@@ -20,15 +20,12 @@ import java.util.Random;
 
 public class ServerItemHandler {
 
-    // --- NOWA METODA POMOCNICZA: Nadawanie osiągnięć ---
     private static void grantAdvancement(ServerPlayer player, String advancementId) {
         net.minecraft.server.MinecraftServer server = player.level().getServer();
         Identifier id = Identifier.parse(advancementId);
-        // W 1.21+ korzystamy z AdvancementHolder
         net.minecraft.advancements.AdvancementHolder advancement = server.getAdvancements().get(id);
 
         if (advancement != null) {
-            // "trigger" to nazwa kryterium, którą zdefiniowaliśmy w plikach JSON
             player.getAdvancements().award(advancement, "trigger");
         }
     }
@@ -67,7 +64,6 @@ public class ServerItemHandler {
 
             player.giveExperiencePoints(CollectorRewardsConfig.rewardXpPerItem);
 
-            // --- WYZWALACZE OSIĄGNIĘĆ: Przedmioty ---
             if (sizeAfter >= 1) grantAdvancement(player, "r3ct_collector:first_item");
             if (sizeAfter >= 100) grantAdvancement(player, "r3ct_collector:items_100");
             if (sizeAfter >= 500) grantAdvancement(player, "r3ct_collector:items_500");
@@ -96,7 +92,6 @@ public class ServerItemHandler {
 
         if (data.rewardedCategories.contains(tabId)) return;
 
-        // --- SPECJALNY PRZYPADEK: Klient zgłasza ułożenie CAŁEJ Księgi! ---
         if (tabId.equals("ALL_COMPLETED")) {
             grantAdvancement(player, "r3ct_collector:all_completed");
             data.rewardedCategories.add("ALL_COMPLETED");
@@ -114,9 +109,7 @@ public class ServerItemHandler {
 
                 data.rewardedCategories.add(tabId);
 
-                // --- WYZWALACZE OSIĄGNIĘĆ: Kategorie ---
                 int catSize = data.rewardedCategories.size();
-                // (Ignorujemy "ALL_COMPLETED" jeśli zostało wcześniej dopisane do rozmiaru)
                 if (data.rewardedCategories.contains("ALL_COMPLETED")) catSize--;
 
                 if (catSize >= 1) grantAdvancement(player, "r3ct_collector:category_1");
@@ -129,8 +122,6 @@ public class ServerItemHandler {
     }
 
     public static void handleLeaderboardRequest(ServerPlayer player) {
-        // --- WYZWALACZ OSIĄGNIĘCIA: Otwarcie Księgi (Root) ---
-        // Skoro klient prosi o Leaderboard, to znaczy że właśnie otworzył GUI!
         grantAdvancement(player, "r3ct_collector:root");
 
         net.minecraft.server.MinecraftServer server = player.level().getServer();

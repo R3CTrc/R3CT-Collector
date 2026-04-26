@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 
 public class KeyMappings {
 
-    // Zmienna będzie zainicjowana przez Fabric lub NeoForge
     public static KeyMapping openCatalogKey;
 
     public static void handleKeyInput() {

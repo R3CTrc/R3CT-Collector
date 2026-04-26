@@ -21,9 +21,8 @@ public class ModState extends SavedData {
     }
 
     public static PlayerData getPlayerData(MinecraftServer server, UUID uuid) {
-        // computeIfAbsent automatycznie stworzy nowego gracza, jeśli go jeszcze nie ma
         return get(server).players.computeIfAbsent(uuid, k -> {
-            get(server).setDirty(); // Wymusza zapis po dodaniu nowej osoby
+            get(server).setDirty();
             return new PlayerData();
         });
     }
@@ -46,7 +45,6 @@ public class ModState extends SavedData {
                     try {
                         state.players.put(UUID.fromString(key), PlayerData.fromNbt(playerDataNbt));
                     } catch (IllegalArgumentException ignored) {
-                        // Ignorujemy uszkodzone lub niepoprawne UUID w pliku
                     }
                 });
             }
@@ -61,7 +59,7 @@ public class ModState extends SavedData {
     );
 
     public static final SavedDataType<ModState> TYPE = new SavedDataType<>(
-            Identifier.parse("r3ct_collector_data"), // Unikalne ID pliku na dysku
+            Identifier.parse("r3ct_collector_data"),
             ModState::new,
             CODEC,
             DataFixTypes.LEVEL

@@ -17,7 +17,7 @@ public class CreativeTabScanner {
 
     public static class SubCategory {
         public String tabId;
-        public Component displayName; // Gotowy, przetłumaczony tekst od gry!
+        public Component displayName;
         public ItemStack icon;
         public List<ItemStack> items = new ArrayList<>();
 
@@ -47,10 +47,8 @@ public class CreativeTabScanner {
         List<Map.Entry<ResourceKey<CreativeModeTab>, CreativeModeTab>> sortedTabs = new ArrayList<>(BuiltInRegistries.CREATIVE_MODE_TAB.entrySet());
         sortedTabs.sort(Comparator.comparingInt(entry -> BuiltInRegistries.CREATIVE_MODE_TAB.getId(entry.getValue())));
 
-        // Lista pamiętająca, co już dodaliśmy (Unikalny klucz = ID + Nazwa)
         Set<String> processedItems = new HashSet<>();
 
-        // --- ETAP 1: IDEALNE ZAKŁADKI VANILLA I INNYCH MODÓW ---
         for (Map.Entry<ResourceKey<CreativeModeTab>, CreativeModeTab> entry : sortedTabs) {
             CreativeModeTab tab = entry.getValue();
             String tabId = entry.getKey().identifier().toString();
@@ -72,12 +70,11 @@ public class CreativeTabScanner {
 
                     if (!CollectorConfig.blacklistedItems.contains(itemId) && !CollectorConfig.blacklistedMods.contains(itemNamespace)) {
 
-                        // SPRYTNY KLUCZ: Łączymy ID przedmiotu z jego wygenerowaną nazwą.
                         String uniqueKey = itemId + stack.getHoverName().getString();
 
                         if (!processedItems.contains(uniqueKey)) {
                             category.items.add(stack);
-                            processedItems.add(uniqueKey); // Zabezpieczamy przed duplikatem w innej zakładce
+                            processedItems.add(uniqueKey);
                         }
                     }
                 }

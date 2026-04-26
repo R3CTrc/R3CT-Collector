@@ -28,13 +28,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
         net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new SubmitItemPayload(itemId));
     }
 
-    // --- NOWE: Wysyłanie prośby o odebranie figurki ---
     @Override
     public void sendClaimRewardPacketToServer(String tabId) {
         net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new com.r3ct.collector.network.ClaimCategoryRewardPayload(tabId));
     }
 
-    // --- ZAKTUALIZOWANE: Przesyłanie obu list do gracza ---
     @Override
     public void sendSyncDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.Set<String> unlockedItems, java.util.Set<String> rewardedCategories) {
         net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player, new SyncDataPayload(new java.util.ArrayList<>(unlockedItems), new java.util.ArrayList<>(rewardedCategories)));

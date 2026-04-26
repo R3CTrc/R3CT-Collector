@@ -14,7 +14,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class CollectorClientNeoForge {
 
-    // DODANO: bus = EventBusSubscriber.Bus.MOD - to gwarantuje poprawne ładowanie eventów rejestracji!
     @EventBusSubscriber(modid = "r3ct_collector", value = Dist.CLIENT)
     public static class ClientModEvents {
 
@@ -32,7 +31,6 @@ public class CollectorClientNeoForge {
             event.register(KeyMappings.openCatalogKey);
         }
 
-        // --- NOWE: REJESTRACJA EKRANU KONFIGURACYJNEGO ---
         @SubscribeEvent
         public static void onClientSetup(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent event) {
             net.neoforged.fml.ModLoadingContext.get().registerExtensionPoint(
@@ -42,7 +40,6 @@ public class CollectorClientNeoForge {
         }
     }
 
-    // Ten zostaje z domyślnym busem (GAME), bo ClientTickEvent dzieje się podczas gry
     @EventBusSubscriber(modid = "r3ct_collector", value = Dist.CLIENT)
     public static class ClientGameEvents {
 

@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerData {
-    public String lastKnownName = "Unknown"; // NOWE: Pamiętamy nick gracza!
+    public String lastKnownName = "Unknown";
     public Set<String> unlockedItems = new HashSet<>();
     public Set<String> rewardedCategories = new HashSet<>();
 
@@ -24,7 +24,6 @@ public class PlayerData {
     public CompoundTag toNbt() {
         CompoundTag nbt = new CompoundTag();
 
-        // Zapisujemy nick
         nbt.putString("lastKnownName", lastKnownName);
 
         ListTag itemsList = new ListTag();

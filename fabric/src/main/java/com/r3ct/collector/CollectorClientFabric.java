@@ -32,7 +32,6 @@ public class CollectorClientFabric implements ClientModInitializer {
                 (payload, context) -> {
                     context.client().execute(() -> {
                         ClientPlayerData.unlockedItems = new java.util.HashSet<>(payload.unlockedItems());
-                        // --- DODANE: Klient musi też zapisać informację o odebranych figurkach! ---
                         ClientPlayerData.rewardedCategories = new java.util.HashSet<>(payload.rewardedCategories());
                     });
                 }

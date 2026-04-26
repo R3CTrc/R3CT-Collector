@@ -27,13 +27,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
         net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new SubmitItemPayload(itemId));
     }
 
-    // --- NOWE: Wysyłanie prośby o odebranie figurki ---
     @Override
     public void sendClaimRewardPacketToServer(String tabId) {
         net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new com.r3ct.collector.network.ClaimCategoryRewardPayload(tabId));
     }
 
-    // --- ZAKTUALIZOWANE: Przesyłanie obu list do gracza ---
     @Override
     public void sendSyncDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.Set<String> unlockedItems, java.util.Set<String> rewardedCategories) {
         net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(player, new SyncDataPayload(new java.util.ArrayList<>(unlockedItems), new java.util.ArrayList<>(rewardedCategories)));

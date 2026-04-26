@@ -14,7 +14,6 @@ import java.util.Set;
 
 public class CollectorConfig {
 
-    // --- Ustawienia Serwerowe (Blacklista) ---
     public static Set<String> blacklistedMods = new HashSet<>(Set.of(
 
     ));
@@ -45,18 +44,15 @@ public class CollectorConfig {
             "minecraft:dragon_egg"
     ));
 
-    // --- Ustawienia Klienckie (GUI) ---
     public static float catalogScale = 1.0f;
 
-    // Narzędzie do konwersji
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final Path CONFIG_DIR = Paths.get("config", "r3ct_collector");
-    // Ścieżki do dwóch osobnych plików konfiguracyjnych
+
     private static final Path SERVER_CONFIG_PATH = CONFIG_DIR.resolve("r3ct_collector_items.json");
     private static final Path CLIENT_CONFIG_PATH = CONFIG_DIR.resolve("r3ct_collector_client.json");
 
-    // Struktury do zapisu poszczególnych plików
     private static class ServerConfigData {
         Set<String> blacklistedMods = CollectorConfig.blacklistedMods;
         Set<String> blacklistedTabs = CollectorConfig.blacklistedTabs;
@@ -67,9 +63,7 @@ public class CollectorConfig {
         float catalogScale = CollectorConfig.catalogScale;
     }
 
-    // Główna metoda ładująca wywoływana w grze
     public static void load() {
-        // 1. Ładowanie/Tworzenie pliku serwerowego
         File serverFile = SERVER_CONFIG_PATH.toFile();
         if (serverFile.exists()) {
             try (FileReader reader = new FileReader(serverFile)) {
@@ -87,7 +81,6 @@ public class CollectorConfig {
             saveServer();
         }
 
-        // 2. Ładowanie/Tworzenie pliku klienckiego
         File clientFile = CLIENT_CONFIG_PATH.toFile();
         if (clientFile.exists()) {
             try (FileReader reader = new FileReader(clientFile)) {
@@ -104,7 +97,6 @@ public class CollectorConfig {
         }
     }
 
-    // Zapis pliku serwerowego
     public static void saveServer() {
         File configDir = SERVER_CONFIG_PATH.getParent().toFile();
         if (!configDir.exists()) configDir.mkdirs();
@@ -117,7 +109,6 @@ public class CollectorConfig {
         }
     }
 
-    // Zapis pliku klienckiego
     public static void saveClient() {
         File configDir = CLIENT_CONFIG_PATH.getParent().toFile();
         if (!configDir.exists()) configDir.mkdirs();
@@ -130,7 +121,6 @@ public class CollectorConfig {
         }
     }
 
-    // Metoda wymuszająca zapisanie obu plików na raz
     public static void save() {
         saveServer();
         saveClient();

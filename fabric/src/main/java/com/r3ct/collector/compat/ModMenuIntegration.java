@@ -8,7 +8,6 @@ public class ModMenuIntegration implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        // Gdy gracz kliknie przycisk "Config" w Mod Menu, otwieramy nasz główny ekran ustawień
         return parent -> new CollectorConfigScreen(parent);
     }
 }

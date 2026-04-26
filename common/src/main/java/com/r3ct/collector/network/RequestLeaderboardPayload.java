@@ -8,7 +8,6 @@ import net.minecraft.resources.Identifier;
 public record RequestLeaderboardPayload() implements CustomPacketPayload {
     public static final Type<RequestLeaderboardPayload> TYPE = new Type<>(Identifier.parse("r3ct_collector:req_leaderboard"));
 
-    // Używamy ByteBuf (zamiast RegistryFriendlyByteBuf), bo wysyłamy pusty pakiet jako "sygnał"
     public static final StreamCodec<ByteBuf, RequestLeaderboardPayload> CODEC = StreamCodec.unit(new RequestLeaderboardPayload());
 
     @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }

@@ -29,9 +29,7 @@ public class ServerConfigScreen extends Screen {
         int centerX = this.width / 2 - buttonWidth / 2;
         int startY = this.height / 2 - 30;
 
-        // --- PRZYCISK 1: Plik z Blacklistą (Items) ---
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collector.config.server.items_button"), button -> {
-                    // ZAKTUALIZOWANA ŚCIEŻKA: Prowadzi do config/r3ct_collector/items.json
                     File configFile = Paths.get("config", "r3ct_collector", "r3ct_collector_items.json").toFile();
                     if (!configFile.exists()) CollectorConfig.saveServer();
                     Util.getPlatform().openUri(configFile.toURI());
@@ -40,9 +38,7 @@ public class ServerConfigScreen extends Screen {
                 .tooltip(Tooltip.create(Component.translatable("gui.r3ct_collector.config.server.items_tooltip")))
                 .build());
 
-        // --- PRZYCISK 2: Plik z Nagrodami (Rewards) ---
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collector.config.server.rewards_button"), button -> {
-                    // ZAKTUALIZOWANA ŚCIEŻKA: Prowadzi do config/r3ct_collector/rewards.json
                     File configFile = Paths.get("config", "r3ct_collector", "r3ct_collector_rewards.json").toFile();
                     if (!configFile.exists()) CollectorRewardsConfig.save();
                     Util.getPlatform().openUri(configFile.toURI());
@@ -51,7 +47,6 @@ public class ServerConfigScreen extends Screen {
                 .tooltip(Tooltip.create(Component.translatable("gui.r3ct_collector.config.server.rewards_tooltip")))
                 .build());
 
-        // --- PRZYCISK 3: Gotowe (Wstecz) ---
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .bounds(centerX, startY + 60, buttonWidth, buttonHeight).build());
     }

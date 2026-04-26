@@ -16,7 +16,6 @@ public class CollectorRewardsConfig {
 
     public static int rewardXpPerItem = 5;
 
-    // Struktura wpisu z lootem (wzorowana na Twoim JSON)
     public static class LootEntry {
         public String item;
         public int min_amount;
@@ -28,13 +27,11 @@ public class CollectorRewardsConfig {
         }
     }
 
-    // Nagrody co 100 przedmiotów
     public static List<LootEntry> milestoneRewards = new ArrayList<>(List.of(
             new LootEntry("minecraft:emerald", 24, 32, 100),
             new LootEntry("minecraft:diamond", 16, 24, 100)
     ));
 
-    // Nagrody za zakładki (Figurki / Bedrock)
     public static Map<String, String> categoryRewards = new HashMap<>(Map.ofEntries(
             Map.entry("minecraft:building_blocks", "minecraft:bedrock"),
             Map.entry("minecraft:colored_blocks", "minecraft:bedrock"),
@@ -79,7 +76,6 @@ public class CollectorRewardsConfig {
     }
 
     public static void save() {
-        // Zabezpieczenie: najpierw upewniamy się, że nasz folder "r3ct_collector" istnieje!
         File configDir = PATH.getParent().toFile();
         if (!configDir.exists()) configDir.mkdirs();
 
@@ -90,7 +86,6 @@ public class CollectorRewardsConfig {
         }
     }
 
-    // Funkcja losująca nagrodę na podstawie wagi (weight)
     public static LootEntry getRandomMilestoneReward() {
         if (milestoneRewards.isEmpty()) return null;
         int totalWeight = milestoneRewards.stream().mapToInt(e -> e.weight).sum();

@@ -34,13 +34,10 @@ public interface IPlatformHelper {
         return isDevelopmentEnvironment() ? "development" : "production";
     }
 
-    // Klient prosi serwer o oddanie przedmiotu
     void sendSubmitItemPacketToServer(String itemId);
 
-    // NOWE:
     void sendClaimRewardPacketToServer(String tabId);
 
-    // ZMIENIONE (dodano rewardedCategories):
     void sendSyncDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.Set<String> unlockedItems, java.util.Set<String> rewardedCategories);
 
     void sendRequestLeaderboardPacketToServer();

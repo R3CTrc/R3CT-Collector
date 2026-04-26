@@ -13,7 +13,7 @@ public class CollectorFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         PayloadTypeRegistry.serverboundPlay().register(SubmitItemPayload.TYPE, SubmitItemPayload.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(com.r3ct.collector.network.ClaimCategoryRewardPayload.TYPE, com.r3ct.collector.network.ClaimCategoryRewardPayload.CODEC); // NOWE
+        PayloadTypeRegistry.serverboundPlay().register(com.r3ct.collector.network.ClaimCategoryRewardPayload.TYPE, com.r3ct.collector.network.ClaimCategoryRewardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(SyncDataPayload.TYPE, SyncDataPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(com.r3ct.collector.network.RequestLeaderboardPayload.TYPE, com.r3ct.collector.network.RequestLeaderboardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(com.r3ct.collector.network.LeaderboardDataPayload.TYPE, com.r3ct.collector.network.LeaderboardDataPayload.CODEC);
@@ -22,7 +22,6 @@ public class CollectorFabric implements ModInitializer {
             context.server().execute(() -> ServerItemHandler.handleItemSubmit(context.player(), payload.itemId()));
         });
 
-        // NOWE
         ServerPlayNetworking.registerGlobalReceiver(com.r3ct.collector.network.ClaimCategoryRewardPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleCategoryReward(context.player(), payload.tabId()));
         });

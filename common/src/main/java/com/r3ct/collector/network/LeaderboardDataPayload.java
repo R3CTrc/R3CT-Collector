@@ -10,7 +10,6 @@ import java.util.List;
 public record LeaderboardDataPayload(List<TopPlayerEntry> entries) implements CustomPacketPayload {
     public static final Type<LeaderboardDataPayload> TYPE = new Type<>(Identifier.parse("r3ct_collector:sync_leaderboard"));
 
-    // Sub-struktura pojedynczego gracza w rankingu
     public record TopPlayerEntry(String name, int totalItems, List<String> unlockedItems) {}
 
     public static final StreamCodec<RegistryFriendlyByteBuf, TopPlayerEntry> ENTRY_CODEC = StreamCodec.composite(

@@ -25,7 +25,6 @@ public class ClientConfigScreen extends Screen {
         int widgetHeight = 20;
 
         this.scaleBox = new EditBox(this.font, rightColumnX, 80, widgetWidth, widgetHeight, Component.translatable("gui.r3ct_collector.config.client.scale"));;
-        // Pobieramy aktualną skalę z configu
         this.scaleBox.setValue(String.valueOf(CollectorConfig.catalogScale));
         this.addRenderableWidget(this.scaleBox);
 
@@ -47,11 +46,9 @@ public class ClientConfigScreen extends Screen {
     @Override
     public void onClose() {
         try {
-            // Zapisujemy nową wartość po zamknięciu
             CollectorConfig.catalogScale = Float.parseFloat(this.scaleBox.getValue());
         } catch (NumberFormatException ignored) {}
 
-        // Zapisujemy tylko plik kliencki!
         CollectorConfig.saveClient();
 
         if (this.minecraft != null) {

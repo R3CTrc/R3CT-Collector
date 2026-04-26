@@ -19,7 +19,6 @@ public class CollectorNeoForge {
 
     public CollectorNeoForge(IEventBus modEventBus) {
         modEventBus.addListener(this::registerPackets);
-        // Rejestrujemy zdarzenie dołączania do gry na głównym busie NeoForge
         NeoForge.EVENT_BUS.addListener(this::onPlayerJoin);
     }
 
@@ -33,7 +32,6 @@ public class CollectorNeoForge {
                 })
         );
 
-        // NOWE (NeoForge)
         registrar.playToServer(
                 com.r3ct.collector.network.ClaimCategoryRewardPayload.TYPE, com.r3ct.collector.network.ClaimCategoryRewardPayload.CODEC,
                 (payload, context) -> context.enqueueWork(() -> {

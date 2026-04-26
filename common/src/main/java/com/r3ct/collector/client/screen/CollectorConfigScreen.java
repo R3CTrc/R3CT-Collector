@@ -24,19 +24,17 @@ public class CollectorConfigScreen extends Screen {
         int centerX = this.width / 2 - buttonWidth / 2;
         int startY = this.height / 2 - 30;
 
-        // --- PRZYCISK 1: Ustawienia Klienckie ---
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collector.config.main.client_button"), button -> {
-                    this.minecraft.setScreen(new ClientConfigScreen(this)); // Otwiera pod-ekran
+                    this.minecraft.setScreen(new ClientConfigScreen(this));
                 })
                 .bounds(centerX, startY, buttonWidth, buttonHeight)
                 .tooltip(Tooltip.create(Component.translatable("gui.r3ct_collector.config.main.client_tooltip")))
                 .build());
 
-        // --- PRZYCISK 2: Ustawienia Serwerowe ---
         boolean isSingleplayer = this.minecraft != null && this.minecraft.hasSingleplayerServer();
 
         Button serverButton = Button.builder(Component.translatable("gui.r3ct_collector.config.main.server_button"), button -> {
-                    this.minecraft.setScreen(new ServerConfigScreen(this)); // Otwiera NOWY pod-ekran serwerowy
+                    this.minecraft.setScreen(new ServerConfigScreen(this));
                 })
                 .bounds(centerX, startY + 25, buttonWidth, buttonHeight)
                 .tooltip(Tooltip.create(
@@ -46,10 +44,9 @@ public class CollectorConfigScreen extends Screen {
                 ))
                 .build();
 
-        serverButton.active = isSingleplayer; // Wyłącza przycisk na serwerach MP
+        serverButton.active = isSingleplayer;
         this.addRenderableWidget(serverButton);
 
-        // --- PRZYCISK 3: Gotowe (Wstecz) ---
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .bounds(centerX, startY + 60, buttonWidth, buttonHeight).build());
     }
