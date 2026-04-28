@@ -13,7 +13,7 @@ The ultimate completionist and collection mod for Minecraft!
 R3CT Collector automatically scans all items in your game (including those from other mods) and generates a beautifully categorized interactive Catalog. Gather items, earn XP, claim milestone rewards, and compete with other players on your server! Built for both Fabric and NeoForge!
 
 <div align="center">
-  <img src="./images/icon.png" width="50%" alt="R3CT Collector Mod Icon">
+  <img src="./images/icon_nb.png" width="50%" alt="R3CT Collector Mod Icon">
 </div>
 
 ---
@@ -25,8 +25,8 @@ R3CT Collector automatically scans all items in your game (including those from 
   * Check your progress with visually pleasing progress bars and dynamic percentage colors.
 
 <div align="center">
-  <a href="./images/Catalog_Screen.png" target="_blank">
-    <img src="./images/Catalog_Screen.png" width="75%" alt="Catalog Screen (Click to enlarge)">
+  <a href="./images/Tab.png" target="_blank">
+    <img src="./images/Tab.png" width="75%" alt="Catalog Screen (Click to enlarge)">
   </a>
 </div>
 
@@ -38,8 +38,8 @@ R3CT Collector automatically scans all items in your game (including those from 
   * Hover over a player's head in the leaderboard to inspect their exact completion percentage for every category.
 
 <div align="center">
-  <a href="./images/Leaderboard_Screen.png" target="_blank">
-    <img src="./images/Leaderboard_Screen.png" width="75%" alt="Leaderboard Screen (Click to enlarge)">
+  <a href="./images/Leaderboard.png" target="_blank">
+    <img src="./images/Leaderboard.png" width="75%" alt="Leaderboard Screen (Click to enlarge)">
   </a>
 </div>
 
