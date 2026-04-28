@@ -76,7 +76,7 @@ public class CatalogScreen extends Screen {
                 if (gathered > 0 && gathered == cat.items.size()) {
                     ClientPlayerData.rewardedCategories.add(cat.tabId);
                     com.r3ct.collector.platform.Services.PLATFORM.sendClaimRewardPacketToServer(cat.tabId);
-                    this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1.0F));
+                    this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.FIREWORK_ROCKET_TWINKLE, 1.0F));
                 }
             }
         }
