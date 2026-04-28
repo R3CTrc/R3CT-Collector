@@ -3,7 +3,7 @@ package com.r3ct.collector.client.screen;
 import com.r3ct.collector.client.data.ClientPlayerData;
 import com.r3ct.collector.config.CollectorConfig;
 import com.r3ct.collector.scanner.CreativeTabScanner;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -11,7 +11,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.util.Mth;
-import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,8 +106,8 @@ public class CatalogScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.extractTransparentBackground(guiGraphics);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderTransparentBackground(guiGraphics);
 
         float scale = calculateEffectiveScale();
         double scaledMouseX = (mouseX - this.width / 2.0) / scale + this.width / 2.0;
@@ -143,10 +142,10 @@ public class CatalogScreen extends Screen {
         }
 
         guiGraphics.pose().popMatrix();
-        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderRightSpecialTabs(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY) {
+    private void renderRightSpecialTabs(GuiGraphics guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY) {
         int tabW = 32;
         int tabH = 28;
         int baseX = bookX + RENDER_SIZE - 40;
@@ -165,7 +164,7 @@ public class CatalogScreen extends Screen {
             int finalX = (isHovered || isSelected) ? baseX + 2 : baseX;
 
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, (isHovered || isSelected) ? TAB_RIGHT_SELECTED : TAB_RIGHT_UNSELECTED, finalX, currentY, tabW, tabH, 0xFFFFF2D4);
-            guiGraphics.item(icons[i], finalX + 7, currentY + 6);
+            guiGraphics.renderItem(icons[i], finalX + 7, currentY + 6);
 
             if (isHovered) {
                 guiGraphics.setTooltipForNextFrame(this.font, Component.translatable(tooltips[i]).withStyle(s -> s.withColor(0xFFD4AF37).withBold(true)), rawMouseX, rawMouseY);
@@ -173,10 +172,10 @@ public class CatalogScreen extends Screen {
         }
     }
 
-    private void renderHomeTab(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY, float deltaTime) {
+    private void renderHomeTab(GuiGraphics guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY, float deltaTime) {
         int centerX = bookX + (RENDER_SIZE / 2);
         Component title = Component.translatable("gui.r3ct_collector.catalog.tab_home");
-        guiGraphics.text(this.font, title, centerX - (this.font.width(title) / 2) - 8, bookY + 15, 0xFF333333, false);
+        guiGraphics.drawString(this.font, title, centerX - (this.font.width(title) / 2) - 8, bookY + 15, 0xFF333333, false);
 
         int listStartY = bookY + 47;
         int visibleItems = 5;
@@ -210,17 +209,17 @@ public class CatalogScreen extends Screen {
             float currentAnimProgress = tabProgressArray[actualIndex];
             int percent = Math.clamp(Math.round(currentAnimProgress * 100), 0, 100);
 
-            guiGraphics.item(cat.icon, bookX + 48, currentY + 4);
+            guiGraphics.renderItem(cat.icon, bookX + 48, currentY + 4);
 
-            guiGraphics.text(this.font, cat.displayName, bookX + 73, currentY, 0xFF444444, false);
+            guiGraphics.drawString(this.font, cat.displayName, bookX + 73, currentY, 0xFF444444, false);
 
             Component countComp = Component.literal(gatheredItems + " / " + totalItems);
             Component percentComp = Component.literal(percent + "%");
 
-            guiGraphics.text(this.font, countComp, bookX + 110, currentY + 12, 0xFF666666, false);
+            guiGraphics.drawString(this.font, countComp, bookX + 110, currentY + 12, 0xFF666666, false);
 
             int dynamicColor = percent < 33 ? 0xFFFF5555 : (percent < 66 ? 0xFFFFAA00 : 0xFF55FF55);
-            guiGraphics.text(this.font, percentComp, bookX + 175, currentY + 12, dynamicColor, false);
+            guiGraphics.drawString(this.font, percentComp, bookX + 175, currentY + 12, dynamicColor, false);
 
             int barX = bookX + 73;
             int barW = 115;
@@ -237,10 +236,10 @@ public class CatalogScreen extends Screen {
         }
     }
 
-    private void renderInfoTab(GuiGraphicsExtractor guiGraphics, int bookX, int bookY) {
+    private void renderInfoTab(GuiGraphics guiGraphics, int bookX, int bookY) {
         int centerX = bookX + (RENDER_SIZE / 2);
         Component title = Component.translatable("gui.r3ct_collector.catalog.tab_info");
-        guiGraphics.text(this.font, title, centerX - (this.font.width(title) / 2) - 8, bookY + 15, 0xFF333333, false);
+        guiGraphics.drawString(this.font, title, centerX - (this.font.width(title) / 2) - 8, bookY + 15, 0xFF333333, false);
 
         int textX = bookX + 50;
         int currentY = bookY + 40;
@@ -259,17 +258,17 @@ public class CatalogScreen extends Screen {
         currentY += 6;
 
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2"), textX, currentY, maxWidth, 0xFF333333);
-        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2_desc", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.milestoneInterval), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2_desc", com.r3ct.collector.config.CollectorRewardsConfig.milestoneInterval), textX + 10, currentY, maxWidth - 10, 0xFF555555);
 
         for (com.r3ct.collector.config.CollectorRewardsConfig.LootEntry entry : com.r3ct.collector.config.CollectorRewardsConfig.milestoneRewards) {
-            net.minecraft.resources.Identifier itemId = net.minecraft.resources.Identifier.parse(entry.item);
-            net.minecraft.world.item.Item rewardItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId).map(net.minecraft.core.Holder::value).orElse(net.minecraft.world.item.Items.AIR);
+            Identifier itemId = Identifier.parse(entry.item);
+            net.minecraft.world.item.Item rewardItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
 
-            if (rewardItem != net.minecraft.world.item.Items.AIR) {
-                net.minecraft.network.chat.MutableComponent line = net.minecraft.network.chat.Component.literal("• ")
+            if (rewardItem != Items.AIR) {
+                net.minecraft.network.chat.MutableComponent line = Component.literal("• ")
                         .withStyle(net.minecraft.ChatFormatting.DARK_GRAY)
                         .append(new ItemStack(rewardItem).getHoverName().copy().withStyle(net.minecraft.ChatFormatting.BLUE))
-                        .append(net.minecraft.network.chat.Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+                        .append(Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
 
                 currentY = drawWrappedText(guiGraphics, line, textX + 15, currentY, maxWidth - 15, 0xFFFFFFFF);
             }
@@ -282,19 +281,19 @@ public class CatalogScreen extends Screen {
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point3_desc"), textX + 10, currentY, maxWidth - 10, 0xFF555555);
     }
 
-    private int drawWrappedText(GuiGraphicsExtractor guiGraphics, Component text, int x, int y, int maxWidth, int color) {
-        java.util.List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
+    private int drawWrappedText(GuiGraphics guiGraphics, Component text, int x, int y, int maxWidth, int color) {
+        List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
         for (net.minecraft.util.FormattedCharSequence line : lines) {
-            guiGraphics.text(this.font, line, x, y, color, false);
+            guiGraphics.drawString(this.font, line, x, y, color, false);
             y += this.font.lineHeight + 2;
         }
         return y;
     }
 
-    private void renderLeaderboardTab(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY) {
+    private void renderLeaderboardTab(GuiGraphics guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY) {
         int centerX = bookX + (RENDER_SIZE / 2);
         Component title = Component.translatable("gui.r3ct_collector.catalog.tab_leaderboard");
-        guiGraphics.text(this.font, title, centerX - (this.font.width(title) / 2) - 8, bookY + 15, 0xFF333333, false);
+        guiGraphics.drawString(this.font, title, centerX - (this.font.width(title) / 2) - 8, bookY + 15, 0xFF333333, false);
 
         int startX = bookX + 50;
         int startY = bookY + 35;
@@ -313,13 +312,13 @@ public class CatalogScreen extends Screen {
 
             ItemStack head = new ItemStack(Items.PLAYER_HEAD);
             head.set(net.minecraft.core.component.DataComponents.PROFILE, net.minecraft.world.item.component.ResolvableProfile.createUnresolved(entry.name()));
-            guiGraphics.item(head, startX, y);
+            guiGraphics.renderItem(head, startX, y);
 
-            guiGraphics.text(this.font, "§8" + (i + 1) + ". " + nameColor + entry.name(), startX + 20, y + 4, 0xFF333333, false);
+            guiGraphics.drawString(this.font, "§8" + (i + 1) + ". " + nameColor + entry.name(), startX + 20, y + 4, 0xFF333333, false);
 
             String scoreTxt = valColor + entry.totalItems();
             int scoreWidth = this.font.width(scoreTxt);
-            guiGraphics.text(this.font, scoreTxt, startX + 145 - scoreWidth, y + 4, 0xFF333333, false);
+            guiGraphics.drawString(this.font, scoreTxt, startX + 145 - scoreWidth, y + 4, 0xFF333333, false);
 
             if (scaledMouseX >= startX && scaledMouseX <= startX + 155 && scaledMouseY >= y && scaledMouseY <= y + 16) {
                 hoveredEntry = entry;
@@ -328,7 +327,7 @@ public class CatalogScreen extends Screen {
         }
 
         if (hoveredEntry != null) {
-            java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new java.util.ArrayList<>();
+            List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new ArrayList<>();
 
             tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("     §f§l" + hoveredEntry.name()).getVisualOrderText()));
             tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("§8----------------").getVisualOrderText()));
@@ -348,15 +347,15 @@ public class CatalogScreen extends Screen {
                 tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal(line).getVisualOrderText()));
             }
 
-            guiGraphics.tooltip(this.font, tt, (int) scaledMouseX, (int) scaledMouseY, net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE, null);
+            guiGraphics.renderTooltip(this.font, tt, (int) scaledMouseX, (int) scaledMouseY, net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE, null);
 
             ItemStack ttHead = new ItemStack(Items.PLAYER_HEAD);
             ttHead.set(net.minecraft.core.component.DataComponents.PROFILE, net.minecraft.world.item.component.ResolvableProfile.createUnresolved(hoveredEntry.name()));
-            guiGraphics.item(ttHead, (int) scaledMouseX + 11, (int) scaledMouseY - 14);
+            guiGraphics.renderItem(ttHead, (int) scaledMouseX + 11, (int) scaledMouseY - 14);
         }
     }
 
-    private void renderTabs(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY) {
+    private void renderTabs(GuiGraphics guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY) {
         int maxVisibleTabs = 7;
         int tabStartY = bookY + 20;
         int tabW = 32;
@@ -370,7 +369,7 @@ public class CatalogScreen extends Screen {
             int y = tabStartY - 10;
             boolean isHoveringUp = scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= y - 2 && scaledMouseY <= y + 10;
             int color = isHoveringUp ? 0xFFFFFFFF : 0xFFBBBBBB;
-            guiGraphics.text(this.font, upArrow, arrowCenter - (w / 2), y, color, false);
+            guiGraphics.drawString(this.font, upArrow, arrowCenter - (w / 2), y, color, false);
 
             if (isHoveringUp) {
                 guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collector.catalog.prev_categories").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
@@ -383,7 +382,7 @@ public class CatalogScreen extends Screen {
             int y = tabStartY + (maxVisibleTabs * 30) + 2;
             boolean isHoveringDown = scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= y - 2 && scaledMouseY <= y + 10;
             int color = isHoveringDown ? 0xFFFFFFFF : 0xFFBBBBBB;
-            guiGraphics.text(this.font, downArrow, arrowCenter - (w / 2), y, color, false);
+            guiGraphics.drawString(this.font, downArrow, arrowCenter - (w / 2), y, color, false);
 
             if (isHoveringDown) {
                 guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collector.catalog.next_categories").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
@@ -401,7 +400,7 @@ public class CatalogScreen extends Screen {
             int finalX = (isHovered || isSelected) ? baseTabX - 2 : baseTabX;
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, (isHovered || isSelected) ? TAB_SELECTED : TAB_UNSELECTED, finalX, currentY, tabW, tabH, 0xFFFFF2D4);
 
-            guiGraphics.item(cat.icon, finalX + 9, currentY + 6);
+            guiGraphics.renderItem(cat.icon, finalX + 9, currentY + 6);
 
             if (isHovered) {
                 List<Component> tabTooltip = new ArrayList<>();
@@ -435,7 +434,7 @@ public class CatalogScreen extends Screen {
         }
     }
 
-    private void renderItemGrid(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY, float deltaTime) {
+    private void renderItemGrid(GuiGraphics guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY, float deltaTime) {
         CreativeTabScanner.SubCategory activeCat = cachedCategories.get(selectedTabIndex);
         List<ItemStack> items = activeCat.items;
 
@@ -464,15 +463,15 @@ public class CatalogScreen extends Screen {
         int dynamicColor = percent < 33 ? 0xFFFF5555 : (percent < 66 ? 0xFFFFAA00 : 0xFF55FF55);
 
         Component catName = activeCat.displayName;
-        guiGraphics.text(this.font, catName, centerX - (this.font.width(catName) / 2), bookY + 12, 0xFF333333, false);
+        guiGraphics.drawString(this.font, catName, centerX - (this.font.width(catName) / 2), bookY + 12, 0xFF333333, false);
 
         Component gatheringText = Component.translatable("gui.r3ct_collector.catalog.gathered_space", gatheredItems, totalItems);
         Component percentText = Component.literal("(" + percent + "%)");
         int totalTextWidth = this.font.width(gatheringText) + this.font.width(percentText);
         int startTextX = centerX - (totalTextWidth / 2);
 
-        guiGraphics.text(this.font, gatheringText, startTextX, bookY + 23, 0xFF555555, false);
-        guiGraphics.text(this.font, percentText, startTextX + this.font.width(gatheringText), bookY + 23, dynamicColor, false);
+        guiGraphics.drawString(this.font, gatheringText, startTextX, bookY + 23, 0xFF555555, false);
+        guiGraphics.drawString(this.font, percentText, startTextX + this.font.width(gatheringText), bookY + 23, dynamicColor, false);
 
         int barW = 100;
         int barH = 4;
@@ -555,7 +554,7 @@ public class CatalogScreen extends Screen {
 
             int itemX = slotX + 1;
             int itemY = slotY + 1;
-            guiGraphics.item(stack, itemX, itemY);
+            guiGraphics.renderItem(stack, itemX, itemY);
 
             if (gridIcon != null) {
                 if (isCollected) {
@@ -563,7 +562,7 @@ public class CatalogScreen extends Screen {
                 }
 
                 int iconW = this.font.width(gridIcon);
-                guiGraphics.text(this.font, gridIcon, itemX + 8 - (iconW / 2), itemY + 4, finalIconColor, true);
+                guiGraphics.drawString(this.font, gridIcon, itemX + 8 - (iconW / 2), itemY + 4, finalIconColor, true);
             }
 
             if (scaledMouseX >= itemX && scaledMouseX < itemX + 16 && scaledMouseY >= itemY && scaledMouseY < itemY + 16) {

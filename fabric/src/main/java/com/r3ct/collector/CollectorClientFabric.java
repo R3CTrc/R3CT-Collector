@@ -4,7 +4,7 @@ import com.r3ct.collector.client.input.KeyMappings;
 import com.r3ct.collector.client.data.ClientPlayerData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -16,7 +16,7 @@ public class CollectorClientFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        KeyMappings.openCatalogKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+        KeyMappings.openCatalogKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.r3ct.open_catalog",
                 com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_C,

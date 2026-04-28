@@ -3,7 +3,6 @@ package com.r3ct.collector.data;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -59,7 +58,7 @@ public class ModState extends SavedData {
     );
 
     public static final SavedDataType<ModState> TYPE = new SavedDataType<>(
-            Identifier.parse("r3ct_collector_data"),
+            "r3ct_collector_data",
             ModState::new,
             CODEC,
             DataFixTypes.LEVEL

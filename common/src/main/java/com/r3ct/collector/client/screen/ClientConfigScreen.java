@@ -1,13 +1,12 @@
 package com.r3ct.collector.client.screen;
 
 import com.r3ct.collector.config.CollectorConfig;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import org.jspecify.annotations.NonNull;
 
 public class ClientConfigScreen extends Screen {
     private final Screen parent;
@@ -33,14 +32,14 @@ public class ClientConfigScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.fill(0, 0, this.width, this.height, 0x99000000);
-        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        guiGraphics.centeredText(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
 
         int leftColumnX = this.width / 2 - 160;
-        guiGraphics.text(this.font, Component.translatable("gui.r3ct_collector.config.client.scale_desc"), leftColumnX, 80 + 6, 0xFFFFFFFF);
+        guiGraphics.drawString(this.font, Component.translatable("gui.r3ct_collector.config.client.scale_desc"), leftColumnX, 80 + 6, 0xFFFFFFFF);
     }
 
     @Override
