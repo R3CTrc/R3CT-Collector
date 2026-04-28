@@ -1,6 +1,8 @@
 package com.r3ct.collector;
 
 import com.r3ct.collector.client.data.ClientPlayerData;
+import com.r3ct.collector.config.CollectorConfig;
+import com.r3ct.collector.config.CollectorRewardsConfig;
 import com.r3ct.collector.logic.ServerItemHandler;
 import com.r3ct.collector.network.SubmitItemPayload;
 import com.r3ct.collector.network.SyncDataPayload;
@@ -18,6 +20,9 @@ import java.util.HashSet;
 public class CollectorNeoForge {
 
     public CollectorNeoForge(IEventBus modEventBus) {
+        CollectorConfig.load();
+        CollectorRewardsConfig.load();
+
         modEventBus.addListener(this::registerPackets);
         NeoForge.EVENT_BUS.addListener(this::onPlayerJoin);
     }

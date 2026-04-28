@@ -16,7 +16,6 @@ import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ServerItemHandler {
 
@@ -26,7 +25,8 @@ public class ServerItemHandler {
         net.minecraft.advancements.AdvancementHolder advancement = server.getAdvancements().get(id);
 
         if (advancement != null) {
-            player.getAdvancements().award(advancement, "trigger");
+            // Zamienione z "trigger" na "unlocked"
+            player.getAdvancements().award(advancement, "unlocked");
         }
     }
 
@@ -69,12 +69,14 @@ public class ServerItemHandler {
             if (sizeAfter >= 500) grantAdvancement(player, "r3ct_collector:items_500");
             if (sizeAfter >= 1000) grantAdvancement(player, "r3ct_collector:items_1000");
 
-            if (sizeBefore / 100 < sizeAfter / 100) {
+            int interval = CollectorRewardsConfig.milestoneInterval;
+            if (interval > 0 && (sizeBefore / interval < sizeAfter / interval)) {
                 CollectorRewardsConfig.LootEntry reward = CollectorRewardsConfig.getRandomMilestoneReward();
                 if (reward != null) {
                     Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(reward.item)).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
                     if (rewardItem != Items.AIR) {
-                        int amount = reward.min_amount + new Random().nextInt((reward.max_amount - reward.min_amount) + 1);
+                        // Optymalizacja: Używamy generatora z obiektu gracza
+                        int amount = reward.min_amount + player.getRandom().nextInt((reward.max_amount - reward.min_amount) + 1);
                         giveItemToPlayer(player, new ItemStack(rewardItem, amount));
                     }
                 }
@@ -82,6 +84,8 @@ public class ServerItemHandler {
 
             ModState.get(player.level().getServer()).setDirty();
             Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
+
+            // Odświeżanie rankingu na żywo po wrzuceniu itemu!
             handleLeaderboardRequest(player);
         }
     }

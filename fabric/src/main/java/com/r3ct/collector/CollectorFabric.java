@@ -1,5 +1,7 @@
 package com.r3ct.collector;
 
+import com.r3ct.collector.config.CollectorConfig;
+import com.r3ct.collector.config.CollectorRewardsConfig;
 import com.r3ct.collector.logic.ServerItemHandler;
 import com.r3ct.collector.network.SubmitItemPayload;
 import com.r3ct.collector.network.SyncDataPayload;
@@ -12,6 +14,9 @@ public class CollectorFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        CollectorConfig.load();
+        CollectorRewardsConfig.load();
+
         PayloadTypeRegistry.serverboundPlay().register(SubmitItemPayload.TYPE, SubmitItemPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(com.r3ct.collector.network.ClaimCategoryRewardPayload.TYPE, com.r3ct.collector.network.ClaimCategoryRewardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(SyncDataPayload.TYPE, SyncDataPayload.CODEC);

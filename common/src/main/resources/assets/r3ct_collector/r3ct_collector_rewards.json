@@ -1,0 +1,41 @@
+{
+  "_comment_version": "Do not change the version number! It is used for automatic config updates.",
+  "version": 1,
+
+  "_comment_xp": "How much experience points a player gets for submitting a single new item.",
+  "rewardXpPerItem": 5,
+
+  "_comment_interval": "How often (every X items) the player receives a milestone reward.",
+  "milestoneInterval": 100,
+
+  "_comment_milestones": "Loot pool for milestone rewards. 'weight' determines the chance of dropping (higher = more common).",
+  "milestoneRewards": [
+    {
+      "item": "minecraft:emerald",
+      "min_amount": 24,
+      "max_amount": 32,
+      "weight": 100
+    },
+    {
+      "item": "minecraft:diamond",
+      "min_amount": 16,
+      "max_amount": 24,
+      "weight": 100
+    }
+  ],
+
+  "_comment_categories": "Rewards given for completing an entire tab (100%). Default fallback is 'modded_generic'.",
+  "categoryRewards": {
+    "minecraft:building_blocks": "minecraft:bedrock",
+    "minecraft:colored_blocks": "minecraft:bedrock",
+    "minecraft:natural_blocks": "minecraft:bedrock",
+    "minecraft:functional_blocks": "minecraft:bedrock",
+    "minecraft:redstone_blocks": "minecraft:bedrock",
+    "minecraft:tools_and_utilities": "minecraft:bedrock",
+    "minecraft:combat": "minecraft:bedrock",
+    "minecraft:food_and_drinks": "minecraft:bedrock",
+    "minecraft:ingredients": "minecraft:bedrock",
+    "minecraft:spawn_eggs": "minecraft:bedrock",
+    "modded_generic": "minecraft:bedrock"
+  }
+}
