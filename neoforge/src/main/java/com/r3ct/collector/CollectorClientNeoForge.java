@@ -24,7 +24,7 @@ public class CollectorClientNeoForge {
             KeyMappings.openCatalogKey = new KeyMapping(
                     "key.r3ct.open_catalog",
                     InputConstants.Type.KEYSYM,
-                    GLFW.GLFW_KEY_C,
+                    GLFW.GLFW_KEY_K,
                     R3CT_COLLECTOR_CATEGORY
             );
 
