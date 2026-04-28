@@ -97,12 +97,14 @@ public class CollectorConfig {
     }
 
     private static class ServerConfigData {
+        int version = CONFIG_VERSION;
         Set<String> blacklistedMods = CollectorConfig.blacklistedMods;
         Set<String> blacklistedTabs = CollectorConfig.blacklistedTabs;
         Set<String> blacklistedItems = CollectorConfig.blacklistedItems;
     }
 
     private static class ClientConfigData {
+        int version = CONFIG_VERSION;
         float catalogScale = CollectorConfig.catalogScale;
     }
 
