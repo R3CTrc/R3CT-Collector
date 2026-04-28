@@ -25,7 +25,6 @@ public class ServerItemHandler {
         net.minecraft.advancements.AdvancementHolder advancement = server.getAdvancements().get(id);
 
         if (advancement != null) {
-            // Zamienione z "trigger" na "unlocked"
             player.getAdvancements().award(advancement, "unlocked");
         }
     }
@@ -62,7 +61,18 @@ public class ServerItemHandler {
             data.unlockedItems.add(itemId);
             int sizeAfter = data.unlockedItems.size();
 
-            player.giveExperiencePoints(CollectorRewardsConfig.rewardXpPerItem);
+            int xpToGive = CollectorRewardsConfig.xpCommon;
+            net.minecraft.world.item.Rarity rarity = new ItemStack(targetItem).getRarity();
+
+            if (rarity == net.minecraft.world.item.Rarity.UNCOMMON) {
+                xpToGive = CollectorRewardsConfig.xpUncommon;
+            } else if (rarity == net.minecraft.world.item.Rarity.RARE) {
+                xpToGive = CollectorRewardsConfig.xpRare;
+            } else if (rarity == net.minecraft.world.item.Rarity.EPIC) {
+                xpToGive = CollectorRewardsConfig.xpEpic;
+            }
+
+            player.giveExperiencePoints(xpToGive);
 
             if (sizeAfter >= 1) grantAdvancement(player, "r3ct_collector:first_item");
             if (sizeAfter >= 100) grantAdvancement(player, "r3ct_collector:items_100");
@@ -75,7 +85,6 @@ public class ServerItemHandler {
                 if (reward != null) {
                     Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(reward.item)).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
                     if (rewardItem != Items.AIR) {
-                        // Optymalizacja: Używamy generatora z obiektu gracza
                         int amount = reward.min_amount + player.getRandom().nextInt((reward.max_amount - reward.min_amount) + 1);
                         giveItemToPlayer(player, new ItemStack(rewardItem, amount));
                     }
@@ -85,7 +94,6 @@ public class ServerItemHandler {
             ModState.get(player.level().getServer()).setDirty();
             Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
 
-            // Odświeżanie rankingu na żywo po wrzuceniu itemu!
             handleLeaderboardRequest(player);
         }
     }

@@ -17,12 +17,15 @@ import java.util.Map;
 
 public class CollectorRewardsConfig {
 
-    public static int rewardXpPerItem = 5;
+    public static int xpCommon = 10;
+    public static int xpUncommon = 50;
+    public static int xpRare = 100;
+    public static int xpEpic = 500;
     public static int milestoneInterval = 100;
     public static List<LootEntry> milestoneRewards = new ArrayList<>();
     public static Map<String, String> categoryRewards = new HashMap<>();
 
-    private static final int CONFIG_VERSION = 1; // Aktualna wersja konfigu
+    private static final int CONFIG_VERSION = 1;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_DIR = Paths.get("config", "r3ct_collector");
     private static final Path PATH = CONFIG_DIR.resolve("r3ct_collector_rewards.json");
@@ -40,7 +43,6 @@ public class CollectorRewardsConfig {
         }
     }
 
-    // Sprawdzanie wersji i tworzenie backupu
     private static void checkAndMigrate() {
         if (!Files.exists(PATH)) {
             copyDefaultConfig();
@@ -72,13 +74,14 @@ public class CollectorRewardsConfig {
     }
 
     public static void load() {
-        // Sprawdzamy wersję przed próbą ładowania!
         checkAndMigrate();
-
         try (FileReader reader = new FileReader(PATH.toFile())) {
             ConfigData data = GSON.fromJson(reader, ConfigData.class);
             if (data != null) {
-                rewardXpPerItem = data.rewardXpPerItem;
+                xpCommon = data.xpCommon;
+                xpUncommon = data.xpUncommon;
+                xpRare = data.xpRare;
+                xpEpic = data.xpEpic;
                 milestoneInterval = data.milestoneInterval;
                 if (data.milestoneRewards != null) milestoneRewards = data.milestoneRewards;
                 if (data.categoryRewards != null) categoryRewards = data.categoryRewards;
@@ -101,7 +104,10 @@ public class CollectorRewardsConfig {
 
     private static class ConfigData {
         int version = CONFIG_VERSION;
-        int rewardXpPerItem = CollectorRewardsConfig.rewardXpPerItem;
+        int xpCommon = CollectorRewardsConfig.xpCommon;
+        int xpUncommon = CollectorRewardsConfig.xpUncommon;
+        int xpRare = CollectorRewardsConfig.xpRare;
+        int xpEpic = CollectorRewardsConfig.xpEpic;
         int milestoneInterval = CollectorRewardsConfig.milestoneInterval;
         List<LootEntry> milestoneRewards = CollectorRewardsConfig.milestoneRewards;
         Map<String, String> categoryRewards = CollectorRewardsConfig.categoryRewards;
@@ -123,7 +129,6 @@ public class CollectorRewardsConfig {
         int totalWeight = milestoneRewards.stream().mapToInt(e -> e.weight).sum();
         if (totalWeight <= 0) return null;
 
-        // Używamy zoptymalizowanego losowacza Javy (brak ostrzeżeń z IntelliJ)
         int random = java.util.concurrent.ThreadLocalRandom.current().nextInt(totalWeight);
 
         for (LootEntry entry : milestoneRewards) {

@@ -2,8 +2,11 @@
   "_comment_version": "Do not change the version number! It is used for automatic config updates.",
   "version": 1,
 
-  "_comment_xp": "How much experience points a player gets for submitting a single new item.",
-  "rewardXpPerItem": 5,
+  "_comment_xp": "Experience points rewarded based on item rarity (Common, Uncommon, Rare, Epic).",
+  "xpCommon": 10,
+  "xpUncommon": 50,
+  "xpRare": 100,
+  "xpEpic": 500,
 
   "_comment_interval": "How often (every X items) the player receives a milestone reward.",
   "milestoneInterval": 100,

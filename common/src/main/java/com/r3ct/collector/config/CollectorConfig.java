@@ -20,7 +20,7 @@ public class CollectorConfig {
     public static Set<String> blacklistedItems = new HashSet<>();
     public static float catalogScale = 1.0f;
 
-    private static final int CONFIG_VERSION = 1; // Aktualna wersja konfigu
+    private static final int CONFIG_VERSION = 1;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_DIR = Paths.get("config", "r3ct_collector");
     private static final Path SERVER_CONFIG_PATH = CONFIG_DIR.resolve("r3ct_collector_items.json");
@@ -42,7 +42,6 @@ public class CollectorConfig {
         }
     }
 
-    // --- NOWA METODA: Sprawdzanie wersji i tworzenie backupu ---
     private static void checkAndMigrate(Path path, String resourceName) {
         if (!Files.exists(path)) {
             copyDefaultConfig(path, resourceName);
@@ -57,7 +56,7 @@ public class CollectorConfig {
                 needsUpdate = true;
             }
         } catch (Exception e) {
-            needsUpdate = true; // Plik uszkodzony lub pusto - wymuszamy reset
+            needsUpdate = true;
         }
 
         if (needsUpdate) {
@@ -74,7 +73,6 @@ public class CollectorConfig {
     }
 
     public static void load() {
-        // 1. Sprawdzanie i ładowanie pliku serwerowego (Items)
         checkAndMigrate(SERVER_CONFIG_PATH, "r3ct_collector_items.json");
         try (FileReader reader = new FileReader(SERVER_CONFIG_PATH.toFile())) {
             ServerConfigData data = GSON.fromJson(reader, ServerConfigData.class);
@@ -87,7 +85,6 @@ public class CollectorConfig {
             System.err.println("[R3CT-Collector] Error loading items config!");
         }
 
-        // 2. Sprawdzanie i ładowanie pliku klienckiego (Client)
         checkAndMigrate(CLIENT_CONFIG_PATH, "r3ct_collector_client.json");
         try (FileReader reader = new FileReader(CLIENT_CONFIG_PATH.toFile())) {
             ClientConfigData data = GSON.fromJson(reader, ClientConfigData.class);

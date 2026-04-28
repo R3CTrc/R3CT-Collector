@@ -250,7 +250,12 @@ public class CatalogScreen extends Screen {
         currentY += 5;
 
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point1"), textX, currentY, maxWidth, 0xFF333333);
-        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point1_desc", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.rewardXpPerItem), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point1.rarity.common", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.xpCommon), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point1.rarity.uncommon", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.xpUncommon), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point1.rarity.rare", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.xpRare), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point1.rarity.epic", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.xpEpic), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+
         currentY += 6;
 
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2"), textX, currentY, maxWidth, 0xFF333333);
@@ -569,8 +574,14 @@ public class CatalogScreen extends Screen {
 
                 itemTooltip.add(modifiedName);
                 if (!isCollected) {
-                    itemTooltip.add(Component.translatable("gui.r3ct_collector.reward_xp_info",
-                            "§e" + com.r3ct.collector.config.CollectorRewardsConfig.rewardXpPerItem));
+                    int xp = com.r3ct.collector.config.CollectorRewardsConfig.xpCommon;
+                    net.minecraft.world.item.Rarity rarity = stack.getRarity();
+
+                    if (rarity == net.minecraft.world.item.Rarity.UNCOMMON) xp = com.r3ct.collector.config.CollectorRewardsConfig.xpUncommon;
+                    else if (rarity == net.minecraft.world.item.Rarity.RARE) xp = com.r3ct.collector.config.CollectorRewardsConfig.xpRare;
+                    else if (rarity == net.minecraft.world.item.Rarity.EPIC) xp = com.r3ct.collector.config.CollectorRewardsConfig.xpEpic;
+
+                    itemTooltip.add(Component.translatable("gui.r3ct_collector.reward_xp_info", "§e" + xp));
                 }
                 guiGraphics.setComponentTooltipForNextFrame(this.font, itemTooltip, rawMouseX, rawMouseY);
             }

@@ -16,7 +16,10 @@
 
   "gui.r3ct_collector.info.rewards_title": "Nagrody za Kolekcjonowanie",
   "gui.r3ct_collector.info.point1": "1. Oddawanie Przedmiotów",
-  "gui.r3ct_collector.info.point1_desc": "Każdy unikalny przedmiot: %s §6PD",
+  "gui.r3ct_collector.info.point1.rarity.common": "§7Zwykłe: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.uncommon": "§6Niepospolite: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.rare": "§bRzadkie: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.epic": "§dEpickie: %s §6XP",
   "gui.r3ct_collector.info.point2": "2. Kamienie Milowe",
   "gui.r3ct_collector.info.point2_desc": "Co każde %s oddanych przedmiotów:",
   "gui.r3ct_collector.info.point2_note": "(Jedno z nich)",

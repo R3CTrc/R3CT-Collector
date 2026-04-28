@@ -16,7 +16,10 @@
 
   "gui.r3ct_collector.info.rewards_title": "Collection Rewards",
   "gui.r3ct_collector.info.point1": "1. Submitting Items",
-  "gui.r3ct_collector.info.point1_desc": "Every unique item: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.common": "§7Common: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.uncommon": "§6Uncommon: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.rare": "§bRare: %s §6XP",
+  "gui.r3ct_collector.info.point1.rarity.epic": "§dEpic: %s §6XP",
   "gui.r3ct_collector.info.point2": "2. Milestones",
   "gui.r3ct_collector.info.point2_desc": "Every %s submitted items:",
   "gui.r3ct_collector.info.point2_note": "(One of them)",
