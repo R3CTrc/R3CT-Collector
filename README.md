@@ -1,28 +1,28 @@
-# R3CT Collector's Book 📚
+# R3CT Collector 📖✨
 
 <div align="center">
 
-[![Modrinth](https://img.shields.io/modrinth/dt/WPISZ_ID?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/mod/r3ct-collector)
-[![CurseForge](https://img.shields.io/curseforge/dt/WPISZ_ID?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/r3ct-collector)
+[![Modrinth](https://img.shields.io/modrinth/dt/YOUR_ID?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/mod/YOUR_LINK)
+[![CurseForge](https://img.shields.io/curseforge/dt/YOUR_ID?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/YOUR_LINK)
 [![Wiki](https://img.shields.io/badge/Documentation-Wiki-6E40C9?style=for-the-badge&logo=readthedocs&logoColor=white)](https://github.com/R3CTrc/R3CT-Collector/wiki)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0576BA?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
 </div>
 
-A powerful, highly configurable completionist mod for Minecraft.
-Gather items, complete categories, compete on the server leaderboard, and unlock custom rewards. Built natively for both Fabric and NeoForge!
+The ultimate completionist and collection mod for Minecraft!
+R3CT Collector automatically scans all items in your game (including those from other mods) and generates a beautifully categorized interactive Catalog. Gather items, earn XP, claim milestone rewards, and compete with other players on your server! Built for both Fabric and NeoForge!
 
 <div align="center">
-  <img src="./images/icon.png" width="50%" alt="R3CT Collector Icon">
+  <img src="./images/icon.png" width="50%" alt="R3CT Collector Mod Icon">
 </div>
 
 ---
 
 ## ✨ Features
 
-* **📚 The Ultimate Catalog:** * Automatically scans your game and mods to build a dynamic collection book based on Creative Tabs.
-    * Submit items directly from your inventory to permanently unlock them in your catalog.
-    * Smart filtering system ensuring only obtainable items are required.
+* **📖 Dynamic Catalog System:** * The mod automatically scans Creative Tabs to generate categories. It adapts perfectly to any modpack, no matter how big!
+  * Submit items you find in the world to unlock them in your personal Catalog.
+  * Check your progress with visually pleasing progress bars and dynamic percentage colors.
 
 <div align="center">
   <a href="./images/Catalog_Screen.png" target="_blank">
@@ -30,22 +30,18 @@ Gather items, complete categories, compete on the server leaderboard, and unlock
   </a>
 </div>
 
-* **🎁 Milestones & Rewards:** * Earn XP for every unique item you submit.
-    * Receive randomized loot drops for hitting major milestones (e.g., every 100 items).
-    * Claim exclusive, customizable rewards for reaching 100% completion in specific categories.
+* **🎁 Progression & Rewards:** * Earn Experience Points for every unique item you submit! The XP amount scales with the item's vanilla rarity (Common, Uncommon, Rare, Epic).
+  * **Milestone Loot:** Receive random configurable loot boxes every X items you collect.
+  * **100% Completion:** Finish an entire category to receive a special reward!
 
-* **👑 Server Leaderboard:** * Integrated real-time leaderboard showing the Top 10 collectors on the server.
-    * Hover over players to see their exact completion percentage for every category!
+* **🏆 Integrated Server Leaderboard:** * Compete with your friends! The Catalog features a built-in "Top 10" Leaderboard.
+  * Hover over a player's head in the leaderboard to inspect their exact completion percentage for every category.
 
 <div align="center">
   <a href="./images/Leaderboard_Screen.png" target="_blank">
     <img src="./images/Leaderboard_Screen.png" width="75%" alt="Leaderboard Screen (Click to enlarge)">
   </a>
 </div>
-
-* **⭐ Custom Advancements:** * Features a full advancement tree to announce your major milestones to the server, culminating in the ultimate "Catch 'Em All!" challenge for 100% game completion.
-
-* **🖥️ Beautiful GUI:** * Fully interactive, scalable, and modern book interface (Default key: `C`).
 
 * **🔄 Cross-Platform:** * Fully native support and identical features for both **Fabric** and **NeoForge**.
 
@@ -57,7 +53,7 @@ To run this mod, you will need to install a few library mods depending on your l
 
 **For Fabric:**
 * [Fabric API](https://modrinth.com/mod/fabric-api) (Required)
-* [Mod Menu](https://modrinth.com/mod/modmenu) (Optional - to access in-game settings)
+* [Mod Menu](https://modrinth.com/mod/modmenu) (Optional - to access in-game client settings)
 
 **For NeoForge:**
 * Nothing!
@@ -66,16 +62,15 @@ To run this mod, you will need to install a few library mods depending on your l
 
 ## 📖 Documentation
 
-For detailed guides on how to configure blacklists, customize rewards, and manage player data, visit our official Wiki:
+For detailed guides on how to configure blacklists, adjust rewards, and tweak the mod's mechanics, visit our official Wiki:
 👉 **[View the Wiki](https://github.com/R3CTrc/R3CT-Collector/wiki)**
 
 <details>
 <summary><b>Click to see popular topics 💡</b></summary>
 
 * [📥 Getting Started](https://github.com/R3CTrc/R3CT-Collector/wiki/Getting-Started)
-* [⚙️ Blacklisting Items & Mods](https://github.com/R3CTrc/R3CT-Collector/wiki/Blacklists)
-* [🎁 Customizing Rewards & Milestones](https://github.com/R3CTrc/R3CT-Collector/wiki/Custom-Rewards)
-* [💾 Managing Player Data](https://github.com/R3CTrc/R3CT-Collector/wiki/Data-Management)
+* [⚙️ Configuring Blacklists](https://github.com/R3CTrc/R3CT-Collector/wiki/Blacklists-Setup)
+* [💎 Customizing Rewards & XP](https://github.com/R3CTrc/R3CT-Collector/wiki/Rewards-Configuration)
 
 </details>
 
@@ -83,16 +78,20 @@ For detailed guides on how to configure blacklists, customize rewards, and manag
 
 ## ⚙️ Configuration & Customization
 
-The mod is highly customizable! There are two ways to configure the mod:
+The mod is highly customizable! There are two ways to configure it:
 
 ### 1. In-Game Settings (Client-side)
-Players can access the mod settings via **Mod Menu** (on Fabric) or the **Mods tab** (on NeoForge). Here, users can adjust the GUI scale to perfectly fit their monitor resolution.
+Players can access the mod settings via **Mod Menu** (on Fabric) or the **Mods tab** (on NeoForge). Here, users can:
+* Adjust the GUI scale of the Catalog Book to perfectly fit their screen resolution.
 
 ### 2. File Configuration (Server-side / Modpack Creators)
-All core rules, blacklists, and rewards can be easily modified. After running the mod once, navigate to the `config/r3ct_collector/` folder:
+All core mechanics, loot pools, and blacklists can be completely rewritten. After running the mod once, navigate to the `config/r3ct_collector/` folder:
 
-* **`r3ct_collector_items.json`** - Manage blacklisted specific items, entire mods, or whole creative tabs to balance your modpack.
-* **`r3ct_collector_rewards.json`** - Customize how much XP players get per item, define milestone loot pools (with drop weights), and set specific rewards for completing categories.
+* **`r3ct_collector_items.json`** - Manage blacklists. Exclude specific mods, creative tabs, or individual items from being scanned.
+* **`r3ct_collector_rewards.json`** - Tweak the XP granted for item rarities, customize the milestone intervals, and set up specific loot pools and category completion rewards.
+* **`r3ct_collector_client.json`** - Client-side settings (GUI Scale).
+
+*Note: The mod features an auto-migration system. If the config format updates in future versions, your old config will be safely backed up!*
 
 ---
 
@@ -101,7 +100,7 @@ All core rules, blacklists, and rewards can be easily modified. After running th
 1. Download the latest release from the **Versions** tab.
 2. Download the required dependencies listed above for your specific mod loader.
 3. Place all `.jar` files into your Minecraft `mods` folder.
-4. Launch the game and start collecting!
+4. Press `K` (default keybind) in-game to open your Catalog and start collecting!
 
 ---
 
