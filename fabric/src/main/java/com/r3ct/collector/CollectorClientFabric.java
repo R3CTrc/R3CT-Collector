@@ -19,7 +19,7 @@ public class CollectorClientFabric implements ClientModInitializer {
         KeyMappings.openCatalogKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.r3ct.open_catalog",
                 com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_C,
+                GLFW.GLFW_KEY_K,
                 R3CT_COLLECTOR_CATEGORY
         ));
 
