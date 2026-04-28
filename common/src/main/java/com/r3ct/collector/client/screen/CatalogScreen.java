@@ -254,7 +254,7 @@ public class CatalogScreen extends Screen {
         currentY += 6;
 
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2"), textX, currentY, maxWidth, 0xFF333333);
-        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2_desc"), textX + 10, currentY, maxWidth - 10, 0xFF555555);
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2_desc", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.milestoneInterval), textX + 10, currentY, maxWidth - 10, 0xFF555555);
 
         for (com.r3ct.collector.config.CollectorRewardsConfig.LootEntry entry : com.r3ct.collector.config.CollectorRewardsConfig.milestoneRewards) {
             net.minecraft.resources.Identifier itemId = net.minecraft.resources.Identifier.parse(entry.item);

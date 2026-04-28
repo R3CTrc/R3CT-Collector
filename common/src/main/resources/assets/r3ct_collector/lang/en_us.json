@@ -18,7 +18,7 @@
   "gui.r3ct_collector.info.point1": "1. Submitting Items",
   "gui.r3ct_collector.info.point1_desc": "Every unique item: %s §6XP",
   "gui.r3ct_collector.info.point2": "2. Milestones",
-  "gui.r3ct_collector.info.point2_desc": "Every 100 submitted items:",
+  "gui.r3ct_collector.info.point2_desc": "Every %s submitted items:",
   "gui.r3ct_collector.info.point2_note": "(One of them)",
   "gui.r3ct_collector.info.point3": "3. Category Completion",
   "gui.r3ct_collector.info.point3_desc": "§dUnique Trophy",

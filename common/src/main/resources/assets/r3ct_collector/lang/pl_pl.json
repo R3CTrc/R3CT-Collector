@@ -18,7 +18,7 @@
   "gui.r3ct_collector.info.point1": "1. Oddawanie Przedmiotów",
   "gui.r3ct_collector.info.point1_desc": "Każdy unikalny przedmiot: %s §6PD",
   "gui.r3ct_collector.info.point2": "2. Kamienie Milowe",
-  "gui.r3ct_collector.info.point2_desc": "Co każde 100 oddanych przedmiotów:",
+  "gui.r3ct_collector.info.point2_desc": "Co każde %s oddanych przedmiotów:",
   "gui.r3ct_collector.info.point2_note": "(Jedno z nich)",
   "gui.r3ct_collector.info.point3": "3. Ukończenie Kategorii",
   "gui.r3ct_collector.info.point3_desc": "§dUnikalne Trofeum",
