@@ -2,8 +2,8 @@
 
 <div align="center">
 
-[![Modrinth](https://img.shields.io/modrinth/dt/YOUR_ID?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/mod/YOUR_LINK)
-[![CurseForge](https://img.shields.io/curseforge/dt/YOUR_ID?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/YOUR_LINK)
+[![Modrinth](https://img.shields.io/modrinth/dt/JNIJFVHZ?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/project/r3ct-collector)
+[![CurseForge](https://img.shields.io/curseforge/dt/1528272?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://legacy.curseforge.com/minecraft/mc-mods/r3ct-collector)
 [![Wiki](https://img.shields.io/badge/Documentation-Wiki-6E40C9?style=for-the-badge&logo=readthedocs&logoColor=white)](https://github.com/R3CTrc/R3CT-Collector/wiki)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0576BA?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
