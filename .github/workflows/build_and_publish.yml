@@ -56,9 +56,9 @@ jobs:
         if: github.event_name == 'release'
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-id: 'WPISZ_NOWE_ID_MODRINTH'
+          modrinth-id: 'JNIJFVHZ'
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          curseforge-id: 'WPISZ_NOWE_ID_CURSEFORGE'
+          curseforge-id: '1528272'
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -79,9 +79,9 @@ jobs:
         if: github.event_name == 'release'
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-id: 'WPISZ_NOWE_ID_MODRINTH'
+          modrinth-id: 'JNIJFVHZ'
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          curseforge-id: 'WPISZ_NOWE_ID_CURSEFORGE'
+          curseforge-id: '1528272'
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
