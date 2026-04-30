@@ -3,7 +3,7 @@
 <div align="center">
 
 [![Modrinth](https://img.shields.io/modrinth/dt/JNIJFVHZ?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/project/r3ct-collector)
-[![CurseForge](https://img.shields.io/curseforge/dt/1528272?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://legacy.curseforge.com/minecraft/mc-mods/r3ct-collector)
+[![CurseForge](https://img.shields.io/curseforge/dt/1528272?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/r3ct-collector)
 [![Wiki](https://img.shields.io/badge/Documentation-Wiki-6E40C9?style=for-the-badge&logo=readthedocs&logoColor=white)](https://github.com/R3CTrc/R3CT-Collector/wiki)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0576BA?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -33,6 +33,12 @@ R3CT Collector automatically scans all items in your game (including those from 
 * **🎁 Progression & Rewards:** * Earn Experience Points for every unique item you submit! The XP amount scales with the item's vanilla rarity (Common, Uncommon, Rare, Epic).
   * **Milestone Loot:** Receive random configurable loot boxes every X items you collect.
   * **100% Completion:** Finish an entire category to receive a special reward!
+
+<div align="center">
+  <a href="./images/Leaderboard.png" target="_blank">
+    <img src="./images/Trophy.png" width="75%" alt="Trophy (Click to enlarge)">
+  </a>
+</div>
 
 * **🏆 Integrated Server Leaderboard:** * Compete with your friends! The Catalog features a built-in "Top 10" Leaderboard.
   * Hover over a player's head in the leaderboard to inspect their exact completion percentage for every category.
