@@ -3,7 +3,9 @@
   "version": 1,
 
   "_comment_blacklists": "Add item, mod, or tab IDs here to hide them from the Collector's Book.",
-  "blacklistedMods": [],
+  "blacklistedMods": [
+    "r3ct_collector"
+  ],
   "blacklistedTabs": [
     "minecraft:spawn_eggs"
   ],
