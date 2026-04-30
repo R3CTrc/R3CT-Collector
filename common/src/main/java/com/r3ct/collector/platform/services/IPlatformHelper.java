@@ -1,5 +1,13 @@
 package com.r3ct.collector.platform.services;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.function.BiFunction;
+
 public interface IPlatformHelper {
 
     /**
@@ -43,4 +51,6 @@ public interface IPlatformHelper {
     void sendRequestLeaderboardPacketToServer();
 
     void sendLeaderboardDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.List<com.r3ct.collector.network.LeaderboardDataPayload.TopPlayerEntry> entries);
+
+    <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BiFunction<BlockPos, BlockState, T> factory, Block... blocks);
 }

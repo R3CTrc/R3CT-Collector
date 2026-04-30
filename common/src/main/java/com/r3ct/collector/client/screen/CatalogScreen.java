@@ -523,7 +523,7 @@ public class CatalogScreen extends Screen {
 
             String registryName = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
             boolean isCollected = ClientPlayerData.unlockedItems.contains(registryName);
-            boolean isInInventory = !isCollected && this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(stack.getItem()));
+            boolean isInInventory = !isCollected && (this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(stack.getItem())));
 
             if (isInInventory) {
                 guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 18, blinkColor);
@@ -679,7 +679,7 @@ public class CatalogScreen extends Screen {
                     if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
                         ItemStack clickedStack = activeCat.items.get(actualItemIndex);
                         String itemId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(clickedStack.getItem()).toString();
-                        boolean hasInInventory = this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
+                        boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
 
                         if (!ClientPlayerData.unlockedItems.contains(itemId)) {
                             if (hasInInventory) {
