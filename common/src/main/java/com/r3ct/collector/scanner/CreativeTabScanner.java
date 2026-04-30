@@ -1,7 +1,6 @@
 package com.r3ct.collector.scanner;
 
 import com.r3ct.collector.config.CollectorConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -28,20 +27,11 @@ public class CreativeTabScanner {
         }
     }
 
-    public static void scanAllTabs() {
+    public static void scanAllTabs(FeatureFlagSet features, net.minecraft.core.RegistryAccess registryAccess, boolean hasOp) {
         SCANNED_SUBCATEGORIES.clear();
-        Minecraft mc = Minecraft.getInstance();
 
         CollectorConfig.load();
 
-        if (mc.level == null) {
-            System.out.println("[R3CT-Collector] Attempted to scan outside of a world, aborting!");
-            return;
-        }
-
-        FeatureFlagSet features = mc.level.enabledFeatures();
-        boolean hasOp = mc.options.operatorItemsTab().get();
-        var registryAccess = mc.level.registryAccess();
         CreativeModeTab.ItemDisplayParameters params = new CreativeModeTab.ItemDisplayParameters(features, hasOp, registryAccess);
 
         List<Map.Entry<ResourceKey<CreativeModeTab>, CreativeModeTab>> sortedTabs = new ArrayList<>(BuiltInRegistries.CREATIVE_MODE_TAB.entrySet());
@@ -70,7 +60,7 @@ public class CreativeTabScanner {
 
                     if (!CollectorConfig.blacklistedItems.contains(itemId) && !CollectorConfig.blacklistedMods.contains(itemNamespace)) {
 
-                        String uniqueKey = itemId + stack.getHoverName().getString();
+                        String uniqueKey = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
 
                         if (!processedItems.contains(uniqueKey)) {
                             category.items.add(stack);
