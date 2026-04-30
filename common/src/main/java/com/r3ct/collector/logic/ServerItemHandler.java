@@ -30,7 +30,8 @@ public class ServerItemHandler {
     }
 
     public static void handleItemSubmit(ServerPlayer player, String itemId) {
-        Identifier id = Identifier.parse(itemId);
+        String[] parts = itemId.split("#");
+        Identifier id = Identifier.parse(parts[0]);
         Item targetItem = BuiltInRegistries.ITEM.get(id).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
 
         if (targetItem == Items.AIR) return;
@@ -50,7 +51,7 @@ public class ServerItemHandler {
         } else {
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 ItemStack stack = inv.getItem(i);
-                if (stack.is(targetItem)) {
+                if (!stack.isEmpty() && getUniqueItemId(stack).equals(itemId)) {
                     stack.shrink(1);
                     foundAndRemoved = true;
                     break;
@@ -115,7 +116,7 @@ public class ServerItemHandler {
 
                 int gathered = 0;
                 for (ItemStack stack : cat.items) {
-                    String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+                    String id = getUniqueItemId(stack);
                     if (data.unlockedItems.contains(id)) gathered++;
                 }
 
@@ -220,5 +221,19 @@ public class ServerItemHandler {
             ItemEntity drop = player.drop(stack, false);
             if (drop != null) drop.setNoPickUpDelay();
         }
+    }
+
+    public static String getUniqueItemId(ItemStack stack) {
+        String baseId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+        if (stack.has(net.minecraft.core.component.DataComponents.POTION_CONTENTS)) {
+            net.minecraft.world.item.alchemy.PotionContents contents = stack.get(net.minecraft.core.component.DataComponents.POTION_CONTENTS);
+            if (contents != null && contents.potion().isPresent()) {
+                String potionId = contents.potion().get().unwrapKey().map(key -> key.identifier().toString()).orElse("");
+                if (!potionId.isEmpty()) {
+                    return baseId + "#" + potionId;
+                }
+            }
+        }
+        return baseId;
     }
 }
