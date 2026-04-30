@@ -5,7 +5,6 @@ import com.r3ct.collector.data.ModState;
 import com.r3ct.collector.data.PlayerData;
 import com.r3ct.collector.network.LeaderboardDataPayload;
 import com.r3ct.collector.platform.Services;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -107,7 +106,11 @@ public class ServerItemHandler {
 
     private static void checkAndAwardCompletedCategories(ServerPlayer player, PlayerData data) {
         if (com.r3ct.collector.scanner.CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
-            com.r3ct.collector.scanner.CreativeTabScanner.scanAllTabs();
+            com.r3ct.collector.scanner.CreativeTabScanner.scanAllTabs(
+                    player.level().enabledFeatures(),
+                    player.level().registryAccess(),
+                    false
+            );
         }
 
         int completedRealCategories = 0;
