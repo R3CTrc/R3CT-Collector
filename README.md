@@ -34,6 +34,12 @@ R3CT Collector automatically scans all items in your game (including those from 
   * **Milestone Loot:** Receive random configurable loot boxes every X items you collect.
   * **100% Completion:** Finish an entire category to receive a special reward!
 
+<div align="center">
+  <a href="./images/Leaderboard.png" target="_blank">
+    <img src="./images/Trophy.png" width="75%" alt="Trophy (Click to enlarge)">
+  </a>
+</div>
+
 * **🏆 Integrated Server Leaderboard:** * Compete with your friends! The Catalog features a built-in "Top 10" Leaderboard.
   * Hover over a player's head in the leaderboard to inspect their exact completion percentage for every category.
 
