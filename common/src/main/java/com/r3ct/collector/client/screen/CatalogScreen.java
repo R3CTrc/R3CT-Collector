@@ -76,7 +76,7 @@ public class CatalogScreen extends Screen {
     private int getGatheredCount(CreativeTabScanner.SubCategory cat) {
         int gathered = 0;
         for (ItemStack stack : cat.items) {
-            String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            String id = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
             if (ClientPlayerData.unlockedItems.contains(id)) gathered++;
         }
         return gathered;
@@ -313,7 +313,7 @@ public class CatalogScreen extends Screen {
                 int max = cat.items.isEmpty() ? 1 : cat.items.size();
                 int gathered = 0;
                 for (ItemStack stack : cat.items) {
-                    String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+                    String id = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
                     if (hoveredEntry.unlockedItems().contains(id)) gathered++;
                 }
 
@@ -386,7 +386,7 @@ public class CatalogScreen extends Screen {
                 int totalCatItems = cat.items.size();
                 int gatheredCatItems = 0;
                 for (ItemStack stack : cat.items) {
-                    String itemId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+                    String itemId = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
                     if (ClientPlayerData.unlockedItems.contains(itemId)) {
                         gatheredCatItems++;
                     }
@@ -423,7 +423,7 @@ public class CatalogScreen extends Screen {
 
         int gatheredItems = 0;
         for (ItemStack stack : items) {
-            String itemId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            String itemId = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
             if (ClientPlayerData.unlockedItems.contains(itemId)) {
                 gatheredItems++;
             }
@@ -498,7 +498,7 @@ public class CatalogScreen extends Screen {
             int slotY = gridStartY + (index / columns * 21);
             ItemStack stack = items.get(i);
 
-            String registryName = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            String registryName = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
             boolean isCollected = ClientPlayerData.unlockedItems.contains(registryName);
             boolean isInInventory = !isCollected && (this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(stack.getItem())));
 
@@ -655,7 +655,7 @@ public class CatalogScreen extends Screen {
 
                     if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
                         ItemStack clickedStack = activeCat.items.get(actualItemIndex);
-                        String itemId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(clickedStack.getItem()).toString();
+                        String itemId = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(clickedStack);
                         boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
 
                         if (!ClientPlayerData.unlockedItems.contains(itemId)) {
