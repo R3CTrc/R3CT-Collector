@@ -47,4 +47,9 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     public void sendLeaderboardDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.List<com.r3ct.collector.network.LeaderboardDataPayload.TopPlayerEntry> entries) {
         net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player, new com.r3ct.collector.network.LeaderboardDataPayload(entries));
     }
+
+    @Override
+    public <T extends net.minecraft.world.level.block.entity.BlockEntity> net.minecraft.world.level.block.entity.BlockEntityType<T> createBlockEntityType(java.util.function.BiFunction<net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, T> factory, net.minecraft.world.level.block.Block... blocks) {
+        return new net.minecraft.world.level.block.entity.BlockEntityType<>(factory::apply, java.util.Set.of(blocks));
+    }
 }
