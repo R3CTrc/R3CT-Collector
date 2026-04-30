@@ -94,11 +94,49 @@ public class ServerItemHandler {
                     }
                 }
             }
+            checkAndAwardCompletedCategories(player, data);
 
             ModState.get(player.level().getServer()).setDirty();
             Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
 
             handleLeaderboardRequest(player);
+        }
+    }
+
+    private static void checkAndAwardCompletedCategories(ServerPlayer player, PlayerData data) {
+        if (com.r3ct.collector.scanner.CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
+            com.r3ct.collector.scanner.CreativeTabScanner.scanAllTabs();
+        }
+
+        int completedRealCategories = 0;
+
+        for (com.r3ct.collector.scanner.CreativeTabScanner.SubCategory cat : com.r3ct.collector.scanner.CreativeTabScanner.SCANNED_SUBCATEGORIES.values()) {
+            if (!data.rewardedCategories.contains(cat.tabId)) {
+
+                int gathered = 0;
+                for (ItemStack stack : cat.items) {
+                    String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+                    if (data.unlockedItems.contains(id)) gathered++;
+                }
+
+                if (gathered > 0 && gathered == cat.items.size()) {
+                    handleCategoryReward(player, cat.tabId);
+                    player.level().playSound(null, player.blockPosition(),
+                            net.minecraft.sounds.SoundEvents.FIREWORK_ROCKET_TWINKLE,
+                            net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
+                }
+            }
+
+            if (data.rewardedCategories.contains(cat.tabId)) {
+                completedRealCategories++;
+            }
+        }
+
+        if (completedRealCategories >= com.r3ct.collector.scanner.CreativeTabScanner.SCANNED_SUBCATEGORIES.size()
+                && !com.r3ct.collector.scanner.CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
+            if (!data.rewardedCategories.contains("ALL_COMPLETED")) {
+                handleCategoryReward(player, "ALL_COMPLETED");
+            }
         }
     }
 
