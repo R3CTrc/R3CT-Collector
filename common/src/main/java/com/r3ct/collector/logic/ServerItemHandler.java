@@ -52,7 +52,6 @@ public class ServerItemHandler {
         } else {
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 ItemStack stack = inv.getItem(i);
-                // ZMIANA: Porównujemy nasze unikalne Super ID z ID, które przyszło z klienta!
                 if (!stack.isEmpty() && getUniqueItemId(stack).equals(itemId)) {
                     stack.shrink(1);
                     foundAndRemoved = true;
@@ -225,17 +224,14 @@ public class ServerItemHandler {
         }
     }
 
-    // --- NOWA METODA DO TWORZENIA UNIKALNEGO ID ---
     public static String getUniqueItemId(ItemStack stack) {
         String baseId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 
-        // Sprawdzamy, czy przedmiot ma w sobie zawartość mikstury (działa na mikstury i strzały)
         if (stack.has(net.minecraft.core.component.DataComponents.POTION_CONTENTS)) {
             net.minecraft.world.item.alchemy.PotionContents contents = stack.get(net.minecraft.core.component.DataComponents.POTION_CONTENTS);
             if (contents != null && contents.potion().isPresent()) {
                 String potionId = contents.potion().get().unwrapKey().map(key -> key.identifier().toString()).orElse("");
                 if (!potionId.isEmpty()) {
-                    // Łączymy bazowe ID z ID mikstury, np. minecraft:potion#minecraft:swiftness
                     return baseId + "#" + potionId;
                 }
             }

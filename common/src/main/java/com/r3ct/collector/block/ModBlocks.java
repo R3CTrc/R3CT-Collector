@@ -39,7 +39,7 @@ public class ModBlocks {
 
     public static final ResourceKey<BlockEntityType<?>> TROPHY_BE_KEY = ResourceKey.create(
             Registries.BLOCK_ENTITY_TYPE,
-            Identifier.parse(Constants.MOD_ID + ":trophy_building_be") // ID zostawiamy stare, by nie psuć światów
+            Identifier.parse(Constants.MOD_ID + ":trophy_building_be")
     );
 
     public static final BlockEntityType<TrophyBlockEntity> TROPHY_BE_TYPE = com.r3ct.collector.platform.Services.PLATFORM.createBlockEntityType(
