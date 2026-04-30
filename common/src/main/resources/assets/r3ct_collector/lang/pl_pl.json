@@ -60,5 +60,18 @@
   "advancement.r3ct_collector.category_5.title": "Perfekcjonista",
   "advancement.r3ct_collector.category_5.desc": "Ukończ w 100% aż pięć różnych zakładek.",
   "advancement.r3ct_collector.all_completed.title": "Złap je wszystkie!",
-  "advancement.r3ct_collector.all_completed.desc": "Zbierz absolutnie każdy przedmiot w grze i wypełnij Księgę w 100%!"
+  "advancement.r3ct_collector.all_completed.desc": "Zbierz absolutnie każdy przedmiot w grze i wypełnij Księgę w 100%!",
+
+  "item.r3ct_collector.trophy_building": "Trofeum Budowniczego",
+  "item.r3ct_collector.trophy_combat": "Trofeum Wojownika",
+  "item.r3ct_collector.trophy_tools": "Trofeum Górnika",
+  "item.r3ct_collector.trophy_food": "Trofeum Kulinarne",
+  "item.r3ct_collector.trophy_redstone": "Trofeum Inżyniera",
+  "item.r3ct_collector.trophy_ingredients": "Trofeum Zbieracza",
+  "item.r3ct_collector.trophy_natural": "Trofeum Natury",
+  "item.r3ct_collector.trophy_colored": "Trofeum Artysty",
+  "item.r3ct_collector.trophy_egg": "Trofeum Przywoływacza",
+  "item.r3ct_collector.trophy_functional": "Trofeum Rzemieślnika",
+  "item.r3ct_collector.trophy_mod": "Trofeum Odkrywcy",
+  "itemGroup.r3ct_collector.main_tab": "R3CT Collector"
 }

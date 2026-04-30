@@ -262,14 +262,14 @@ public class CatalogScreen extends Screen {
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collector.info.point2_desc", "§6" + com.r3ct.collector.config.CollectorRewardsConfig.milestoneInterval), textX + 10, currentY, maxWidth - 10, 0xFF555555);
 
         for (com.r3ct.collector.config.CollectorRewardsConfig.LootEntry entry : com.r3ct.collector.config.CollectorRewardsConfig.milestoneRewards) {
-            net.minecraft.resources.Identifier itemId = net.minecraft.resources.Identifier.parse(entry.item);
-            net.minecraft.world.item.Item rewardItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId).map(net.minecraft.core.Holder::value).orElse(net.minecraft.world.item.Items.AIR);
+            Identifier itemId = Identifier.parse(entry.item);
+            net.minecraft.world.item.Item rewardItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
 
-            if (rewardItem != net.minecraft.world.item.Items.AIR) {
-                net.minecraft.network.chat.MutableComponent line = net.minecraft.network.chat.Component.literal("• ")
+            if (rewardItem != Items.AIR) {
+                net.minecraft.network.chat.MutableComponent line = Component.literal("• ")
                         .withStyle(net.minecraft.ChatFormatting.DARK_GRAY)
                         .append(new ItemStack(rewardItem).getHoverName().copy().withStyle(net.minecraft.ChatFormatting.BLUE))
-                        .append(net.minecraft.network.chat.Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+                        .append(Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
 
                 currentY = drawWrappedText(guiGraphics, line, textX + 15, currentY, maxWidth - 15, 0xFFFFFFFF);
             }
@@ -283,7 +283,7 @@ public class CatalogScreen extends Screen {
     }
 
     private int drawWrappedText(GuiGraphicsExtractor guiGraphics, Component text, int x, int y, int maxWidth, int color) {
-        java.util.List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
+        List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
         for (net.minecraft.util.FormattedCharSequence line : lines) {
             guiGraphics.text(this.font, line, x, y, color, false);
             y += this.font.lineHeight + 2;
@@ -328,7 +328,7 @@ public class CatalogScreen extends Screen {
         }
 
         if (hoveredEntry != null) {
-            java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new java.util.ArrayList<>();
+            List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new ArrayList<>();
 
             tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("     §f§l" + hoveredEntry.name()).getVisualOrderText()));
             tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("§8----------------").getVisualOrderText()));
@@ -524,7 +524,7 @@ public class CatalogScreen extends Screen {
 
             String registryName = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
             boolean isCollected = ClientPlayerData.unlockedItems.contains(registryName);
-            boolean isInInventory = !isCollected && this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(stack.getItem()));
+            boolean isInInventory = !isCollected && (this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(stack.getItem())));
 
             if (isInInventory) {
                 guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 18, blinkColor);
@@ -680,7 +680,7 @@ public class CatalogScreen extends Screen {
                     if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
                         ItemStack clickedStack = activeCat.items.get(actualItemIndex);
                         String itemId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(clickedStack.getItem()).toString();
-                        boolean hasInInventory = this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
+                        boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
 
                         if (!ClientPlayerData.unlockedItems.contains(itemId)) {
                             if (hasInInventory) {
