@@ -107,7 +107,11 @@ public class ServerItemHandler {
 
     private static void checkAndAwardCompletedCategories(ServerPlayer player, PlayerData data) {
         if (com.r3ct.collector.scanner.CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
-            com.r3ct.collector.scanner.CreativeTabScanner.scanAllTabs();
+            com.r3ct.collector.scanner.CreativeTabScanner.scanAllTabs(
+                    player.level().enabledFeatures(),
+                    player.level().registryAccess(),
+                    false
+            );
         }
 
         int completedRealCategories = 0;
