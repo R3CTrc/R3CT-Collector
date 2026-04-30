@@ -70,30 +70,6 @@ public class CatalogScreen extends Screen {
             tabProgressArray[i] = cat.items.isEmpty() ? 0f : (float) gathered / cat.items.size();
         }
 
-        for (CreativeTabScanner.SubCategory cat : cachedCategories) {
-            if (!ClientPlayerData.rewardedCategories.contains(cat.tabId)) {
-                int gathered = getGatheredCount(cat);
-                if (gathered > 0 && gathered == cat.items.size()) {
-                    ClientPlayerData.rewardedCategories.add(cat.tabId);
-                    com.r3ct.collector.platform.Services.PLATFORM.sendClaimRewardPacketToServer(cat.tabId);
-                    this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.FIREWORK_ROCKET_TWINKLE, 1.0F));
-                }
-            }
-        }
-
-        if (!cachedCategories.isEmpty()) {
-            long completedRealCategories = ClientPlayerData.rewardedCategories.stream()
-                    .filter(id -> !id.equals("ALL_COMPLETED"))
-                    .count();
-
-            if (completedRealCategories >= cachedCategories.size()) {
-                if (!ClientPlayerData.rewardedCategories.contains("ALL_COMPLETED")) {
-                    ClientPlayerData.rewardedCategories.add("ALL_COMPLETED");
-                    com.r3ct.collector.platform.Services.PLATFORM.sendClaimRewardPacketToServer("ALL_COMPLETED");
-                }
-            }
-        }
-
         com.r3ct.collector.platform.Services.PLATFORM.sendRequestLeaderboardPacketToServer();
     }
 
