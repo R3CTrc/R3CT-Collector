@@ -5,6 +5,7 @@ import com.r3ct.collector.data.ModState;
 import com.r3ct.collector.data.PlayerData;
 import com.r3ct.collector.network.LeaderboardDataPayload;
 import com.r3ct.collector.platform.Services;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,12 +46,16 @@ public class ServerItemHandler {
         Inventory inv = player.getInventory();
         boolean foundAndRemoved = false;
 
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack stack = inv.getItem(i);
-            if (stack.is(targetItem)) {
-                stack.shrink(1);
-                foundAndRemoved = true;
-                break;
+        if (player.isCreative()) {
+            foundAndRemoved = true;
+        } else {
+            for (int i = 0; i < inv.getContainerSize(); i++) {
+                ItemStack stack = inv.getItem(i);
+                if (stack.is(targetItem)) {
+                    stack.shrink(1);
+                    foundAndRemoved = true;
+                    break;
+                }
             }
         }
 
@@ -117,7 +122,26 @@ public class ServerItemHandler {
         if (rewardItemId != null) {
             Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(rewardItemId)).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
             if (rewardItem != Items.AIR) {
-                giveItemToPlayer(player, new ItemStack(rewardItem, 1));
+                ItemStack rewardStack = new ItemStack(rewardItem, 1);
+
+                net.minecraft.network.chat.MutableComponent customName = net.minecraft.network.chat.Component.literal(player.getName().getString())
+                        .withStyle(net.minecraft.ChatFormatting.AQUA);
+
+                customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+
+                customName.append(net.minecraft.network.chat.Component.translatable(rewardItem.getDescriptionId()).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+
+                if (rewardItemId.equals("r3ct_collector:trophy_mod")) {
+                    net.minecraft.world.item.CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(net.minecraft.core.Holder::value).orElse(null);
+                    if (tab != null) {
+                        customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE))
+                                .append(tab.getDisplayName().copy().withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+                    }
+                }
+
+                rewardStack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, customName);
+
+                giveItemToPlayer(player, rewardStack);
 
                 data.rewardedCategories.add(tabId);
 

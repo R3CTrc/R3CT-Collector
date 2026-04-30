@@ -60,5 +60,18 @@
   "advancement.r3ct_collector.category_5.title": "Perfectionist",
   "advancement.r3ct_collector.category_5.desc": "Complete five different tabs to 100%.",
   "advancement.r3ct_collector.all_completed.title": "Catch 'Em All!",
-  "advancement.r3ct_collector.all_completed.desc": "Collect absolutely every item in the game and complete the Book to 100%!"
+  "advancement.r3ct_collector.all_completed.desc": "Collect absolutely every item in the game and complete the Book to 100%!",
+
+  "item.r3ct_collector.trophy_building": "Builder's Trophy",
+  "item.r3ct_collector.trophy_combat": "Warrior's Trophy",
+  "item.r3ct_collector.trophy_tools": "Miner's Trophy",
+  "item.r3ct_collector.trophy_food": "Culinary Trophy",
+  "item.r3ct_collector.trophy_redstone": "Engineer's Trophy",
+  "item.r3ct_collector.trophy_ingredients": "Gatherer's Trophy",
+  "item.r3ct_collector.trophy_natural": "Nature's Trophy",
+  "item.r3ct_collector.trophy_colored": "Artist's Trophy",
+  "item.r3ct_collector.trophy_egg": "Summoner's Trophy",
+  "item.r3ct_collector.trophy_functional": "Artisan's Trophy",
+  "item.r3ct_collector.trophy_mod": "Explorer's Trophy",
+  "itemGroup.r3ct_collector.main_tab": "R3CT Collector"
 }
