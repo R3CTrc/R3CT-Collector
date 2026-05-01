@@ -27,7 +27,6 @@ public class CreativeTabScanner {
         }
     }
 
-    // Dodano parametry, by metoda działała zarówno u klienta, jak i na serwerze!
     public static void scanAllTabs(FeatureFlagSet features, net.minecraft.core.RegistryAccess registryAccess, boolean hasOp) {
         SCANNED_SUBCATEGORIES.clear();
 
@@ -61,7 +60,6 @@ public class CreativeTabScanner {
 
                     if (!CollectorConfig.blacklistedItems.contains(itemId) && !CollectorConfig.blacklistedMods.contains(itemNamespace)) {
 
-                        // NAPRAWA: Zamiast nazwy wyświetlanej, używamy naszego Unikalnego ID!
                         String uniqueKey = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
 
                         if (!processedItems.contains(uniqueKey)) {
