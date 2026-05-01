@@ -56,7 +56,11 @@ public class CatalogScreen extends Screen {
         CollectorConfig.load();
 
         if (CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
-            CreativeTabScanner.scanAllTabs();
+            CreativeTabScanner.scanAllTabs(
+                    this.minecraft.level.enabledFeatures(),
+                    this.minecraft.level.registryAccess(),
+                    this.minecraft.options.operatorItemsTab().get()
+            );
         }
         cachedCategories.clear();
         cachedCategories.addAll(CreativeTabScanner.SCANNED_SUBCATEGORIES.values());
