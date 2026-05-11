@@ -25,7 +25,7 @@ public class CollectorRewardsConfig {
     public static List<LootEntry> milestoneRewards = new ArrayList<>();
     public static Map<String, String> categoryRewards = new HashMap<>();
 
-    private static final int CONFIG_VERSION = 1;
+    private static final int CONFIG_VERSION = 2;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_DIR = Paths.get("config", "r3ct_collector");
     private static final Path PATH = CONFIG_DIR.resolve("r3ct_collector_rewards.json");
@@ -33,7 +33,7 @@ public class CollectorRewardsConfig {
     private static void copyDefaultConfig() {
         try {
             if (!Files.exists(CONFIG_DIR)) Files.createDirectories(CONFIG_DIR);
-            InputStream is = CollectorRewardsConfig.class.getResourceAsStream("/assets/r3ct_collector/r3ct_collector_rewards.json");
+            InputStream is = CollectorRewardsConfig.class.getResourceAsStream("/assets/r3ct_collector/config/r3ct_collector_rewards.json");
             if (is != null) {
                 Files.copy(is, PATH, StandardCopyOption.REPLACE_EXISTING);
                 is.close();
@@ -118,9 +118,14 @@ public class CollectorRewardsConfig {
         public int min_amount;
         public int max_amount;
         public int weight;
+        public String color;
 
-        public LootEntry(String item, int min, int max, int weight) {
-            this.item = item; this.min_amount = min; this.max_amount = max; this.weight = weight;
+        public LootEntry(String item, int min, int max, int weight, String color) {
+            this.item = item;
+            this.min_amount = min;
+            this.max_amount = max;
+            this.weight = weight;
+            this.color = color;
         }
     }
 
