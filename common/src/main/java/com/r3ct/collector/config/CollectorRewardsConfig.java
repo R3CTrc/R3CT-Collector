@@ -25,7 +25,7 @@ public class CollectorRewardsConfig {
     public static List<LootEntry> milestoneRewards = new ArrayList<>();
     public static Map<String, String> categoryRewards = new HashMap<>();
 
-    private static final int CONFIG_VERSION = 1;
+    private static final int CONFIG_VERSION = 2;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_DIR = Paths.get("config", "r3ct_collector");
     private static final Path PATH = CONFIG_DIR.resolve("r3ct_collector_rewards.json");
