@@ -17,13 +17,15 @@
       "item": "minecraft:emerald",
       "min_amount": 24,
       "max_amount": 32,
-      "weight": 100
+      "weight": 100,
+      "color": "&a"
     },
     {
       "item": "minecraft:diamond",
       "min_amount": 16,
       "max_amount": 24,
-      "weight": 100
+      "weight": 100,
+      "color": "&b"
     }
   ],
 

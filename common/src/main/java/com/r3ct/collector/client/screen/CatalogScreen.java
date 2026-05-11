@@ -244,13 +244,18 @@ public class CatalogScreen extends Screen {
         for (com.r3ct.collector.config.CollectorRewardsConfig.LootEntry entry : com.r3ct.collector.config.CollectorRewardsConfig.milestoneRewards) {
             net.minecraft.resources.Identifier itemId = net.minecraft.resources.Identifier.parse(entry.item);
             net.minecraft.world.item.Item rewardItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId).map(net.minecraft.core.Holder::value).orElse(net.minecraft.world.item.Items.AIR);
-
             if (rewardItem != net.minecraft.world.item.Items.AIR) {
+                net.minecraft.ChatFormatting itemColor = net.minecraft.ChatFormatting.BLUE;
+                if (entry.color != null && entry.color.length() >= 2 && entry.color.startsWith("&")) {
+                    net.minecraft.ChatFormatting parsedColor = net.minecraft.ChatFormatting.getByCode(entry.color.charAt(1));
+                    if (parsedColor != null) {
+                        itemColor = parsedColor;
+                    }
+                }
                 net.minecraft.network.chat.MutableComponent line = net.minecraft.network.chat.Component.literal("• ")
                         .withStyle(net.minecraft.ChatFormatting.DARK_GRAY)
-                        .append(new ItemStack(rewardItem).getHoverName().copy().withStyle(net.minecraft.ChatFormatting.BLUE))
-                        .append(net.minecraft.network.chat.Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
-
+                        .append(new ItemStack(rewardItem).getHoverName().copy().withStyle(itemColor))
+                        .append(net.minecraft.network.chat.Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(itemColor));
                 currentY = drawWrappedText(guiGraphics, line, textX + 15, currentY, maxWidth - 15, 0xFFFFFFFF);
             }
         }

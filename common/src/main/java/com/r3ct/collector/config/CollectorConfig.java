@@ -31,7 +31,7 @@ public class CollectorConfig {
             if (!Files.exists(target.getParent())) {
                 Files.createDirectories(target.getParent());
             }
-            InputStream is = CollectorConfig.class.getResourceAsStream("/assets/r3ct_collector/" + resourceName);
+            InputStream is = CollectorConfig.class.getResourceAsStream("/assets/r3ct_collector/config/" + resourceName);
             if (is != null) {
                 Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
                 is.close();
