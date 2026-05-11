@@ -1,6 +1,6 @@
 {
   "_comment_version": "Do not change the version number! It is used for automatic config updates.",
-  "version": 1,
+  "version": 2,
 
   "_comment_xp": "Experience points rewarded based on item rarity (Common, Uncommon, Rare, Epic).",
   "xpCommon": 10,
@@ -17,13 +17,15 @@
       "item": "minecraft:emerald",
       "min_amount": 24,
       "max_amount": 32,
-      "weight": 100
+      "weight": 100,
+      "color": "&a"
     },
     {
       "item": "minecraft:diamond",
       "min_amount": 16,
       "max_amount": 24,
-      "weight": 100
+      "weight": 100,
+      "color": "&b"
     }
   ],
 
