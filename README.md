@@ -110,6 +110,19 @@ All core mechanics, loot pools, and blacklists can be completely rewritten. Afte
 
 ---
 
+## 📦 Check out my other mods!
+
+If you enjoy this mod, you might also like my other projects:
+
+### [🎯 R3CT Daily Quests & Rewards](https://modrinth.com/mod/r3ct-daily-quests-rewards)
+*A highly configurable Daily Quests & Rewards mod! Keep players engaged with dynamic tasks, login rewards, streaks, and competitive leaderboards.*
+
+<a href="https://modrinth.com/mod/r3ct-daily-quests-rewards">
+  <img src="./images/daily_icon_nb.png" width="150" alt="R3CT Daily Quests & Rewards">
+</a>
+
+---
+
 ## 💖 Support the Development
 
 I'm a computer science student, and I develop game mods and software in my free time. If my work has improved your server or modpack, consider supporting my coding journey! Every coffee helps me survive late-night debugging sessions. ☕💻
