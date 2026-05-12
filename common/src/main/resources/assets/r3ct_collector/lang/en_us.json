@@ -13,6 +13,10 @@
   "gui.r3ct_collector.catalog.tab_home": "Categories",
   "gui.r3ct_collector.catalog.tab_info": "Information",
   "gui.r3ct_collector.catalog.tab_leaderboard": "Leaderboard",
+  "gui.r3ct_collector.catalog.confirm_title": "Are you sure you want to submit this item?",
+  "gui.r3ct_collector.catalog.select_title": "Which item do you want to submit?",
+  "gui.r3ct_collector.catalog.yes": "Yes",
+  "gui.r3ct_collector.catalog.no": "No",
 
   "gui.r3ct_collector.info.rewards_title": "Collection Rewards",
   "gui.r3ct_collector.info.point1": "1. Submitting Items",

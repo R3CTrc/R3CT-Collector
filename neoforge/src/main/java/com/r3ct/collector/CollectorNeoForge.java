@@ -44,7 +44,7 @@ public class CollectorNeoForge {
         registrar.playToServer(
                 SubmitItemPayload.TYPE, SubmitItemPayload.CODEC,
                 (payload, context) -> context.enqueueWork(() -> {
-                    ServerItemHandler.handleItemSubmit((ServerPlayer) context.player(), payload.itemId());
+                    ServerItemHandler.handleItemSubmit((ServerPlayer) context.player(), payload.itemId(), payload.slotId());
                 })
         );
 

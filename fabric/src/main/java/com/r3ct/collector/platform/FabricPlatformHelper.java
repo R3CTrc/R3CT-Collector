@@ -23,8 +23,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public void sendSubmitItemPacketToServer(String itemId) {
-        net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new SubmitItemPayload(itemId));
+    public void sendSubmitItemPacketToServer(String itemId, int slotId) {
+        net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new SubmitItemPayload(itemId, slotId));
     }
 
     @Override
