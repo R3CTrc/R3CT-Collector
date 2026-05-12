@@ -268,7 +268,7 @@ public class CatalogScreen extends Screen {
     }
 
     private int drawWrappedText(GuiGraphicsExtractor guiGraphics, Component text, int x, int y, int maxWidth, int color) {
-        List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
+        java.util.List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
         for (net.minecraft.util.FormattedCharSequence line : lines) {
             guiGraphics.text(this.font, line, x, y, color, false);
             y += this.font.lineHeight + 2;
@@ -313,7 +313,7 @@ public class CatalogScreen extends Screen {
         }
 
         if (hoveredEntry != null) {
-            List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new ArrayList<>();
+            java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new java.util.ArrayList<>();
 
             tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("     §f§l" + hoveredEntry.name()).getVisualOrderText()));
             tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("§8----------------").getVisualOrderText()));
@@ -509,7 +509,22 @@ public class CatalogScreen extends Screen {
 
             String registryName = com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(stack);
             boolean isCollected = ClientPlayerData.unlockedItems.contains(registryName);
-            boolean isInInventory = !isCollected && (this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(stack.getItem())));
+            boolean isInInventory = false;
+
+            if (!isCollected) {
+                if (this.minecraft.player.isCreative()) {
+                    isInInventory = true;
+                } else {
+                    net.minecraft.world.entity.player.Inventory inv = this.minecraft.player.getInventory();
+                    for (int j = 0; j < inv.getContainerSize(); j++) {
+                        ItemStack invStack = inv.getItem(j);
+                        if (!invStack.isEmpty() && com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(invStack).equals(registryName)) {
+                            isInInventory = true;
+                            break;
+                        }
+                    }
+                }
+            }
 
             if (isInInventory) {
                 guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 18, blinkColor);
@@ -668,9 +683,45 @@ public class CatalogScreen extends Screen {
                         boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
 
                         if (!ClientPlayerData.unlockedItems.contains(itemId)) {
-                            if (hasInInventory) {
-                                com.r3ct.collector.platform.Services.PLATFORM.sendSubmitItemPacketToServer(itemId);
+
+                            if (this.minecraft.player.isCreative()) {
+                                com.r3ct.collector.platform.Services.PLATFORM.sendSubmitItemPacketToServer(itemId, -1);
                                 this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                return true;
+                            }
+
+                            List<SlotItem> uniqueItems = new ArrayList<>();
+                            net.minecraft.world.entity.player.Inventory inv = this.minecraft.player.getInventory();
+
+                            for (int i = 0; i < inv.getContainerSize(); i++) {
+                                ItemStack invStack = inv.getItem(i);
+                                if (!invStack.isEmpty() && com.r3ct.collector.logic.ServerItemHandler.getUniqueItemId(invStack).equals(itemId)) {
+
+                                    boolean isDuplicate = false;
+                                    for (SlotItem existing : uniqueItems) {
+                                        if (ItemStack.isSameItemSameComponents(existing.stack, invStack)) {
+                                            existing.stack.setCount(existing.stack.getCount() + invStack.getCount());
+                                            isDuplicate = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!isDuplicate) {
+                                        uniqueItems.add(new SlotItem(invStack, i));
+                                    }
+                                }
+                            }
+
+                            if (uniqueItems.size() == 1) {
+                                SlotItem singleItem = uniqueItems.get(0);
+                                if (isValuable(singleItem.stack)) {
+                                    this.minecraft.setScreen(new ConfirmSubmitScreen(this, singleItem.stack, singleItem.slotId, itemId));
+                                } else {
+                                    com.r3ct.collector.platform.Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
+                                    this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                }
+                            } else if (uniqueItems.size() > 1) {
+                                this.minecraft.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));
                             }
                         }
                         return true;
@@ -726,6 +777,36 @@ public class CatalogScreen extends Screen {
 
     @Override
     public boolean isPauseScreen() {
+        return false;
+    }
+
+    public static class SlotItem {
+        public final ItemStack stack;
+        public final int slotId;
+
+        public SlotItem(ItemStack stack, int slotId) {
+            this.stack = stack.copy();
+            this.slotId = slotId;
+        }
+    }
+
+    public static boolean isValuable(ItemStack stack) {
+        if (stack.isEnchanted() || stack.has(net.minecraft.core.component.DataComponents.CUSTOM_NAME)) {
+            return true;
+        }
+
+        net.minecraft.world.item.component.ItemContainerContents container = stack.get(net.minecraft.core.component.DataComponents.CONTAINER);
+        if (container != null) {
+            for (var item : container.nonEmptyItems()) {
+                return true;
+            }
+        }
+
+        net.minecraft.world.item.component.BundleContents bundle = stack.get(net.minecraft.core.component.DataComponents.BUNDLE_CONTENTS);
+        if (bundle != null && !bundle.isEmpty()) {
+            return true;
+        }
+
         return false;
     }
 }

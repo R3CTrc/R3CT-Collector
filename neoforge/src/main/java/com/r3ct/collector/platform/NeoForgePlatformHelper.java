@@ -24,8 +24,8 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public void sendSubmitItemPacketToServer(String itemId) {
-        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new SubmitItemPayload(itemId));
+    public void sendSubmitItemPacketToServer(String itemId, int slotId) {
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new SubmitItemPayload(itemId, slotId));
     }
 
     @Override

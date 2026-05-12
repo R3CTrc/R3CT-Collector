@@ -5,7 +5,6 @@ import com.r3ct.collector.data.ModState;
 import com.r3ct.collector.data.PlayerData;
 import com.r3ct.collector.network.LeaderboardDataPayload;
 import com.r3ct.collector.platform.Services;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +29,7 @@ public class ServerItemHandler {
         }
     }
 
-    public static void handleItemSubmit(ServerPlayer player, String itemId) {
+    public static void handleItemSubmit(ServerPlayer player, String itemId, int slotId) {
         String[] parts = itemId.split("#");
         Identifier id = Identifier.parse(parts[0]);
         Item targetItem = BuiltInRegistries.ITEM.get(id).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
@@ -44,19 +43,15 @@ public class ServerItemHandler {
 
         if (data.unlockedItems.contains(itemId)) return;
 
-        Inventory inv = player.getInventory();
         boolean foundAndRemoved = false;
 
         if (player.isCreative()) {
             foundAndRemoved = true;
         } else {
-            for (int i = 0; i < inv.getContainerSize(); i++) {
-                ItemStack stack = inv.getItem(i);
-                if (!stack.isEmpty() && getUniqueItemId(stack).equals(itemId)) {
-                    stack.shrink(1);
-                    foundAndRemoved = true;
-                    break;
-                }
+            ItemStack stack = player.getInventory().getItem(slotId);
+            if (!stack.isEmpty() && getUniqueItemId(stack).equals(itemId)) {
+                stack.shrink(1);
+                foundAndRemoved = true;
             }
         }
 
@@ -168,17 +163,17 @@ public class ServerItemHandler {
                 ItemStack rewardStack = new ItemStack(rewardItem, 1);
 
                 net.minecraft.network.chat.MutableComponent customName = net.minecraft.network.chat.Component.literal(player.getName().getString())
-                        .withStyle(ChatFormatting.AQUA);
+                        .withStyle(net.minecraft.ChatFormatting.AQUA);
 
-                customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(ChatFormatting.LIGHT_PURPLE));
+                customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
 
-                customName.append(net.minecraft.network.chat.Component.translatable(rewardItem.getDescriptionId()).withStyle(ChatFormatting.LIGHT_PURPLE));
+                customName.append(net.minecraft.network.chat.Component.translatable(rewardItem.getDescriptionId()).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
 
                 if (rewardItemId.equals("r3ct_collector:trophy_mod")) {
                     net.minecraft.world.item.CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(net.minecraft.core.Holder::value).orElse(null);
                     if (tab != null) {
-                        customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(ChatFormatting.LIGHT_PURPLE))
-                                .append(tab.getDisplayName().copy().withStyle(ChatFormatting.LIGHT_PURPLE));
+                        customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE))
+                                .append(tab.getDisplayName().copy().withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
                     }
                 }
 
