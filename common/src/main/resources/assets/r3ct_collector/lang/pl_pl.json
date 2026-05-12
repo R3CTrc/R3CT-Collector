@@ -13,6 +13,10 @@
   "gui.r3ct_collector.catalog.tab_home": "Kategorie",
   "gui.r3ct_collector.catalog.tab_info": "Informacje",
   "gui.r3ct_collector.catalog.tab_leaderboard": "Ranking",
+  "gui.r3ct_collector.catalog.confirm_title": "Czy na pewno chcesz oddać ten przedmiot?",
+  "gui.r3ct_collector.catalog.select_title": "Który przedmiot chcesz oddać?",
+  "gui.r3ct_collector.catalog.yes": "Tak",
+  "gui.r3ct_collector.catalog.no": "Nie",
 
   "gui.r3ct_collector.info.rewards_title": "Nagrody za Kolekcjonowanie",
   "gui.r3ct_collector.info.point1": "1. Oddawanie Przedmiotów",

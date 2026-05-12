@@ -42,7 +42,7 @@ public interface IPlatformHelper {
         return isDevelopmentEnvironment() ? "development" : "production";
     }
 
-    void sendSubmitItemPacketToServer(String itemId);
+    void sendSubmitItemPacketToServer(String itemId, int slotId);
 
     void sendClaimRewardPacketToServer(String tabId);
 

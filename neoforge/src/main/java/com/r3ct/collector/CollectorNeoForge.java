@@ -44,7 +44,7 @@ public class CollectorNeoForge {
         registrar.playToServer(
                 SubmitItemPayload.TYPE, SubmitItemPayload.CODEC,
                 (payload, context) -> context.enqueueWork(() -> {
-                    ServerItemHandler.handleItemSubmit((ServerPlayer) context.player(), payload.itemId());
+                    ServerItemHandler.handleItemSubmit((ServerPlayer) context.player(), payload.itemId(), payload.slotId());
                 })
         );
 
@@ -65,7 +65,7 @@ public class CollectorNeoForge {
 
         registrar.playToServer(
                 com.r3ct.collector.network.RequestLeaderboardPayload.TYPE, com.r3ct.collector.network.RequestLeaderboardPayload.CODEC,
-                (payload, context) -> context.enqueueWork(() -> ServerItemHandler.handleLeaderboardRequest((ServerPlayer) context.player()))
+                (payload, context) -> context.enqueueWork(() -> ServerItemHandler.handleLeaderboardRequest((net.minecraft.server.level.ServerPlayer) context.player()))
         );
 
         registrar.playToClient(
