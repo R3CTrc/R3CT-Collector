@@ -74,7 +74,7 @@ public class CollectorFabric implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(com.r3ct.collector.network.LeaderboardDataPayload.TYPE, com.r3ct.collector.network.LeaderboardDataPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SubmitItemPayload.TYPE, (payload, context) -> {
-            context.server().execute(() -> ServerItemHandler.handleItemSubmit(context.player(), payload.itemId()));
+            context.server().execute(() -> ServerItemHandler.handleItemSubmit(context.player(), payload.itemId(), payload.slotId()));
         });
 
         ServerPlayNetworking.registerGlobalReceiver(com.r3ct.collector.network.ClaimCategoryRewardPayload.TYPE, (payload, context) -> {

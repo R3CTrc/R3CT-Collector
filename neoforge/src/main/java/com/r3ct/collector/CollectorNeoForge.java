@@ -1,28 +1,28 @@
 package com.r3ct.collector;
 
-import com.r3ct.collector.block.ModBlocks;
 import com.r3ct.collector.client.data.ClientPlayerData;
 import com.r3ct.collector.config.CollectorConfig;
 import com.r3ct.collector.config.CollectorRewardsConfig;
 import com.r3ct.collector.logic.ServerItemHandler;
 import com.r3ct.collector.network.SubmitItemPayload;
 import com.r3ct.collector.network.SyncDataPayload;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.RegisterEvent;
+import com.r3ct.collector.block.ModBlocks;
 
 import java.util.HashSet;
 
@@ -44,7 +44,7 @@ public class CollectorNeoForge {
         registrar.playToServer(
                 SubmitItemPayload.TYPE, SubmitItemPayload.CODEC,
                 (payload, context) -> context.enqueueWork(() -> {
-                    ServerItemHandler.handleItemSubmit((ServerPlayer) context.player(), payload.itemId());
+                    ServerItemHandler.handleItemSubmit((ServerPlayer) context.player(), payload.itemId(), payload.slotId());
                 })
         );
 
@@ -65,7 +65,7 @@ public class CollectorNeoForge {
 
         registrar.playToServer(
                 com.r3ct.collector.network.RequestLeaderboardPayload.TYPE, com.r3ct.collector.network.RequestLeaderboardPayload.CODEC,
-                (payload, context) -> context.enqueueWork(() -> ServerItemHandler.handleLeaderboardRequest((ServerPlayer) context.player()))
+                (payload, context) -> context.enqueueWork(() -> ServerItemHandler.handleLeaderboardRequest((net.minecraft.server.level.ServerPlayer) context.player()))
         );
 
         registrar.playToClient(

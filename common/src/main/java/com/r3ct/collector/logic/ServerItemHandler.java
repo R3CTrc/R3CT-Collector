@@ -29,7 +29,7 @@ public class ServerItemHandler {
         }
     }
 
-    public static void handleItemSubmit(ServerPlayer player, String itemId) {
+    public static void handleItemSubmit(ServerPlayer player, String itemId, int slotId) {
         String[] parts = itemId.split("#");
         Identifier id = Identifier.parse(parts[0]);
         Item targetItem = BuiltInRegistries.ITEM.get(id).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
@@ -43,19 +43,15 @@ public class ServerItemHandler {
 
         if (data.unlockedItems.contains(itemId)) return;
 
-        Inventory inv = player.getInventory();
         boolean foundAndRemoved = false;
 
         if (player.isCreative()) {
             foundAndRemoved = true;
         } else {
-            for (int i = 0; i < inv.getContainerSize(); i++) {
-                ItemStack stack = inv.getItem(i);
-                if (!stack.isEmpty() && getUniqueItemId(stack).equals(itemId)) {
-                    stack.shrink(1);
-                    foundAndRemoved = true;
-                    break;
-                }
+            ItemStack stack = player.getInventory().getItem(slotId);
+            if (!stack.isEmpty() && getUniqueItemId(stack).equals(itemId)) {
+                stack.shrink(1);
+                foundAndRemoved = true;
             }
         }
 
@@ -229,6 +225,7 @@ public class ServerItemHandler {
 
     public static String getUniqueItemId(ItemStack stack) {
         String baseId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+
         if (stack.has(net.minecraft.core.component.DataComponents.POTION_CONTENTS)) {
             net.minecraft.world.item.alchemy.PotionContents contents = stack.get(net.minecraft.core.component.DataComponents.POTION_CONTENTS);
             if (contents != null && contents.potion().isPresent()) {
