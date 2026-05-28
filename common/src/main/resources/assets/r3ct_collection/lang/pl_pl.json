@@ -51,6 +51,7 @@
 
   "chat.r3ct_collection.milestone_reward": "Osiągnięto kamień milowy %s przedmiotów! Otrzymujesz: %s",
   "chat.r3ct_collection.category_complete": "Gratulacje! Ukończono kategorię %s! Otrzymujesz: %s",
+  "chat.r3ct_collection.migration_refund": "Zaktualizowano wersję moda! Brakujące trofea zostały zwrócone do twojego ekwipunku.",
 
   "advancement.r3ct_collection.root.title": "R3CT Collection",
   "advancement.r3ct_collection.root.desc": "Otwórz Księgę Kolekcjonera i rozpocznij wielkie łowy.",

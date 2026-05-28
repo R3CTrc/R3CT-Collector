@@ -279,4 +279,58 @@ public class ServerItemHandler {
         }
         return baseId;
     }
+
+    public static void refundMigrationTrophies(net.minecraft.server.level.ServerPlayer player, PlayerData data) {
+        if (data.receivedMigrationRefund) return;
+
+        if (data.rewardedCategories.isEmpty() || (data.rewardedCategories.size() == 1 && data.rewardedCategories.contains("ALL_COMPLETED"))) {
+            data.receivedMigrationRefund = true;
+            ModState.get(player.level().getServer()).setDirty();
+            return;
+        }
+
+        com.r3ct.collection.config.CollectionConfig.load();
+        boolean gaveAny = false;
+
+        for (String tabId : data.rewardedCategories) {
+            if (tabId.equals("ALL_COMPLETED")) continue;
+
+            String rewardItemId = com.r3ct.collection.config.CollectionConfig.categoryRewards.getOrDefault(tabId, com.r3ct.collection.config.CollectionConfig.categoryRewards.get("modded_generic"));
+
+            if (rewardItemId != null) {
+                Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(rewardItemId)).map(net.minecraft.core.Holder::value).orElse(Items.AIR);
+                if (rewardItem != Items.AIR) {
+                    ItemStack rewardStack = new ItemStack(rewardItem, 1);
+
+                    net.minecraft.network.chat.MutableComponent customName = net.minecraft.network.chat.Component.literal(player.getName().getString())
+                            .withStyle(net.minecraft.ChatFormatting.AQUA)
+                            .append(net.minecraft.network.chat.Component.literal(" - ").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE))
+                            .append(net.minecraft.network.chat.Component.translatable(rewardItem.getDescriptionId()).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+
+                    if (rewardItemId.equals("r3ct_collection:trophy_mod")) {
+                        net.minecraft.world.item.CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(net.minecraft.core.Holder::value).orElse(null);
+                        if (tab != null) {
+                            customName.append(net.minecraft.network.chat.Component.literal(" - ").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE))
+                                    .append(tab.getDisplayName().copy().withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+                        }
+                    }
+
+                    rewardStack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, customName);
+                    giveItemToPlayer(player, rewardStack);
+                    gaveAny = true;
+                }
+            }
+        }
+        data.receivedMigrationRefund = true;
+        ModState.get(player.level().getServer()).setDirty();
+
+        if (gaveAny) {
+            var prefix = net.minecraft.network.chat.Component.literal("[Collection] ").withStyle(net.minecraft.ChatFormatting.AQUA);
+            var message = net.minecraft.network.chat.Component.translatable("chat.r3ct_collection.migration_refund").withStyle(net.minecraft.ChatFormatting.GREEN);
+
+            player.sendSystemMessage(net.minecraft.network.chat.Component.empty().append(prefix).append(message));
+
+            player.level().playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
+        }
+    }
 }

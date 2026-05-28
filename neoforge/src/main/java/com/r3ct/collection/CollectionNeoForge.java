@@ -77,6 +77,7 @@ public class CollectionNeoForge {
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             com.r3ct.collection.data.PlayerData data = com.r3ct.collection.data.ModState.getPlayerData(serverPlayer.level().getServer(), serverPlayer.getUUID());
+            com.r3ct.collection.logic.ServerItemHandler.refundMigrationTrophies(serverPlayer, data);
             com.r3ct.collection.platform.Services.PLATFORM.sendSyncDataPacketToClient(serverPlayer, data.unlockedItems, data.rewardedCategories);
         }
     }

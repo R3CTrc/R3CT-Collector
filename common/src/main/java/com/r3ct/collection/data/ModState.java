@@ -8,15 +8,42 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.LevelResource;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 public class ModState extends SavedData {
     public final Map<UUID, PlayerData> players = new HashMap<>();
 
     public static ModState get(MinecraftServer server) {
+
+        Path worldRoot = server.getWorldPath(LevelResource.ROOT);
+
+        Path rootDataDir = worldRoot.resolve("data").resolve("minecraft");
+        Path dimDataDir = worldRoot.resolve("dimensions").resolve("minecraft").resolve("overworld").resolve("data").resolve("minecraft");
+
+        Path oldFile1 = rootDataDir.resolve("r3ct_collector_data.dat");
+        Path oldFile2 = dimDataDir.resolve("r3ct_collector_data.dat");
+
+        Path actualOldFile = Files.exists(oldFile2) ? oldFile2 : (Files.exists(oldFile1) ? oldFile1 : null);
+
+        if (actualOldFile != null) {
+            Path newFile = actualOldFile.getParent().resolve("r3ct_collection_data.dat");
+
+            if (!Files.exists(newFile)) {
+                try {
+                    Files.move(actualOldFile, newFile);
+                    System.out.println("[R3CT-Collection] Successfully migrated old player data file to new name!");
+                } catch (IOException e) {
+                    System.err.println("[R3CT-Collection] Failed to migrate old player data file!");
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
@@ -43,7 +70,23 @@ public class ModState extends SavedData {
             for (String key : playersNbt.keySet()) {
                 playersNbt.getCompound(key).ifPresent(playerDataNbt -> {
                     try {
-                        state.players.put(UUID.fromString(key), PlayerData.fromNbt(playerDataNbt));
+                        PlayerData data = PlayerData.fromNbt(playerDataNbt);
+
+                        Set<String> migratedItems = new HashSet<>();
+                        for (String item : data.unlockedItems) {
+                            migratedItems.add(item.replace("r3ct_collector:", "r3ct_collection:")
+                                    .replace("r3ct:", "r3ct_collection:"));
+                        }
+                        data.unlockedItems = migratedItems;
+
+                        Set<String> migratedCats = new HashSet<>();
+                        for (String cat : data.rewardedCategories) {
+                            migratedCats.add(cat.replace("r3ct_collector:", "r3ct_collection:")
+                                    .replace("r3ct:", "r3ct_collection:"));
+                        }
+                        data.rewardedCategories = migratedCats;
+
+                        state.players.put(UUID.fromString(key), data);
                     } catch (IllegalArgumentException ignored) {
                     }
                 });

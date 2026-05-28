@@ -51,6 +51,7 @@
 
   "chat.r3ct_collection.milestone_reward": "Reached milestone of %s items! You received: %s",
   "chat.r3ct_collection.category_complete": "Congratulations! You completed the %s category! You received: %s",
+  "chat.r3ct_collection.migration_refund": "Mod version updated! Missing trophies have been refunded to your inventory.",
 
   "advancement.r3ct_collection.root.title": "R3CT Collection",
   "advancement.r3ct_collection.root.desc": "Open the Collector's Book and start your great hunt.",
