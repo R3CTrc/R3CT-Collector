@@ -1,19 +1,19 @@
-# R3CT Collector 📖✨
+# R3CT Collection 📖✨
 
 <div align="center">
 
-[![Modrinth](https://img.shields.io/modrinth/dt/JNIJFVHZ?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/project/r3ct-collector)
-[![CurseForge](https://img.shields.io/curseforge/dt/1528272?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/r3ct-collector)
-[![Wiki](https://img.shields.io/badge/Documentation-Wiki-6E40C9?style=for-the-badge&logo=readthedocs&logoColor=white)](https://github.com/R3CTrc/R3CT-Collector/wiki)
+[![Modrinth](https://img.shields.io/modrinth/dt/JNIJFVHZ?style=for-the-badge&label=Modrinth&logo=modrinth&logoColor=white&color=2EA043)](https://modrinth.com/project/r3ct-collection)
+[![CurseForge](https://img.shields.io/curseforge/dt/1528272?style=for-the-badge&label=CurseForge&logo=curseforge&logoColor=white&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/r3ct-collection)
+[![Wiki](https://img.shields.io/badge/Documentation-Wiki-6E40C9?style=for-the-badge&logo=readthedocs&logoColor=white)](https://github.com/R3CTrc/R3CT-Collection/wiki)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0576BA?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
 </div>
 
 The ultimate completionist and collection mod for Minecraft!
-R3CT Collector automatically scans all items in your game (including those from other mods) and generates a beautifully categorized interactive Catalog. Gather items, earn XP, claim milestone rewards, and compete with other players on your server! Built for both Fabric and NeoForge!
+R3CT Collection automatically scans all items in your game (including those from other mods) and generates a beautifully categorized interactive Catalog. Gather items, earn XP, claim milestone rewards, and compete with other players on your server! Built for both Fabric and NeoForge!
 
 <div align="center">
-  <img src="./images/icon_nb.png" width="50%" alt="R3CT Collector Mod Icon">
+  <img src="./images/icon_nb.png" width="50%" alt="R3CT Collection Mod Icon">
 </div>
 
 ---
@@ -69,14 +69,14 @@ To run this mod, you will need to install a few library mods depending on your l
 ## 📖 Documentation
 
 For detailed guides on how to configure blacklists, adjust rewards, and tweak the mod's mechanics, visit our official Wiki:
-👉 **[View the Wiki](https://github.com/R3CTrc/R3CT-Collector/wiki)**
+👉 **[View the Wiki](https://github.com/R3CTrc/R3CT-Collection/wiki)**
 
 <details>
 <summary><b>Click to see popular topics 💡</b></summary>
 
-* [📥 Getting Started](https://github.com/R3CTrc/R3CT-Collector/wiki/Getting-Started)
-* [⚙️ Configuring Blacklists](https://github.com/R3CTrc/R3CT-Collector/wiki/Blacklists-Setup)
-* [💎 Customizing Rewards & XP](https://github.com/R3CTrc/R3CT-Collector/wiki/Rewards-Configuration)
+* [📥 Getting Started](https://github.com/R3CTrc/R3CT-Collection/wiki/Getting-Started)
+* [⚙️ Configuring Blacklists](https://github.com/R3CTrc/R3CT-Collection/wiki/Blacklists-Setup)
+* [💎 Customizing Rewards & XP](https://github.com/R3CTrc/R3CT-Collection/wiki/Rewards-Configuration)
 
 </details>
 
@@ -91,11 +91,11 @@ Players can access the mod settings via **Mod Menu** (on Fabric) or the **Mods t
 * Adjust the GUI scale of the Catalog Book to perfectly fit their screen resolution.
 
 ### 2. File Configuration (Server-side / Modpack Creators)
-All core mechanics, loot pools, and blacklists can be completely rewritten. After running the mod once, navigate to the `config/r3ct_collector/` folder:
+All core mechanics, loot pools, and blacklists can be completely rewritten. After running the mod once, navigate to the `config/r3ct_collection/` folder:
 
-* **`r3ct_collector_items.json`** - Manage blacklists. Exclude specific mods, creative tabs, or individual items from being scanned.
-* **`r3ct_collector_rewards.json`** - Tweak the XP granted for item rarities, customize the milestone intervals, and set up specific loot pools and category completion rewards.
-* **`r3ct_collector_client.json`** - Client-side settings (GUI Scale).
+* **`r3ct_collection_items.json`** - Manage blacklists. Exclude specific mods, creative tabs, or individual items from being scanned.
+* **`r3ct_collection_rewards.json`** - Tweak the XP granted for item rarities, customize the milestone intervals, and set up specific loot pools and category completion rewards.
+* **`r3ct_collection_client.json`** - Client-side settings (GUI Scale).
 
 *Note: The mod features an auto-migration system. If the config format updates in future versions, your old config will be safely backed up!*
 
