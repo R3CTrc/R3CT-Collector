@@ -12,22 +12,22 @@
         "sources": "https://github.com/FabricMC/fabric-example-mod"
     },
     "license": "${license}",
-    "icon": "assets/r3ct_collector/icon.png",
+    "icon": "assets/r3ct_collection/icon.png",
     "environment": "*",
     "entrypoints": {
         "main": [
-            "com.r3ct.collector.CollectorFabric"
+            "com.r3ct.collection.CollectionFabric"
         ],
         "client": [
-            "com.r3ct.collector.CollectorClientFabric"
+            "com.r3ct.collection.CollectionClientFabric"
         ],
         "modmenu": [
-            "com.r3ct.collector.compat.ModMenuIntegration"
+            "com.r3ct.collection.compat.ModMenuIntegration"
         ]
     },
     "mixins": [
-        "r3ct_collector.mixins.json",
-        "r3ct_collector.fabric.mixins.json"
+        "r3ct_collection.mixins.json",
+        "r3ct_collection.fabric.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
