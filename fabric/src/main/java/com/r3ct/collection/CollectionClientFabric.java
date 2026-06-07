@@ -1,11 +1,14 @@
 package com.r3ct.collection;
 
+import com.r3ct.collection.block.ModBlocks;
 import com.r3ct.collection.client.input.KeyMappings;
 import com.r3ct.collection.client.data.ClientPlayerData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -15,6 +18,21 @@ public class CollectionClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+
+        BlockRenderLayerMap.putBlocks(
+                ChunkSectionLayer.TRANSLUCENT,
+                ModBlocks.TROPHY_BUILDING,
+                ModBlocks.TROPHY_COMBAT,
+                ModBlocks.TROPHY_TOOLS,
+                ModBlocks.TROPHY_FOOD,
+                ModBlocks.TROPHY_REDSTONE,
+                ModBlocks.TROPHY_INGREDIENTS,
+                ModBlocks.TROPHY_NATURAL,
+                ModBlocks.TROPHY_COLORED,
+                ModBlocks.TROPHY_EGG,
+                ModBlocks.TROPHY_FUNCTIONAL,
+                ModBlocks.TROPHY_MOD
+        );
 
         KeyMappings.openCatalogKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.r3ct.open_catalog",
