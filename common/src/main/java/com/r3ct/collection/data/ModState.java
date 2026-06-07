@@ -20,27 +20,23 @@ public class ModState extends SavedData {
 
     public static ModState get(MinecraftServer server) {
 
-        Path worldRoot = server.getWorldPath(LevelResource.ROOT);
+        Path dimDataDir = server.getWorldPath(LevelResource.ROOT)
+                .resolve("dimensions")
+                .resolve("minecraft")
+                .resolve("overworld")
+                .resolve("data")
+                .resolve("minecraft");
 
-        Path rootDataDir = worldRoot.resolve("data").resolve("minecraft");
-        Path dimDataDir = worldRoot.resolve("dimensions").resolve("minecraft").resolve("overworld").resolve("data").resolve("minecraft");
+        Path oldFile = dimDataDir.resolve("r3ct_collector_data.dat");
+        Path newFile = dimDataDir.resolve("r3ct_collection_data.dat");
 
-        Path oldFile1 = rootDataDir.resolve("r3ct_collector_data.dat");
-        Path oldFile2 = dimDataDir.resolve("r3ct_collector_data.dat");
-
-        Path actualOldFile = Files.exists(oldFile2) ? oldFile2 : (Files.exists(oldFile1) ? oldFile1 : null);
-
-        if (actualOldFile != null) {
-            Path newFile = actualOldFile.getParent().resolve("r3ct_collection_data.dat");
-
-            if (!Files.exists(newFile)) {
-                try {
-                    Files.move(actualOldFile, newFile);
-                    System.out.println("[R3CT-Collection] Successfully migrated old player data file to new name!");
-                } catch (IOException e) {
-                    System.err.println("[R3CT-Collection] Failed to migrate old player data file!");
-                    e.printStackTrace();
-                }
+        if (Files.exists(oldFile) && !Files.exists(newFile)) {
+            try {
+                Files.move(oldFile, newFile);
+                System.out.println("[R3CT-Collection] Successfully migrated old player data file to new name!");
+            } catch (IOException e) {
+                System.err.println("[R3CT-Collection] Failed to migrate old player data file!");
+                e.printStackTrace();
             }
         }
 
