@@ -1,6 +1,17 @@
 {
   "_comment_version": "Do not change the version number! It is used for automatic config updates.",
-  "version": 1,
+  "version": 2,
+
+  "_comment_INFO_1": "=========================================================================",
+  "_comment_INFO_2": " CHANCES: The 'chance' field works proportionally. For the best experience,",
+  "_comment_INFO_3": " make sure the sum of all chances in a single group [ ] equals exactly 100.",
+  "_comment_INFO_4": " If they don't sum to 100, the mod will still safely calculate the odds,",
+  "_comment_INFO_5": " but the actual drop percentages will differ from the written values.",
+  "_comment_INFO_6": "=========================================================================",
+
+  "_comment_INFO_7": "=========================================================================",
+  "_comment_INFO_8": " COLORS: You can use standard Minecraft color codes with the '&' symbol.",
+  "_comment_INFO_9": "=========================================================================",
 
   "_comment_xp": "Experience points rewarded based on item rarity (Common, Uncommon, Rare, Epic).",
   "xpCommon": 10,
@@ -11,20 +22,20 @@
   "_comment_interval": "How often (every X items) the player receives a milestone reward.",
   "milestoneInterval": 100,
 
-  "_comment_milestones": "Loot pool for milestone rewards. 'weight' determines the chance of dropping (higher = more common).",
+  "_comment_milestones": "Loot pool for milestone rewards.",
   "milestoneRewards": [
     {
       "item": "minecraft:emerald",
       "min_amount": 24,
       "max_amount": 32,
-      "weight": 100,
+      "chance": 50,
       "color": "&a"
     },
     {
       "item": "minecraft:diamond",
       "min_amount": 16,
       "max_amount": 24,
-      "weight": 100,
+      "chance": 50,
       "color": "&b"
     }
   ],
