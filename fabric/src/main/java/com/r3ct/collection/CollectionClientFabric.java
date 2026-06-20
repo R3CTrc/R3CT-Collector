@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
 import org.lwjgl.glfw.GLFW;
 
 public class CollectionClientFabric implements ClientModInitializer {
@@ -21,17 +22,7 @@ public class CollectionClientFabric implements ClientModInitializer {
 
         BlockRenderLayerMap.putBlocks(
                 ChunkSectionLayer.TRANSLUCENT,
-                ModBlocks.TROPHY_BUILDING,
-                ModBlocks.TROPHY_COMBAT,
-                ModBlocks.TROPHY_TOOLS,
-                ModBlocks.TROPHY_FOOD,
-                ModBlocks.TROPHY_REDSTONE,
-                ModBlocks.TROPHY_INGREDIENTS,
-                ModBlocks.TROPHY_NATURAL,
-                ModBlocks.TROPHY_COLORED,
-                ModBlocks.TROPHY_EGG,
-                ModBlocks.TROPHY_FUNCTIONAL,
-                ModBlocks.TROPHY_MOD
+                ModBlocks.TROPHIES.values().toArray(new Block[0])
         );
 
         KeyMappings.openCatalogKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
