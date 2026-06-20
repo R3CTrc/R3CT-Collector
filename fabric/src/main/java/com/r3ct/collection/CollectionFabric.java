@@ -27,17 +27,7 @@ public class CollectionFabric implements ModInitializer {
     public void onInitialize() {
         CollectionConfig.load();
 
-        registerTrophy("trophy_building", ModBlocks.TROPHY_BUILDING);
-        registerTrophy("trophy_combat", ModBlocks.TROPHY_COMBAT);
-        registerTrophy("trophy_tools", ModBlocks.TROPHY_TOOLS);
-        registerTrophy("trophy_food", ModBlocks.TROPHY_FOOD);
-        registerTrophy("trophy_redstone", ModBlocks.TROPHY_REDSTONE);
-        registerTrophy("trophy_ingredients", ModBlocks.TROPHY_INGREDIENTS);
-        registerTrophy("trophy_natural", ModBlocks.TROPHY_NATURAL);
-        registerTrophy("trophy_colored", ModBlocks.TROPHY_COLORED);
-        registerTrophy("trophy_egg", ModBlocks.TROPHY_EGG);
-        registerTrophy("trophy_functional", ModBlocks.TROPHY_FUNCTIONAL);
-        registerTrophy("trophy_mod", ModBlocks.TROPHY_MOD);
+        ModBlocks.TROPHIES.forEach(this::registerTrophy);
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.parse(Constants.MOD_ID + ":trophy_building_be"), ModBlocks.TROPHY_BE_TYPE);
 
@@ -50,17 +40,7 @@ public class CollectionFabric implements ModInitializer {
                 .title(net.minecraft.network.chat.Component.translatable("itemGroup." + Constants.MOD_ID + ".main_tab"))
                 .icon(() -> new net.minecraft.world.item.ItemStack(ModBlocks.TROPHY_BUILDING))
                 .displayItems((context, output) -> {
-                    output.accept(ModBlocks.TROPHY_BUILDING);
-                    output.accept(ModBlocks.TROPHY_NATURAL);
-                    output.accept(ModBlocks.TROPHY_COLORED);
-                    output.accept(ModBlocks.TROPHY_COMBAT);
-                    output.accept(ModBlocks.TROPHY_TOOLS);
-                    output.accept(ModBlocks.TROPHY_REDSTONE);
-                    output.accept(ModBlocks.TROPHY_FUNCTIONAL);
-                    output.accept(ModBlocks.TROPHY_FOOD);
-                    output.accept(ModBlocks.TROPHY_INGREDIENTS);
-                    output.accept(ModBlocks.TROPHY_EGG);
-                    output.accept(ModBlocks.TROPHY_MOD);
+                    ModBlocks.TROPHIES.values().forEach(output::accept);
                 })
                 .build()
         );

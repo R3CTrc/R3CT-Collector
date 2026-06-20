@@ -30,7 +30,7 @@ public class CollectionConfig {
 
     private static final int SERVER_CONFIG_VERSION = 1;
     private static final int CLIENT_CONFIG_VERSION = 1;
-    private static final int REWARDS_CONFIG_VERSION = 1;
+    private static final int REWARDS_CONFIG_VERSION = 2;
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_DIR = Paths.get("config", "r3ct_collection");
@@ -90,13 +90,19 @@ public class CollectionConfig {
                 if (data.blacklistedTabs != null) blacklistedTabs = data.blacklistedTabs;
                 if (data.blacklistedItems != null) blacklistedItems = data.blacklistedItems;
             }
-        } catch (Exception e) { System.err.println("[R3CT-Collection] Error loading items config!"); }
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error loading items config!");
+            e.printStackTrace();
+        }
 
         checkAndMigrate(CLIENT_PATH, "r3ct_collection_client.json", CLIENT_CONFIG_VERSION);
         try (FileReader reader = new FileReader(CLIENT_PATH.toFile())) {
             ClientData data = GSON.fromJson(reader, ClientData.class);
             if (data != null) catalogScale = data.catalogScale;
-        } catch (Exception e) { System.err.println("[R3CT-Collection] Error loading client config!"); }
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error loading client config!");
+            e.printStackTrace();
+        }
 
         checkAndMigrate(REWARDS_PATH, "r3ct_collection_rewards.json", REWARDS_CONFIG_VERSION);
         try (FileReader reader = new FileReader(REWARDS_PATH.toFile())) {
@@ -110,7 +116,10 @@ public class CollectionConfig {
                 if (data.milestoneRewards != null) milestoneRewards = data.milestoneRewards;
                 if (data.categoryRewards != null) categoryRewards = data.categoryRewards;
             }
-        } catch (Exception e) { System.err.println("[R3CT-Collection] Error loading rewards config!"); }
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error loading rewards config!");
+            e.printStackTrace();
+        }
     }
 
     public static void saveItems() {
@@ -167,27 +176,27 @@ public class CollectionConfig {
         public String item;
         public int min_amount;
         public int max_amount;
-        public int weight;
+        public int chance;
         public String color;
 
-        public LootEntry(String item, int min, int max, int weight, String color) {
+        public LootEntry(String item, int min, int max, int chance, String color) {
             this.item = item;
             this.min_amount = min;
             this.max_amount = max;
-            this.weight = weight;
+            this.chance = chance;
             this.color = color;
         }
     }
 
     public static LootEntry getRandomMilestoneReward() {
         if (milestoneRewards.isEmpty()) return null;
-        int totalWeight = milestoneRewards.stream().mapToInt(e -> e.weight).sum();
+        int totalWeight = milestoneRewards.stream().mapToInt(e -> e.chance).sum();
         if (totalWeight <= 0) return null;
 
         int random = java.util.concurrent.ThreadLocalRandom.current().nextInt(totalWeight);
 
         for (LootEntry entry : milestoneRewards) {
-            random -= entry.weight;
+            random -= entry.chance;
             if (random < 0) return entry;
         }
         return null;
