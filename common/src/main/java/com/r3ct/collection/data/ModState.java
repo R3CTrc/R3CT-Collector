@@ -1,6 +1,7 @@
 package com.r3ct.collection.data;
 
 import com.mojang.serialization.Codec;
+import com.r3ct.collection.Constants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
@@ -55,14 +56,14 @@ public class ModState extends SavedData {
         players.forEach((uuid, data) -> {
             playersNbt.put(uuid.toString(), data.toNbt());
         });
-        nbt.put("players", playersNbt);
+        nbt.put(Constants.NBT_PLAYERS_KEY, playersNbt);
         return nbt;
     }
 
     public static ModState load(CompoundTag nbt, HolderLookup.Provider registries) {
         ModState state = new ModState();
 
-        nbt.getCompound("players").ifPresent(playersNbt -> {
+        nbt.getCompound(Constants.NBT_PLAYERS_KEY).ifPresent(playersNbt -> {
             for (String key : playersNbt.keySet()) {
                 playersNbt.getCompound(key).ifPresent(playerDataNbt -> {
                     try {
@@ -70,15 +71,23 @@ public class ModState extends SavedData {
 
                         Set<String> migratedItems = new HashSet<>();
                         for (String item : data.unlockedItems) {
-                            migratedItems.add(item.replace("r3ct_collector:", "r3ct_collection:")
-                                    .replace("r3ct:", "r3ct_collection:"));
+                            if (item.startsWith("r3ct_collector:") || item.startsWith("r3ct:")) {
+                                migratedItems.add(item.replace("r3ct_collector:", "r3ct_collection:")
+                                        .replace("r3ct:", "r3ct_collection:"));
+                            } else {
+                                migratedItems.add(item);
+                            }
                         }
                         data.unlockedItems = migratedItems;
 
                         Set<String> migratedCats = new HashSet<>();
                         for (String cat : data.rewardedCategories) {
-                            migratedCats.add(cat.replace("r3ct_collector:", "r3ct_collection:")
-                                    .replace("r3ct:", "r3ct_collection:"));
+                            if (cat.startsWith("r3ct_collector:") || cat.startsWith("r3ct:")) {
+                                migratedCats.add(cat.replace("r3ct_collector:", "r3ct_collection:")
+                                        .replace("r3ct:", "r3ct_collection:"));
+                            } else {
+                                migratedCats.add(cat);
+                            }
                         }
                         data.rewardedCategories = migratedCats;
 
@@ -98,7 +107,7 @@ public class ModState extends SavedData {
     );
 
     public static final SavedDataType<ModState> TYPE = new SavedDataType<>(
-            Identifier.parse("r3ct_collection_data"),
+            Identifier.parse(Constants.DATA_NAME),
             ModState::new,
             CODEC,
             DataFixTypes.LEVEL

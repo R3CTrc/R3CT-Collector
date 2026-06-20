@@ -90,13 +90,19 @@ public class CollectionConfig {
                 if (data.blacklistedTabs != null) blacklistedTabs = data.blacklistedTabs;
                 if (data.blacklistedItems != null) blacklistedItems = data.blacklistedItems;
             }
-        } catch (Exception e) { System.err.println("[R3CT-Collection] Error loading items config!"); }
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error loading items config!");
+            e.printStackTrace();
+        }
 
         checkAndMigrate(CLIENT_PATH, "r3ct_collection_client.json", CLIENT_CONFIG_VERSION);
         try (FileReader reader = new FileReader(CLIENT_PATH.toFile())) {
             ClientData data = GSON.fromJson(reader, ClientData.class);
             if (data != null) catalogScale = data.catalogScale;
-        } catch (Exception e) { System.err.println("[R3CT-Collection] Error loading client config!"); }
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error loading client config!");
+            e.printStackTrace();
+        }
 
         checkAndMigrate(REWARDS_PATH, "r3ct_collection_rewards.json", REWARDS_CONFIG_VERSION);
         try (FileReader reader = new FileReader(REWARDS_PATH.toFile())) {
@@ -110,7 +116,10 @@ public class CollectionConfig {
                 if (data.milestoneRewards != null) milestoneRewards = data.milestoneRewards;
                 if (data.categoryRewards != null) categoryRewards = data.categoryRewards;
             }
-        } catch (Exception e) { System.err.println("[R3CT-Collection] Error loading rewards config!"); }
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error loading rewards config!");
+            e.printStackTrace();
+        }
     }
 
     public static void saveItems() {
