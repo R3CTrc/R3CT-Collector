@@ -2,8 +2,11 @@ package com.r3ct.collection.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -58,13 +61,13 @@ public class TrophyBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected net.minecraft.world.item.ItemStack getCloneItemStack(net.minecraft.world.level.LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
-        net.minecraft.world.item.ItemStack stack = super.getCloneItemStack(level, pos, state, includeData);
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state, includeData);
 
-        net.minecraft.world.level.block.entity.BlockEntity blockEntity = level.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof TrophyBlockEntity trophyBE) {
             if (trophyBE.getCustomName() != null) {
-                stack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, trophyBE.getCustomName());
+                stack.set(DataComponents.CUSTOM_NAME, trophyBE.getCustomName());
             }
         }
 

@@ -1,9 +1,11 @@
 package com.r3ct.collection;
 
 import com.r3ct.collection.config.CollectionConfig;
+import com.r3ct.collection.data.ModState;
+import com.r3ct.collection.data.PlayerData;
 import com.r3ct.collection.logic.ServerItemHandler;
-import com.r3ct.collection.network.SubmitItemPayload;
-import com.r3ct.collection.network.SyncDataPayload;
+import com.r3ct.collection.network.*;
+import com.r3ct.collection.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -12,13 +14,11 @@ import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.*;
 import com.r3ct.collection.block.ModBlocks;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 
 public class CollectionFabric implements ModInitializer {
@@ -37,8 +37,8 @@ public class CollectionFabric implements ModInitializer {
         );
 
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB_KEY, FabricCreativeModeTab.builder()
-                .title(net.minecraft.network.chat.Component.translatable("itemGroup." + Constants.MOD_ID + ".main_tab"))
-                .icon(() -> new net.minecraft.world.item.ItemStack(ModBlocks.TROPHY_BUILDING))
+                .title(Component.translatable("itemGroup." + Constants.MOD_ID + ".main_tab"))
+                .icon(() -> new ItemStack(ModBlocks.TROPHY_BUILDING))
                 .displayItems((context, output) -> {
                     ModBlocks.TROPHIES.values().forEach(output::accept);
                 })
@@ -46,26 +46,26 @@ public class CollectionFabric implements ModInitializer {
         );
 
         PayloadTypeRegistry.serverboundPlay().register(SubmitItemPayload.TYPE, SubmitItemPayload.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(com.r3ct.collection.network.ClaimCategoryRewardPayload.TYPE, com.r3ct.collection.network.ClaimCategoryRewardPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ClaimCategoryRewardPayload.TYPE, ClaimCategoryRewardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(SyncDataPayload.TYPE, SyncDataPayload.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(com.r3ct.collection.network.RequestLeaderboardPayload.TYPE, com.r3ct.collection.network.RequestLeaderboardPayload.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(com.r3ct.collection.network.LeaderboardDataPayload.TYPE, com.r3ct.collection.network.LeaderboardDataPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(RequestLeaderboardPayload.TYPE, RequestLeaderboardPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(LeaderboardDataPayload.TYPE, LeaderboardDataPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SubmitItemPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleItemSubmit(context.player(), payload.itemId(), payload.slotId()));
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(com.r3ct.collection.network.ClaimCategoryRewardPayload.TYPE, (payload, context) -> {
+        ServerPlayNetworking.registerGlobalReceiver(ClaimCategoryRewardPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleCategoryReward(context.player(), payload.tabId()));
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            com.r3ct.collection.data.PlayerData data = com.r3ct.collection.data.ModState.getPlayerData(server, handler.player.getUUID());
-            com.r3ct.collection.logic.ServerItemHandler.refundMigrationTrophies(handler.player, data);
-            com.r3ct.collection.platform.Services.PLATFORM.sendSyncDataPacketToClient(handler.player, data.unlockedItems, data.rewardedCategories);
+            PlayerData data = ModState.getPlayerData(server, handler.player.getUUID());
+            ServerItemHandler.refundMigrationTrophies(handler.player, data);
+            Services.PLATFORM.sendSyncDataPacketToClient(handler.player, data.unlockedItems, data.rewardedCategories);
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(com.r3ct.collection.network.RequestLeaderboardPayload.TYPE, (payload, context) -> {
+        ServerPlayNetworking.registerGlobalReceiver(RequestLeaderboardPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleLeaderboardRequest(context.player()));
         });
     }

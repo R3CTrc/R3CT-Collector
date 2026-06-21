@@ -7,9 +7,12 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.lwjgl.glfw.GLFW;
 
 public class CollectionClientNeoForge {
@@ -32,9 +35,9 @@ public class CollectionClientNeoForge {
         }
 
         @SubscribeEvent
-        public static void onClientSetup(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent event) {
-            net.neoforged.fml.ModLoadingContext.get().registerExtensionPoint(
-                    net.neoforged.neoforge.client.gui.IConfigScreenFactory.class,
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            ModLoadingContext.get().registerExtensionPoint(
+                    IConfigScreenFactory.class,
                     () -> (minecraft, parentScreen) -> new CollectionConfigScreen(parentScreen)
             );
         }
