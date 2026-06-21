@@ -1,6 +1,7 @@
 package com.r3ct.collection.block;
 
 import com.r3ct.collection.Constants;
+import com.r3ct.collection.platform.Services;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -53,7 +54,7 @@ public class ModBlocks {
             Identifier.parse(Constants.MOD_ID + ":trophy_building_be")
     );
 
-    public static final BlockEntityType<TrophyBlockEntity> TROPHY_BE_TYPE = com.r3ct.collection.platform.Services.PLATFORM.createBlockEntityType(
+    public static final BlockEntityType<TrophyBlockEntity> TROPHY_BE_TYPE = Services.PLATFORM.createBlockEntityType(
             (pos, state) -> new TrophyBlockEntity(ModBlocks.TROPHY_BE_TYPE, pos, state),
             TROPHIES.values().toArray(new Block[0])
     );

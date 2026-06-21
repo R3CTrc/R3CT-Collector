@@ -1,11 +1,18 @@
 package com.r3ct.collection.client.screen;
 
 import com.r3ct.collection.platform.Services;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+
+import java.util.Optional;
 
 public class ConfirmSubmitScreen extends Screen {
     private final Screen parent;
@@ -26,15 +33,15 @@ public class ConfirmSubmitScreen extends Screen {
         int centerX = this.width / 2;
         int btnY = this.height / 2 + 30;
 
-        this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.yes").withStyle(net.minecraft.ChatFormatting.GREEN), button -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.yes").withStyle(ChatFormatting.GREEN), button -> {
             Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, this.slotId);
             if (this.minecraft != null) {
-                this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                 this.minecraft.setScreen(this.parent);
             }
         }).bounds(centerX - 105, btnY, 100, 20).build());
 
-        this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.no").withStyle(net.minecraft.ChatFormatting.RED), button -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.no").withStyle(ChatFormatting.RED), button -> {
             if (this.minecraft != null) this.minecraft.setScreen(this.parent);
         }).bounds(centerX + 5, btnY, 100, 20).build());
     }
@@ -54,7 +61,7 @@ public class ConfirmSubmitScreen extends Screen {
         guiGraphics.fill(itemX - 2, itemY - 2, itemX + 18, itemY + 18, 0x44FFFFFF);
 
         if (mouseX >= itemX && mouseX <= itemX + 16 && mouseY >= itemY && mouseY <= itemY + 16) {
-            guiGraphics.setTooltipForNextFrame(this.font, this.stack.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, net.minecraft.world.item.TooltipFlag.NORMAL), java.util.Optional.empty(), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(this.font, this.stack.getTooltipLines(Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, TooltipFlag.NORMAL), Optional.empty(), mouseX, mouseY);
         }
     }
 }
