@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CollectionConfig {
 
@@ -193,7 +194,7 @@ public class CollectionConfig {
         int totalWeight = milestoneRewards.stream().mapToInt(e -> e.chance).sum();
         if (totalWeight <= 0) return null;
 
-        int random = java.util.concurrent.ThreadLocalRandom.current().nextInt(totalWeight);
+        int random = ThreadLocalRandom.current().nextInt(totalWeight);
 
         for (LootEntry entry : milestoneRewards) {
             random -= entry.chance;

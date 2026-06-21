@@ -1,6 +1,8 @@
 package com.r3ct.collection.scanner;
 
 import com.r3ct.collection.config.CollectionConfig;
+import com.r3ct.collection.logic.ServerItemHandler;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -27,7 +29,7 @@ public class CreativeTabScanner {
         }
     }
 
-    public static void scanAllTabs(FeatureFlagSet features, net.minecraft.core.RegistryAccess registryAccess, boolean hasOp) {
+    public static void scanAllTabs(FeatureFlagSet features, RegistryAccess registryAccess, boolean hasOp) {
         SCANNED_SUBCATEGORIES.clear();
 
         CollectionConfig.load();
@@ -60,7 +62,7 @@ public class CreativeTabScanner {
 
                     if (!CollectionConfig.blacklistedItems.contains(itemId) && !CollectionConfig.blacklistedMods.contains(itemNamespace)) {
 
-                        String uniqueKey = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+                        String uniqueKey = ServerItemHandler.getUniqueItemId(stack);
 
                         if (!processedItems.contains(uniqueKey)) {
                             category.items.add(stack);
