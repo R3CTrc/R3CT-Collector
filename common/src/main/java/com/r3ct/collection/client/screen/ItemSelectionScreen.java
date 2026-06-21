@@ -1,12 +1,20 @@
 package com.r3ct.collection.client.screen;
 
+import com.r3ct.collection.platform.Services;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ItemSelectionScreen extends Screen {
     private final Screen parent;
@@ -22,7 +30,7 @@ public class ItemSelectionScreen extends Screen {
 
     @Override
     protected void init() {
-        this.addRenderableWidget(Button.builder(net.minecraft.network.chat.CommonComponents.GUI_CANCEL, button -> {
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> {
             if (this.minecraft != null) this.minecraft.setScreen(this.parent);
         }).bounds(this.width / 2 - 50, this.height / 2 + 50, 100, 20).build());
     }
@@ -58,13 +66,13 @@ public class ItemSelectionScreen extends Screen {
 
             if (mouseX >= slotX && mouseX <= slotX + slotSize && mouseY >= slotY && mouseY <= slotY + slotSize) {
                 guiGraphics.fill(slotX, slotY, slotX + slotSize, slotY + slotSize, 0x44FFFFFF);
-                guiGraphics.setTooltipForNextFrame(this.font, slotItem.stack.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, net.minecraft.world.item.TooltipFlag.NORMAL), java.util.Optional.empty(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(this.font, slotItem.stack.getTooltipLines(Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, TooltipFlag.NORMAL), Optional.empty(), mouseX, mouseY);
             }
         }
     }
 
     @Override
-    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         double mouseX = event.x();
         double mouseY = event.y();
 
@@ -85,8 +93,8 @@ public class ItemSelectionScreen extends Screen {
                 if (CatalogScreen.isValuable(selected.stack)) {
                     this.minecraft.setScreen(new ConfirmSubmitScreen(this.parent, selected.stack, selected.slotId, this.itemId));
                 } else {
-                    com.r3ct.collection.platform.Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, selected.slotId);
-                    this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                    Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, selected.slotId);
+                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                     this.minecraft.setScreen(this.parent);
                 }
                 return true;
