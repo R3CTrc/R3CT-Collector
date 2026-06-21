@@ -1,11 +1,15 @@
 package com.r3ct.collection.platform.services;
 
+import com.r3ct.collection.network.LeaderboardDataPayload;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 public interface IPlatformHelper {
@@ -46,11 +50,11 @@ public interface IPlatformHelper {
 
     void sendClaimRewardPacketToServer(String tabId);
 
-    void sendSyncDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.Set<String> unlockedItems, java.util.Set<String> rewardedCategories);
+    void sendSyncDataPacketToClient(ServerPlayer player, Set<String> unlockedItems, Set<String> rewardedCategories);
 
     void sendRequestLeaderboardPacketToServer();
 
-    void sendLeaderboardDataPacketToClient(net.minecraft.server.level.ServerPlayer player, java.util.List<com.r3ct.collection.network.LeaderboardDataPayload.TopPlayerEntry> entries);
+    void sendLeaderboardDataPacketToClient(ServerPlayer player, List<LeaderboardDataPayload.TopPlayerEntry> entries);
 
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BiFunction<BlockPos, BlockState, T> factory, Block... blocks);
 

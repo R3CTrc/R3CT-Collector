@@ -2,20 +2,42 @@ package com.r3ct.collection.client.screen;
 
 import com.r3ct.collection.client.data.ClientPlayerData;
 import com.r3ct.collection.config.CollectionConfig;
-import com.r3ct.collection.config.CollectionConfig;
+import com.r3ct.collection.logic.ServerItemHandler;
+import com.r3ct.collection.network.LeaderboardDataPayload;
+import com.r3ct.collection.platform.Services;
 import com.r3ct.collection.scanner.CreativeTabScanner;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CatalogScreen extends Screen {
 
@@ -75,13 +97,13 @@ public class CatalogScreen extends Screen {
             tabProgressArray[i] = cat.items.isEmpty() ? 0f : (float) gathered / cat.items.size();
         }
 
-        com.r3ct.collection.platform.Services.PLATFORM.sendRequestLeaderboardPacketToServer();
+        Services.PLATFORM.sendRequestLeaderboardPacketToServer();
     }
 
     private int getGatheredCount(CreativeTabScanner.SubCategory cat) {
         int gathered = 0;
         for (ItemStack stack : cat.items) {
-            String id = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+            String id = ServerItemHandler.getUniqueItemId(stack);
             if (ClientPlayerData.unlockedItems.contains(id)) gathered++;
         }
         return gathered;
@@ -227,7 +249,7 @@ public class CatalogScreen extends Screen {
         int currentY = bookY + 40;
         int maxWidth = 150;
 
-        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collection.info.rewards_title").withStyle(net.minecraft.ChatFormatting.BOLD), textX, currentY, maxWidth, 0xFF000000);
+        currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collection.info.rewards_title").withStyle(ChatFormatting.BOLD), textX, currentY, maxWidth, 0xFF000000);
         currentY += 5;
 
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collection.info.point1"), textX, currentY, maxWidth, 0xFF333333);
@@ -243,20 +265,20 @@ public class CatalogScreen extends Screen {
         currentY = drawWrappedText(guiGraphics, Component.translatable("gui.r3ct_collection.info.point2_desc", "§6" + CollectionConfig.milestoneInterval), textX + 10, currentY, maxWidth - 10, 0xFF555555);
 
         for (CollectionConfig.LootEntry entry : CollectionConfig.milestoneRewards) {
-            net.minecraft.resources.Identifier itemId = net.minecraft.resources.Identifier.parse(entry.item);
-            net.minecraft.world.item.Item rewardItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(itemId).map(net.minecraft.core.Holder::value).orElse(net.minecraft.world.item.Items.AIR);
-            if (rewardItem != net.minecraft.world.item.Items.AIR) {
-                net.minecraft.ChatFormatting itemColor = net.minecraft.ChatFormatting.BLUE;
+            Identifier itemId = Identifier.parse(entry.item);
+            Item rewardItem = BuiltInRegistries.ITEM.get(itemId).map(Holder::value).orElse(Items.AIR);
+            if (rewardItem != Items.AIR) {
+                ChatFormatting itemColor = ChatFormatting.BLUE;
                 if (entry.color != null && entry.color.length() >= 2 && entry.color.startsWith("&")) {
-                    net.minecraft.ChatFormatting parsedColor = net.minecraft.ChatFormatting.getByCode(entry.color.charAt(1));
+                    ChatFormatting parsedColor = ChatFormatting.getByCode(entry.color.charAt(1));
                     if (parsedColor != null) {
                         itemColor = parsedColor;
                     }
                 }
-                net.minecraft.network.chat.MutableComponent line = net.minecraft.network.chat.Component.literal("• ")
-                        .withStyle(net.minecraft.ChatFormatting.DARK_GRAY)
+                MutableComponent line = Component.literal("• ")
+                        .withStyle(ChatFormatting.DARK_GRAY)
                         .append(new ItemStack(rewardItem).getHoverName().copy().withStyle(itemColor))
-                        .append(net.minecraft.network.chat.Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(itemColor));
+                        .append(Component.literal(" (" + entry.min_amount + " - " + entry.max_amount + ")").withStyle(itemColor));
                 currentY = drawWrappedText(guiGraphics, line, textX + 15, currentY, maxWidth - 15, 0xFFFFFFFF);
             }
         }
@@ -269,8 +291,8 @@ public class CatalogScreen extends Screen {
     }
 
     private int drawWrappedText(GuiGraphicsExtractor guiGraphics, Component text, int x, int y, int maxWidth, int color) {
-        java.util.List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(text, maxWidth);
-        for (net.minecraft.util.FormattedCharSequence line : lines) {
+        List<FormattedCharSequence> lines = this.font.split(text, maxWidth);
+        for (FormattedCharSequence line : lines) {
             guiGraphics.text(this.font, line, x, y, color, false);
             y += this.font.lineHeight + 2;
         }
@@ -284,21 +306,21 @@ public class CatalogScreen extends Screen {
 
         int startX = bookX + 50;
         int startY = bookY + 35;
-        com.r3ct.collection.network.LeaderboardDataPayload.TopPlayerEntry hoveredEntry = null;
+        LeaderboardDataPayload.TopPlayerEntry hoveredEntry = null;
 
         if (ClientPlayerData.leaderboardData.isEmpty()) {
             return;
         }
 
         for (int i = 0; i < Math.min(10, ClientPlayerData.leaderboardData.size()); i++) {
-            com.r3ct.collection.network.LeaderboardDataPayload.TopPlayerEntry entry = ClientPlayerData.leaderboardData.get(i);
+            LeaderboardDataPayload.TopPlayerEntry entry = ClientPlayerData.leaderboardData.get(i);
             int y = startY + (i * 19);
 
             String nameColor = (i == 0) ? "§5§l" : (i == 1) ? "§6§l" : (i == 2) ? "§3§l" : "§8";
             String valColor = (i == 0) ? "§5" : (i == 1) ? "§6" : (i == 2) ? "§3" : "§8";
 
             ItemStack head = new ItemStack(Items.PLAYER_HEAD);
-            head.set(net.minecraft.core.component.DataComponents.PROFILE, net.minecraft.world.item.component.ResolvableProfile.createUnresolved(entry.name()));
+            head.set(DataComponents.PROFILE, ResolvableProfile.createUnresolved(entry.name()));
             guiGraphics.item(head, startX, y);
 
             guiGraphics.text(this.font, "§8" + (i + 1) + ". " + nameColor + entry.name(), startX + 20, y + 4, 0xFF333333, false);
@@ -314,16 +336,16 @@ public class CatalogScreen extends Screen {
         }
 
         if (hoveredEntry != null) {
-            java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tt = new java.util.ArrayList<>();
+            List<ClientTooltipComponent> tt = new ArrayList<>();
 
-            tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("     §f§l" + hoveredEntry.name()).getVisualOrderText()));
-            tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal("§8----------------").getVisualOrderText()));
+            tt.add(ClientTooltipComponent.create(Component.literal("     §f§l" + hoveredEntry.name()).getVisualOrderText()));
+            tt.add(ClientTooltipComponent.create(Component.literal("§8----------------").getVisualOrderText()));
 
             for (CreativeTabScanner.SubCategory cat : cachedCategories) {
                 int max = cat.items.isEmpty() ? 1 : cat.items.size();
                 int gathered = 0;
                 for (ItemStack stack : cat.items) {
-                    String id = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+                    String id = ServerItemHandler.getUniqueItemId(stack);
                     if (hoveredEntry.unlockedItems().contains(id)) gathered++;
                 }
 
@@ -331,26 +353,26 @@ public class CatalogScreen extends Screen {
                 String colorCode = percent < 33 ? "§c" : (percent < 66 ? "§6" : "§a");
 
                 String line = "§7" + cat.displayName.getString() + ": " + colorCode + percent + "%";
-                tt.add(net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.create(Component.literal(line).getVisualOrderText()));
+                tt.add(ClientTooltipComponent.create(Component.literal(line).getVisualOrderText()));
             }
 
-            guiGraphics.tooltip(this.font, tt, (int) scaledMouseX, (int) scaledMouseY, net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE, null);
+            guiGraphics.tooltip(this.font, tt, (int) scaledMouseX, (int) scaledMouseY, DefaultTooltipPositioner.INSTANCE, null);
 
             ItemStack ttHead = new ItemStack(Items.PLAYER_HEAD);
-            ttHead.set(net.minecraft.core.component.DataComponents.PROFILE, net.minecraft.world.item.component.ResolvableProfile.createUnresolved(hoveredEntry.name()));
+            ttHead.set(DataComponents.PROFILE, ResolvableProfile.createUnresolved(hoveredEntry.name()));
             guiGraphics.item(ttHead, (int) scaledMouseX + 11, (int) scaledMouseY - 14);
         }
     }
 
     private void renderTabs(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY) {
 
-        java.util.Set<String> playerInvCache = new java.util.HashSet<>();
+        Set<String> playerInvCache = new HashSet<>();
         if (!this.minecraft.player.isCreative()) {
-            net.minecraft.world.entity.player.Inventory inv = this.minecraft.player.getInventory();
+            Inventory inv = this.minecraft.player.getInventory();
             for (int j = 0; j < inv.getContainerSize(); j++) {
                 ItemStack invStack = inv.getItem(j);
                 if (!invStack.isEmpty()) {
-                    playerInvCache.add(com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(invStack));
+                    playerInvCache.add(ServerItemHandler.getUniqueItemId(invStack));
                 }
             }
         }
@@ -406,7 +428,7 @@ public class CatalogScreen extends Screen {
             boolean canSubmitAny = false;
 
             for (ItemStack stack : cat.items) {
-                String itemId = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+                String itemId = ServerItemHandler.getUniqueItemId(stack);
                 boolean isCollected = ClientPlayerData.unlockedItems.contains(itemId);
 
                 if (isCollected) {
@@ -433,7 +455,7 @@ public class CatalogScreen extends Screen {
                 tabTooltip.add(cat.displayName.copy().withStyle(s -> s.withColor(0xFFD4AF37).withBold(true)));
 
                 for (ItemStack stack : cat.items) {
-                    String itemId = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+                    String itemId = ServerItemHandler.getUniqueItemId(stack);
                     if (ClientPlayerData.unlockedItems.contains(itemId)) {
                         gatheredCatItems++;
                     }
@@ -470,7 +492,7 @@ public class CatalogScreen extends Screen {
 
         int gatheredItems = 0;
         for (ItemStack stack : items) {
-            String itemId = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+            String itemId = ServerItemHandler.getUniqueItemId(stack);
             if (ClientPlayerData.unlockedItems.contains(itemId)) {
                 gatheredItems++;
             }
@@ -545,7 +567,7 @@ public class CatalogScreen extends Screen {
             int slotY = gridStartY + (index / columns * 21);
             ItemStack stack = items.get(i);
 
-            String registryName = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(stack);
+            String registryName = ServerItemHandler.getUniqueItemId(stack);
             boolean isCollected = ClientPlayerData.unlockedItems.contains(registryName);
             boolean isInInventory = false;
 
@@ -553,10 +575,10 @@ public class CatalogScreen extends Screen {
                 if (this.minecraft.player.isCreative()) {
                     isInInventory = true;
                 } else {
-                    net.minecraft.world.entity.player.Inventory inv = this.minecraft.player.getInventory();
+                    Inventory inv = this.minecraft.player.getInventory();
                     for (int j = 0; j < inv.getContainerSize(); j++) {
                         ItemStack invStack = inv.getItem(j);
-                        if (!invStack.isEmpty() && com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(invStack).equals(registryName)) {
+                        if (!invStack.isEmpty() && ServerItemHandler.getUniqueItemId(invStack).equals(registryName)) {
                             isInInventory = true;
                             break;
                         }
@@ -613,11 +635,11 @@ public class CatalogScreen extends Screen {
                 itemTooltip.add(modifiedName);
                 if (!isCollected) {
                     int xp = CollectionConfig.xpCommon;
-                    net.minecraft.world.item.Rarity rarity = stack.getRarity();
+                    Rarity rarity = stack.getRarity();
 
-                    if (rarity == net.minecraft.world.item.Rarity.UNCOMMON) xp = CollectionConfig.xpUncommon;
-                    else if (rarity == net.minecraft.world.item.Rarity.RARE) xp = CollectionConfig.xpRare;
-                    else if (rarity == net.minecraft.world.item.Rarity.EPIC) xp = CollectionConfig.xpEpic;
+                    if (rarity == Rarity.UNCOMMON) xp = CollectionConfig.xpUncommon;
+                    else if (rarity == Rarity.RARE) xp = CollectionConfig.xpRare;
+                    else if (rarity == Rarity.EPIC) xp = CollectionConfig.xpEpic;
 
                     itemTooltip.add(Component.translatable("gui.r3ct_collection.reward_xp_info", "§e" + xp));
                 }
@@ -647,7 +669,7 @@ public class CatalogScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         float scale = calculateEffectiveScale();
         double mouseX = (event.x() - this.width / 2.0) / scale + this.width / 2.0;
         double mouseY = (event.y() - this.height / 2.0) / scale + this.height / 2.0;
@@ -660,7 +682,7 @@ public class CatalogScreen extends Screen {
         for (int i = 0; i < tabs.length; i++) {
             if (mouseX >= rightTabX && mouseX <= rightTabX + 32 && mouseY >= bookStartY + 20 + (i * 32) && mouseY <= bookStartY + 20 + (i * 32) + 28) {
                 activeSpecialTab = tabs[i];
-                this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
         }
@@ -674,7 +696,7 @@ public class CatalogScreen extends Screen {
                 selectedTabIndex = newTab;
                 currentRowScroll = 0;
                 activeSpecialTab = SpecialTab.NONE;
-                this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
         }
@@ -682,12 +704,12 @@ public class CatalogScreen extends Screen {
         int arrowCenter = tabStartX + 16;
         if (currentTabScroll > 0 && mouseX >= arrowCenter - 10 && mouseX <= arrowCenter + 10 && mouseY >= tabStartY - 10 && mouseY <= tabStartY + 2) {
             currentTabScroll--; currentRowScroll = 0;
-            this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         }
         if (currentTabScroll < cachedCategories.size() - 7 && mouseX >= arrowCenter - 10 && mouseX <= arrowCenter + 10 && mouseY >= tabStartY + 212 && mouseY <= tabStartY + 224) {
             currentTabScroll++; currentRowScroll = 0;
-            this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         }
 
@@ -717,23 +739,23 @@ public class CatalogScreen extends Screen {
 
                     if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
                         ItemStack clickedStack = activeCat.items.get(actualItemIndex);
-                        String itemId = com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(clickedStack);
-                        boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(java.util.Set.of(clickedStack.getItem()));
+                        String itemId = ServerItemHandler.getUniqueItemId(clickedStack);
+                        boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(Set.of(clickedStack.getItem()));
 
                         if (!ClientPlayerData.unlockedItems.contains(itemId)) {
 
                             if (this.minecraft.player.isCreative()) {
-                                com.r3ct.collection.platform.Services.PLATFORM.sendSubmitItemPacketToServer(itemId, -1);
-                                this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                Services.PLATFORM.sendSubmitItemPacketToServer(itemId, -1);
+                                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                                 return true;
                             }
 
                             List<SlotItem> uniqueItems = new ArrayList<>();
-                            net.minecraft.world.entity.player.Inventory inv = this.minecraft.player.getInventory();
+                            Inventory inv = this.minecraft.player.getInventory();
 
                             for (int i = 0; i < inv.getContainerSize(); i++) {
                                 ItemStack invStack = inv.getItem(i);
-                                if (!invStack.isEmpty() && com.r3ct.collection.logic.ServerItemHandler.getUniqueItemId(invStack).equals(itemId)) {
+                                if (!invStack.isEmpty() && ServerItemHandler.getUniqueItemId(invStack).equals(itemId)) {
 
                                     boolean isDuplicate = false;
                                     for (SlotItem existing : uniqueItems) {
@@ -755,8 +777,8 @@ public class CatalogScreen extends Screen {
                                 if (isValuable(singleItem.stack)) {
                                     this.minecraft.setScreen(new ConfirmSubmitScreen(this, singleItem.stack, singleItem.slotId, itemId));
                                 } else {
-                                    com.r3ct.collection.platform.Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
-                                    this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                    Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
+                                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                                 }
                             } else if (uniqueItems.size() > 1) {
                                 this.minecraft.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));
@@ -772,7 +794,7 @@ public class CatalogScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent event, double dx, double dy) {
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
         float scale = calculateEffectiveScale();
         double mouseY = (event.y() - this.height / 2.0) / scale + this.height / 2.0;
 
@@ -781,7 +803,7 @@ public class CatalogScreen extends Screen {
     }
 
     @Override
-    public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (event.button() == 0) isScrolling = false;
         return super.mouseReleased(event);
     }
@@ -829,8 +851,8 @@ public class CatalogScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
-        if (com.r3ct.collection.platform.Services.PLATFORM.isCatalogKey(event)) {
+    public boolean keyPressed(KeyEvent event) {
+        if (Services.PLATFORM.isCatalogKey(event)) {
             this.onClose();
             return true;
         }
@@ -838,18 +860,18 @@ public class CatalogScreen extends Screen {
     }
 
     public static boolean isValuable(ItemStack stack) {
-        if (stack.isEnchanted() || stack.has(net.minecraft.core.component.DataComponents.CUSTOM_NAME)) {
+        if (stack.isEnchanted() || stack.has(DataComponents.CUSTOM_NAME)) {
             return true;
         }
 
-        net.minecraft.world.item.component.ItemContainerContents container = stack.get(net.minecraft.core.component.DataComponents.CONTAINER);
+        ItemContainerContents container = stack.get(DataComponents.CONTAINER);
         if (container != null) {
             for (var item : container.nonEmptyItems()) {
                 return true;
             }
         }
 
-        net.minecraft.world.item.component.BundleContents bundle = stack.get(net.minecraft.core.component.DataComponents.BUNDLE_CONTENTS);
+        BundleContents bundle = stack.get(DataComponents.BUNDLE_CONTENTS);
         if (bundle != null && !bundle.isEmpty()) {
             return true;
         }

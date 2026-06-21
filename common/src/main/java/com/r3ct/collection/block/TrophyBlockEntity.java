@@ -3,8 +3,16 @@ package com.r3ct.collection.block;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,26 +67,26 @@ public class TrophyBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void applyImplicitComponents(net.minecraft.core.component.DataComponentGetter input) {
+    protected void applyImplicitComponents(DataComponentGetter input) {
         super.applyImplicitComponents(input);
-        this.customName = input.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
+        this.customName = input.get(DataComponents.CUSTOM_NAME);
     }
 
     @Override
-    protected void collectImplicitComponents(net.minecraft.core.component.DataComponentMap.Builder components) {
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         if (this.customName != null) {
-            components.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, this.customName);
+            components.set(DataComponents.CUSTOM_NAME, this.customName);
         }
     }
 
     @Override
-    public net.minecraft.nbt.CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
 
     @Override
-    public net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener> getUpdatePacket() {
-        return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

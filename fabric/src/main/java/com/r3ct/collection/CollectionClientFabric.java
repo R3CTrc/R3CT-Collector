@@ -1,13 +1,20 @@
 package com.r3ct.collection;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.r3ct.collection.client.input.KeyMappings;
 import com.r3ct.collection.client.data.ClientPlayerData;
+import com.r3ct.collection.network.LeaderboardDataPayload;
+import com.r3ct.collection.network.SyncDataPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class CollectionClientFabric implements ClientModInitializer {
 
@@ -18,7 +25,7 @@ public class CollectionClientFabric implements ClientModInitializer {
 
         KeyMappings.openCatalogKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.r3ct.open_catalog",
-                com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_K,
                 R3CT_COLLECTOR_CATEGORY
         ));
@@ -27,20 +34,20 @@ public class CollectionClientFabric implements ClientModInitializer {
             KeyMappings.handleKeyInput();
         });
 
-        net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
-                com.r3ct.collection.network.SyncDataPayload.TYPE,
+        ClientPlayNetworking.registerGlobalReceiver(
+                SyncDataPayload.TYPE,
                 (payload, context) -> {
                     context.client().execute(() -> {
-                        ClientPlayerData.unlockedItems = new java.util.HashSet<>(payload.unlockedItems());
-                        ClientPlayerData.rewardedCategories = new java.util.HashSet<>(payload.rewardedCategories());
+                        ClientPlayerData.unlockedItems = new HashSet<>(payload.unlockedItems());
+                        ClientPlayerData.rewardedCategories = new HashSet<>(payload.rewardedCategories());
                     });
                 }
         );
 
-        net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
-                com.r3ct.collection.network.LeaderboardDataPayload.TYPE,
+        ClientPlayNetworking.registerGlobalReceiver(
+                LeaderboardDataPayload.TYPE,
                 (payload, context) -> context.client().execute(() -> {
-                    ClientPlayerData.leaderboardData = new java.util.ArrayList<>(payload.entries());
+                    ClientPlayerData.leaderboardData = new ArrayList<>(payload.entries());
                 })
         );
     }
