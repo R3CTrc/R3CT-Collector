@@ -63,6 +63,7 @@ public class CollectionFabric implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             PlayerData data = ModState.getPlayerData(server, handler.player.getUUID());
             ServerItemHandler.refundMigrationTrophies(handler.player, data);
+            ServerItemHandler.checkAndAwardCompletedCategories(handler.player, data);
             Services.PLATFORM.sendSyncDataPacketToClient(handler.player, data.unlockedItems, data.rewardedCategories);
 
             String itemsJson = CollectionConfig.getConfigFileAsString("r3ct_collection_items.json");
