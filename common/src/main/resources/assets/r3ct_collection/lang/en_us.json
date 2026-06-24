@@ -17,6 +17,7 @@
   "gui.r3ct_collection.catalog.select_title": "Which item do you want to submit?",
   "gui.r3ct_collection.catalog.yes": "Yes",
   "gui.r3ct_collection.catalog.no": "No",
+  "gui.r3ct_collection.catalog.global_submit_ready": "You have items to submit!",
 
   "gui.r3ct_collection.info.rewards_title": "Collection Rewards",
   "gui.r3ct_collection.info.point1": "1. Submitting Items",

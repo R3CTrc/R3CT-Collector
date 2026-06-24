@@ -3,6 +3,15 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+repositories {
+    maven { url = "https://maven.blamejared.com/" }
+}
+
+dependencies {
+    compileOnly "mezz.jei:jei-1.21.11-neoforge-api:27.4.0.24"
+    runtimeOnly "mezz.jei:jei-1.21.11-neoforge:27.4.0.24"
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable neoforge AccessTransformers if the file exists

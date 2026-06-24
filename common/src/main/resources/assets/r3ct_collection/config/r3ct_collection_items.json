@@ -1,6 +1,6 @@
 {
   "_comment_version": "Do not change the version number! It is used for automatic config updates.",
-  "version": 1,
+  "version": 2,
 
   "_comment_blacklists": "Add item, mod, or tab IDs here to hide them from the Collector's Book.",
   "blacklistedMods": [
@@ -17,6 +17,8 @@
     "minecraft:vault",
     "minecraft:suspicious_sand",
     "minecraft:suspicious_gravel",
+    "minecraft:dirt_path",
+    "minecraft:farmland",
     "minecraft:infested_stone",
     "minecraft:infested_cobblestone",
     "minecraft:infested_stone_bricks",
