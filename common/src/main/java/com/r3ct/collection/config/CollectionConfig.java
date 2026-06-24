@@ -202,4 +202,46 @@ public class CollectionConfig {
         }
         return null;
     }
+
+    public static void syncFromServer(String itemsJson, String rewardsJson) {
+        try {
+            if (itemsJson != null && !itemsJson.isEmpty()) {
+                ItemsData data = GSON.fromJson(itemsJson, ItemsData.class);
+                if (data != null) {
+                    if (data.blacklistedMods != null) blacklistedMods = data.blacklistedMods;
+                    if (data.blacklistedTabs != null) blacklistedTabs = data.blacklistedTabs;
+                    if (data.blacklistedItems != null) blacklistedItems = data.blacklistedItems;
+                }
+            }
+
+            if (rewardsJson != null && !rewardsJson.isEmpty()) {
+                RewardsData data = GSON.fromJson(rewardsJson, RewardsData.class);
+                if (data != null) {
+                    xpCommon = data.xpCommon;
+                    xpUncommon = data.xpUncommon;
+                    xpRare = data.xpRare;
+                    xpEpic = data.xpEpic;
+                    milestoneInterval = data.milestoneInterval;
+                    if (data.milestoneRewards != null) milestoneRewards = data.milestoneRewards;
+                    if (data.categoryRewards != null) categoryRewards = data.categoryRewards;
+                }
+            }
+            System.out.println("[R3CT-Collection] Server configuration synchronization completed successfully.");
+        } catch (Exception e) {
+            System.err.println("[R3CT-Collection] Error during server configuration synchronization!");
+            e.printStackTrace();
+        }
+    }
+
+    public static String getConfigFileAsString(String fileName) {
+        try {
+            Path path = CONFIG_DIR.resolve(fileName);
+            if (Files.exists(path)) {
+                return Files.readString(path);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "{}";
+    }
 }

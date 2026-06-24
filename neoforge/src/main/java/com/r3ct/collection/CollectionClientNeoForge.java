@@ -3,6 +3,8 @@ package com.r3ct.collection;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.r3ct.collection.client.input.KeyMappings;
 import com.r3ct.collection.client.screen.CollectionConfigScreen;
+import com.r3ct.collection.config.CollectionConfig;
+import com.r3ct.collection.scanner.CreativeTabScanner;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
@@ -10,6 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -49,6 +52,12 @@ public class CollectionClientNeoForge {
         @SubscribeEvent
         public static void onClientTick(ClientTickEvent.Post event) {
             KeyMappings.handleKeyInput();
+        }
+
+        @SubscribeEvent
+        public static void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+            CollectionConfig.load();
+            CreativeTabScanner.SCANNED_SUBCATEGORIES.clear();
         }
     }
 }

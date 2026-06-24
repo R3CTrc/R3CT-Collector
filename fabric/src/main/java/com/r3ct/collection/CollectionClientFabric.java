@@ -4,11 +4,15 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.r3ct.collection.block.ModBlocks;
 import com.r3ct.collection.client.input.KeyMappings;
 import com.r3ct.collection.client.data.ClientPlayerData;
+import com.r3ct.collection.config.CollectionConfig;
+import com.r3ct.collection.network.ConfigSyncPayload;
 import com.r3ct.collection.network.LeaderboardDataPayload;
 import com.r3ct.collection.network.SyncDataPayload;
+import com.r3ct.collection.scanner.CreativeTabScanner;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.KeyMapping;
@@ -59,5 +63,18 @@ public class CollectionClientFabric implements ClientModInitializer {
                     ClientPlayerData.leaderboardData = new ArrayList<>(payload.entries());
                 })
         );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                ConfigSyncPayload.TYPE,
+                (payload, context) -> context.client().execute(() -> {
+                    CollectionConfig.syncFromServer(payload.itemsJson(), payload.rewardsJson());
+                    CreativeTabScanner.SCANNED_SUBCATEGORIES.clear();
+                })
+        );
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            CollectionConfig.load();
+            CreativeTabScanner.SCANNED_SUBCATEGORIES.clear();
+        });
     }
 }

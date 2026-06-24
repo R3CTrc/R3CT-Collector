@@ -109,7 +109,6 @@ public class CatalogScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        CollectionConfig.load();
 
         if (CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
             CreativeTabScanner.scanAllTabs(
