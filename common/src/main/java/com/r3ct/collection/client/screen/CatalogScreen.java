@@ -89,6 +89,7 @@ public class CatalogScreen extends Screen {
     private float[] tabProgressArray = new float[0];
     private long lastUpdateTime = 0L;
     private boolean isScrolling = false;
+    private double scrollGrabOffset = 0.0;
 
     private final List<CreativeTabScanner.SubCategory> cachedCategories = new ArrayList<>();
 
@@ -722,14 +723,17 @@ public class CatalogScreen extends Screen {
         if (activeSpecialTab == SpecialTab.HOME) {
             int maxScroll = Math.max(0, cachedCategories.size() - 5);
             if (maxScroll > 0) {
-                float fraction = Mth.clamp((float)(mouseY - trackY) / trackH, 0.0f, 1.0f);
+                int thumbH = Math.max(12, (int) (((float) 5 / Math.max(1, cachedCategories.size())) * trackH));
+                float fraction = Mth.clamp((float)(mouseY - scrollGrabOffset - trackY) / (trackH - thumbH), 0.0f, 1.0f);
                 homeScroll = Math.round(fraction * maxScroll);
             }
         } else if (activeSpecialTab == SpecialTab.NONE && !cachedCategories.isEmpty()) {
             CreativeTabScanner.SubCategory cat = cachedCategories.get(selectedTabIndex);
-            int maxScroll = Math.max(0, (int) Math.ceil(cat.items.size() / 7.0) - 8);
+            int totalRows = (int) Math.ceil(cat.items.size() / 7.0);
+            int maxScroll = Math.max(0, totalRows - 8);
             if (maxScroll > 0) {
-                float fraction = Mth.clamp((float)(mouseY - trackY) / trackH, 0.0f, 1.0f);
+                int thumbH = Math.max(12, (int) (((float) 8 / Math.max(1, totalRows)) * trackH));
+                float fraction = Mth.clamp((float)(mouseY - scrollGrabOffset - trackY) / (trackH - thumbH), 0.0f, 1.0f);
                 currentRowScroll = Math.round(fraction * maxScroll);
             }
         }
@@ -780,79 +784,107 @@ public class CatalogScreen extends Screen {
             return true;
         }
 
-        if (activeSpecialTab == SpecialTab.HOME) {
-            int trackX = bookStartX + 49 + (7 * 21) + 4;
-            if (mouseX >= trackX - 2 && mouseX <= trackX + 6 && mouseY >= bookStartY + 47 && mouseY <= bookStartY + 47 + 164) {
-                isScrolling = true; updateScrollbar(mouseY); return true;
+        int trackX = bookStartX + 49 + (7 * 21) + 4;
+        int trackY = bookStartY + 47;
+        int trackH = 164;
+
+        if ((activeSpecialTab == SpecialTab.HOME || activeSpecialTab == SpecialTab.NONE) &&
+                mouseX >= trackX - 2 && mouseX <= trackX + 6 && mouseY >= trackY && mouseY <= trackY + trackH) {
+
+            isScrolling = true;
+            int maxScroll = 0;
+            int currentScroll = 0;
+            int visibleItems = 0;
+            int totalItems = 0;
+
+            if (activeSpecialTab == SpecialTab.HOME) {
+                visibleItems = 5;
+                totalItems = cachedCategories.size();
+                maxScroll = Math.max(0, totalItems - visibleItems);
+                currentScroll = homeScroll;
+            } else {
+                visibleItems = 8;
+                totalItems = cachedCategories.isEmpty() ? 0 : (int) Math.ceil(cachedCategories.get(selectedTabIndex).items.size() / 7.0);
+                maxScroll = Math.max(0, totalItems - visibleItems);
+                currentScroll = currentRowScroll;
             }
+
+            if (maxScroll > 0) {
+                int thumbH = Math.max(12, (int) (((float) visibleItems / Math.max(1, totalItems)) * trackH));
+                float scrollFraction = (float) currentScroll / maxScroll;
+                int thumbY = trackY + (int) (scrollFraction * (trackH - thumbH));
+
+                if (mouseY >= thumbY && mouseY <= thumbY + thumbH) {
+                    scrollGrabOffset = mouseY - thumbY;
+                } else {
+                    scrollGrabOffset = thumbH / 2.0;
+                }
+            } else {
+                scrollGrabOffset = 0;
+            }
+
+            updateScrollbar(mouseY);
+            return true;
         }
-        else if (activeSpecialTab == SpecialTab.NONE) {
-            int trackX = bookStartX + 49 + (7 * 21) + 4;
-            if (mouseX >= trackX - 2 && mouseX <= trackX + 6 && mouseY >= bookStartY + 47 && mouseY <= bookStartY + 47 + 164) {
-                isScrolling = true; updateScrollbar(mouseY); return true;
-            }
 
-            if (!cachedCategories.isEmpty()) {
-                int gridStartX = bookStartX + 49;
-                int gridStartY = bookStartY + 46;
+        if (activeSpecialTab == SpecialTab.NONE && !cachedCategories.isEmpty()) {
+            int gridStartX = bookStartX + 49;
+            int gridStartY = bookStartY + 46;
 
-                if (mouseX >= gridStartX && mouseX < gridStartX + (7 * 21) && mouseY >= gridStartY && mouseY < gridStartY + (8 * 21)) {
-                    int col = (int) (mouseX - gridStartX) / 21;
-                    int row = (int) (mouseY - gridStartY) / 21;
-                    int indexOnScreen = (row * 7) + col;
-                    int actualItemIndex = (currentRowScroll * 7) + indexOnScreen;
+            if (mouseX >= gridStartX && mouseX < gridStartX + (7 * 21) && mouseY >= gridStartY && mouseY < gridStartY + (8 * 21)) {
+                int col = (int) (mouseX - gridStartX) / 21;
+                int row = (int) (mouseY - gridStartY) / 21;
+                int indexOnScreen = (row * 7) + col;
+                int actualItemIndex = (currentRowScroll * 7) + indexOnScreen;
 
-                    CreativeTabScanner.SubCategory activeCat = cachedCategories.get(selectedTabIndex);
+                CreativeTabScanner.SubCategory activeCat = cachedCategories.get(selectedTabIndex);
 
-                    if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
-                        ItemStack clickedStack = activeCat.items.get(actualItemIndex);
-                        String itemId = ServerItemHandler.getUniqueItemId(clickedStack);
-                        boolean hasInInventory = this.minecraft.player.isCreative() || this.minecraft.player.getInventory().hasAnyOf(Set.of(clickedStack.getItem()));
+                if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
+                    ItemStack clickedStack = activeCat.items.get(actualItemIndex);
+                    String itemId = ServerItemHandler.getUniqueItemId(clickedStack);
 
-                        if (!ClientPlayerData.unlockedItems.contains(itemId)) {
+                    if (!ClientPlayerData.unlockedItems.contains(itemId)) {
+                        if (this.minecraft.player.isCreative()) {
+                            Services.PLATFORM.sendSubmitItemPacketToServer(itemId, -1);
+                            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                            return true;
+                        }
 
-                            if (this.minecraft.player.isCreative()) {
-                                Services.PLATFORM.sendSubmitItemPacketToServer(itemId, -1);
-                                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
-                                return true;
-                            }
+                        List<SlotItem> uniqueItems = new ArrayList<>();
+                        Inventory inv = this.minecraft.player.getInventory();
 
-                            List<SlotItem> uniqueItems = new ArrayList<>();
-                            Inventory inv = this.minecraft.player.getInventory();
+                        for (int i = 0; i < inv.getContainerSize(); i++) {
+                            ItemStack invStack = inv.getItem(i);
+                            if (!invStack.isEmpty() && ServerItemHandler.getUniqueItemId(invStack).equals(itemId)) {
 
-                            for (int i = 0; i < inv.getContainerSize(); i++) {
-                                ItemStack invStack = inv.getItem(i);
-                                if (!invStack.isEmpty() && ServerItemHandler.getUniqueItemId(invStack).equals(itemId)) {
-
-                                    boolean isDuplicate = false;
-                                    for (SlotItem existing : uniqueItems) {
-                                        if (ItemStack.isSameItemSameComponents(existing.stack, invStack)) {
-                                            existing.stack.setCount(existing.stack.getCount() + invStack.getCount());
-                                            isDuplicate = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (!isDuplicate) {
-                                        uniqueItems.add(new SlotItem(invStack, i));
+                                boolean isDuplicate = false;
+                                for (SlotItem existing : uniqueItems) {
+                                    if (ItemStack.isSameItemSameComponents(existing.stack, invStack)) {
+                                        existing.stack.setCount(existing.stack.getCount() + invStack.getCount());
+                                        isDuplicate = true;
+                                        break;
                                     }
                                 }
-                            }
 
-                            if (uniqueItems.size() == 1) {
-                                SlotItem singleItem = uniqueItems.get(0);
-                                if (isValuable(singleItem.stack)) {
-                                    this.minecraft.setScreen(new ConfirmSubmitScreen(this, singleItem.stack, singleItem.slotId, itemId));
-                                } else {
-                                    Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
-                                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                if (!isDuplicate) {
+                                    uniqueItems.add(new SlotItem(invStack, i));
                                 }
-                            } else if (uniqueItems.size() > 1) {
-                                this.minecraft.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));
                             }
                         }
-                        return true;
+
+                        if (uniqueItems.size() == 1) {
+                            SlotItem singleItem = uniqueItems.get(0);
+                            if (isValuable(singleItem.stack)) {
+                                this.minecraft.setScreen(new ConfirmSubmitScreen(this, singleItem.stack, singleItem.slotId, itemId));
+                            } else {
+                                Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
+                                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                            }
+                        } else if (uniqueItems.size() > 1) {
+                            this.minecraft.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));
+                        }
                     }
+                    return true;
                 }
             }
         }
