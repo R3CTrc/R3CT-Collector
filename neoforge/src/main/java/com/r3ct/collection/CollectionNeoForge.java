@@ -91,6 +91,7 @@ public class CollectionNeoForge {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             PlayerData data = ModState.getPlayerData(serverPlayer.level().getServer(), serverPlayer.getUUID());
             ServerItemHandler.refundMigrationTrophies(serverPlayer, data);
+            ServerItemHandler.checkAndAwardCompletedCategories(serverPlayer, data);
             Services.PLATFORM.sendSyncDataPacketToClient(serverPlayer, data.unlockedItems, data.rewardedCategories);
 
             String itemsJson = CollectionConfig.getConfigFileAsString("r3ct_collection_items.json");

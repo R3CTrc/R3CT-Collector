@@ -148,7 +148,7 @@ public class ServerItemHandler {
         }
     }
 
-    private static void checkAndAwardCompletedCategories(ServerPlayer player, PlayerData data) {
+    public static void checkAndAwardCompletedCategories(ServerPlayer player, PlayerData data) {
         if (CreativeTabScanner.SCANNED_SUBCATEGORIES.isEmpty()) {
             CreativeTabScanner.scanAllTabs(player.level().enabledFeatures(), player.level().registryAccess(), false);
         }
