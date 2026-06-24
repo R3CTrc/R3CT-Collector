@@ -17,6 +17,7 @@
   "gui.r3ct_collection.catalog.select_title": "Który przedmiot chcesz oddać?",
   "gui.r3ct_collection.catalog.yes": "Tak",
   "gui.r3ct_collection.catalog.no": "Nie",
+  "gui.r3ct_collection.catalog.global_submit_ready": "Masz przedmioty do oddania!",
 
   "gui.r3ct_collection.info.rewards_title": "Nagrody za Kolekcjonowanie",
   "gui.r3ct_collection.info.point1": "1. Oddawanie Przedmiotów",

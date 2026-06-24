@@ -29,7 +29,7 @@ public class CollectionConfig {
     public static List<LootEntry> milestoneRewards = new ArrayList<>();
     public static Map<String, String> categoryRewards = new HashMap<>();
 
-    private static final int SERVER_CONFIG_VERSION = 1;
+    private static final int SERVER_CONFIG_VERSION = 2;
     private static final int CLIENT_CONFIG_VERSION = 1;
     private static final int REWARDS_CONFIG_VERSION = 2;
 
