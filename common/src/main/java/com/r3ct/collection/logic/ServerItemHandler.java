@@ -85,7 +85,6 @@ public class ServerItemHandler {
         }
 
         if (foundAndRemoved) {
-            CollectionConfig.load();
 
             int sizeBefore = data.unlockedItems.size();
             data.unlockedItems.add(itemId);
@@ -195,7 +194,6 @@ public class ServerItemHandler {
             return;
         }
 
-        CollectionConfig.load();
         String rewardItemId = CollectionConfig.categoryRewards.getOrDefault(tabId, CollectionConfig.categoryRewards.get("modded_generic"));
 
         if (rewardItemId != null) {
@@ -287,7 +285,6 @@ public class ServerItemHandler {
             return;
         }
 
-        CollectionConfig.load();
         boolean gaveAny = false;
 
         for (String tabId : data.rewardedCategories) {

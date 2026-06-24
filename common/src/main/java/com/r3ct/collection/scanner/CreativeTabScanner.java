@@ -32,7 +32,6 @@ public class CreativeTabScanner {
     public static void scanAllTabs(FeatureFlagSet features, RegistryAccess registryAccess, boolean hasOp) {
         SCANNED_SUBCATEGORIES.clear();
 
-        CollectionConfig.load();
 
         CreativeModeTab.ItemDisplayParameters params = new CreativeModeTab.ItemDisplayParameters(features, hasOp, registryAccess);
 

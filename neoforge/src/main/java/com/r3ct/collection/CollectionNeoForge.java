@@ -7,6 +7,7 @@ import com.r3ct.collection.data.PlayerData;
 import com.r3ct.collection.logic.ServerItemHandler;
 import com.r3ct.collection.network.*;
 import com.r3ct.collection.platform.Services;
+import com.r3ct.collection.scanner.CreativeTabScanner;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -16,6 +17,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -75,6 +77,14 @@ public class CollectionNeoForge {
                     ClientPlayerData.leaderboardData = new ArrayList<>(payload.entries());
                 })
         );
+
+        registrar.playToClient(
+                ConfigSyncPayload.TYPE, ConfigSyncPayload.CODEC,
+                (payload, context) -> context.enqueueWork(() -> {
+                    CollectionConfig.syncFromServer(payload.itemsJson(), payload.rewardsJson());
+                    CreativeTabScanner.SCANNED_SUBCATEGORIES.clear();
+                })
+        );
     }
 
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -82,6 +92,10 @@ public class CollectionNeoForge {
             PlayerData data = ModState.getPlayerData(serverPlayer.level().getServer(), serverPlayer.getUUID());
             ServerItemHandler.refundMigrationTrophies(serverPlayer, data);
             Services.PLATFORM.sendSyncDataPacketToClient(serverPlayer, data.unlockedItems, data.rewardedCategories);
+
+            String itemsJson = CollectionConfig.getConfigFileAsString("r3ct_collection_items.json");
+            String rewardsJson = CollectionConfig.getConfigFileAsString("r3ct_collection_rewards.json");
+            PacketDistributor.sendToPlayer(serverPlayer, new ConfigSyncPayload(itemsJson, rewardsJson));
         }
     }
 

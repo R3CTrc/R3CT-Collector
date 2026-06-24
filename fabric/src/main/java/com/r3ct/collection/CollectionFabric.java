@@ -50,6 +50,7 @@ public class CollectionFabric implements ModInitializer {
         PayloadTypeRegistry.clientboundPlay().register(SyncDataPayload.TYPE, SyncDataPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(RequestLeaderboardPayload.TYPE, RequestLeaderboardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(LeaderboardDataPayload.TYPE, LeaderboardDataPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ConfigSyncPayload.TYPE, ConfigSyncPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SubmitItemPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleItemSubmit(context.player(), payload.itemId(), payload.slotId()));
@@ -63,6 +64,10 @@ public class CollectionFabric implements ModInitializer {
             PlayerData data = ModState.getPlayerData(server, handler.player.getUUID());
             ServerItemHandler.refundMigrationTrophies(handler.player, data);
             Services.PLATFORM.sendSyncDataPacketToClient(handler.player, data.unlockedItems, data.rewardedCategories);
+
+            String itemsJson = CollectionConfig.getConfigFileAsString("r3ct_collection_items.json");
+            String rewardsJson = CollectionConfig.getConfigFileAsString("r3ct_collection_rewards.json");
+            ServerPlayNetworking.send(handler.player, new ConfigSyncPayload(itemsJson, rewardsJson));
         });
 
         ServerPlayNetworking.registerGlobalReceiver(RequestLeaderboardPayload.TYPE, (payload, context) -> {
