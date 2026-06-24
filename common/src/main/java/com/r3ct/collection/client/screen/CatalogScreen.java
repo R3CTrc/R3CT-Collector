@@ -47,6 +47,37 @@ public class CatalogScreen extends Screen {
     private static final Identifier TAB_RIGHT_UNSELECTED = Identifier.parse("advancements/tab_right_middle");
     private static final Identifier TAB_RIGHT_SELECTED = Identifier.parse("advancements/tab_right_middle_selected");
 
+    public ItemStack getHoveredItem(double mouseX, double mouseY) {
+        float scale = calculateEffectiveScale();
+        double scaledMouseX = (mouseX - this.width / 2.0) / scale + this.width / 2.0;
+        double scaledMouseY = (mouseY - this.height / 2.0) / scale + this.height / 2.0;
+
+        int bookStartX = (this.width - RENDER_SIZE) / 2;
+        int bookStartY = (this.height - RENDER_SIZE) / 2;
+
+        if (activeSpecialTab != SpecialTab.NONE || cachedCategories.isEmpty()) return ItemStack.EMPTY;
+
+        int gridStartX = bookStartX + 49;
+        int gridStartY = bookStartY + 46;
+
+        if (scaledMouseX >= gridStartX && scaledMouseX < gridStartX + (7 * 21) && scaledMouseY >= gridStartY && scaledMouseY < gridStartY + (8 * 21)) {
+            int col = (int) (scaledMouseX - gridStartX) / 21;
+            int row = (int) (scaledMouseY - gridStartY) / 21;
+            int actualItemIndex = (currentRowScroll * 7) + ((row * 7) + col);
+
+            CreativeTabScanner.SubCategory activeCat = cachedCategories.get(selectedTabIndex);
+
+            if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
+                int itemX = gridStartX + (col * 21) + 1;
+                int itemY = gridStartY + (row * 21) + 1;
+                if (scaledMouseX >= itemX && scaledMouseX < itemX + 16 && scaledMouseY >= itemY && scaledMouseY < itemY + 16) {
+                    return activeCat.items.get(actualItemIndex);
+                }
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
     private static final int SOURCE_PAGE_SIZE = 192;
     private static final int RENDER_SIZE = 260;
 
@@ -68,7 +99,7 @@ public class CatalogScreen extends Screen {
         super(Component.translatable("gui.r3ct_collection.catalog.title"));
     }
 
-    private float calculateEffectiveScale() {
+    public float calculateEffectiveScale() {
         float configScale = CollectionConfig.catalogScale;
         float maxPossibleScale = Math.min((float) this.width / (RENDER_SIZE + 60), (float) this.height / RENDER_SIZE);
         return Math.min(configScale, maxPossibleScale);
@@ -110,8 +141,12 @@ public class CatalogScreen extends Screen {
     }
 
     @Override
+    public void extractBackground(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.extractTransparentBackground(guiGraphics);
 
         float scale = calculateEffectiveScale();
         double scaledMouseX = (mouseX - this.width / 2.0) / scale + this.width / 2.0;
@@ -377,12 +412,44 @@ public class CatalogScreen extends Screen {
             }
         }
 
+        boolean canSubmitAnythingGlobally = false;
+        for (CreativeTabScanner.SubCategory cat : cachedCategories) {
+            for (ItemStack stack : cat.items) {
+                String itemId = ServerItemHandler.getUniqueItemId(stack);
+                if (!ClientPlayerData.unlockedItems.contains(itemId)) {
+                    if (this.minecraft.player.isCreative() || playerInvCache.contains(itemId)) {
+                        canSubmitAnythingGlobally = true;
+                        break;
+                    }
+                }
+            }
+            if (canSubmitAnythingGlobally) break;
+        }
+
         int maxVisibleTabs = 7;
         int tabStartY = bookY + 20;
         int tabW = 32;
         int tabH = 28;
         int baseTabX = (bookX + 27) - tabW + 5;
         int arrowCenter = baseTabX + (tabW / 2);
+
+        if (canSubmitAnythingGlobally) {
+            long time = System.currentTimeMillis();
+            float pulse = (float) (Math.sin(time / 150.0) + 1.0) / 2.0f;
+            int r = 255;
+            int g = (int) (170 + (85 * pulse));
+            int blinkColor = 0xFF000000 | (r << 16) | (g << 8);
+
+            Component globalAlert = Component.literal("!");
+            int alertW = this.font.width(globalAlert);
+            int alertY = tabStartY - 24;
+
+            guiGraphics.text(this.font, globalAlert, arrowCenter - (alertW / 2), alertY, blinkColor, true);
+
+            if (scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= alertY - 2 && scaledMouseY <= alertY + 10) {
+                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.global_submit_ready").withStyle(s -> s.withColor(0xFFFFAA00)), rawMouseX, rawMouseY);
+            }
+        }
 
         if (currentTabScroll > 0) {
             Component upArrow = Component.literal("▲");
