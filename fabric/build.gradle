@@ -11,8 +11,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modImplementation "maven.modrinth:modmenu:17.0.0"
-    compileOnly "mezz.jei:jei-1.21.11-fabric-api:27.4.0.24"
-    runtimeOnly "mezz.jei:jei-1.21.11-fabric:27.4.0.24"
+    modCompileOnly "mezz.jei:jei-1.21.11-fabric-api:27.4.0.24"
+    modRuntimeOnly "mezz.jei:jei-1.21.11-fabric:27.4.0.24"
 }
 
 repositories {
