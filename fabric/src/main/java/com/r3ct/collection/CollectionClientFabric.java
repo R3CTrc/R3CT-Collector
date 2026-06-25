@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.r3ct.collection.block.ModBlocks;
 import com.r3ct.collection.client.input.KeyMappings;
 import com.r3ct.collection.client.data.ClientPlayerData;
+import com.r3ct.collection.client.render.TrophyBlockEntityRenderer;
 import com.r3ct.collection.config.CollectionConfig;
 import com.r3ct.collection.network.ConfigSyncPayload;
 import com.r3ct.collection.network.LeaderboardDataPayload;
@@ -14,11 +15,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.Block;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -30,11 +29,6 @@ public class CollectionClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
-        BlockRenderLayerMap.putBlocks(
-                ChunkSectionLayer.TRANSLUCENT,
-                ModBlocks.TROPHIES.values().toArray(new Block[0])
-        );
 
         KeyMappings.openCatalogKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.r3ct.open_catalog",
@@ -76,5 +70,7 @@ public class CollectionClientFabric implements ClientModInitializer {
             CollectionConfig.load();
             CreativeTabScanner.SCANNED_SUBCATEGORIES.clear();
         });
+
+        BlockEntityRendererRegistry.register(ModBlocks.TROPHY_BE_TYPE, TrophyBlockEntityRenderer::new);
     }
 }

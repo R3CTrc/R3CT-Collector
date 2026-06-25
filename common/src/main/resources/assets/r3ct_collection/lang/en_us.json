@@ -1,4 +1,5 @@
 {
+  "itemGroup.r3ct_collection.main_tab": "R3CT Collection",
   "key.category.r3ct_collection.main": "R3CT Collection",
   "key.r3ct.open_catalog": "Open Collector's Book",
   "r3ct_collection:main": "R3CT Collection",
@@ -71,16 +72,5 @@
   "advancement.r3ct_collection.all_completed.title": "Catch 'Em All!",
   "advancement.r3ct_collection.all_completed.desc": "Collect absolutely every item in the game and complete the Book to 100%!",
 
-  "item.r3ct_collection.trophy_building": "Builder's Trophy",
-  "item.r3ct_collection.trophy_combat": "Warrior's Trophy",
-  "item.r3ct_collection.trophy_tools": "Miner's Trophy",
-  "item.r3ct_collection.trophy_food": "Culinary Trophy",
-  "item.r3ct_collection.trophy_redstone": "Engineer's Trophy",
-  "item.r3ct_collection.trophy_ingredients": "Gatherer's Trophy",
-  "item.r3ct_collection.trophy_natural": "Nature's Trophy",
-  "item.r3ct_collection.trophy_colored": "Artist's Trophy",
-  "item.r3ct_collection.trophy_egg": "Summoner's Trophy",
-  "item.r3ct_collection.trophy_functional": "Artisan's Trophy",
-  "item.r3ct_collection.trophy_mod": "Explorer's Trophy",
-  "itemGroup.r3ct_collection.main_tab": "R3CT Collection"
+  "item.r3ct_collection.trophy": "Collection Trophy"
 }

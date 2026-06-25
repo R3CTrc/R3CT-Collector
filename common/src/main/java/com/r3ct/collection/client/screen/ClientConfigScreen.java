@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.NonNull;
 
 public class ClientConfigScreen extends Screen {
     private final Screen parent;
@@ -32,7 +33,7 @@ public class ClientConfigScreen extends Screen {
     }
 
     @Override
-    public void render( GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.fill(0, 0, this.width, this.height, 0x99000000);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 

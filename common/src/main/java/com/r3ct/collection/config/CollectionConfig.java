@@ -27,7 +27,6 @@ public class CollectionConfig {
     public static int xpEpic = 500;
     public static int milestoneInterval = 100;
     public static List<LootEntry> milestoneRewards = new ArrayList<>();
-    public static Map<String, String> categoryRewards = new HashMap<>();
 
     private static final int SERVER_CONFIG_VERSION = 2;
     private static final int CLIENT_CONFIG_VERSION = 1;
@@ -115,7 +114,6 @@ public class CollectionConfig {
                 xpEpic = data.xpEpic;
                 milestoneInterval = data.milestoneInterval;
                 if (data.milestoneRewards != null) milestoneRewards = data.milestoneRewards;
-                if (data.categoryRewards != null) categoryRewards = data.categoryRewards;
             }
         } catch (Exception e) {
             System.err.println("[R3CT-Collection] Error loading rewards config!");
@@ -170,7 +168,6 @@ public class CollectionConfig {
         int xpEpic = CollectionConfig.xpEpic;
         int milestoneInterval = CollectionConfig.milestoneInterval;
         List<LootEntry> milestoneRewards = CollectionConfig.milestoneRewards;
-        Map<String, String> categoryRewards = CollectionConfig.categoryRewards;
     }
 
     public static class LootEntry {
@@ -223,7 +220,6 @@ public class CollectionConfig {
                     xpEpic = data.xpEpic;
                     milestoneInterval = data.milestoneInterval;
                     if (data.milestoneRewards != null) milestoneRewards = data.milestoneRewards;
-                    if (data.categoryRewards != null) categoryRewards = data.categoryRewards;
                 }
             }
             System.out.println("[R3CT-Collection] Server configuration synchronization completed successfully.");

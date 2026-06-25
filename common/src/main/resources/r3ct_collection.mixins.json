@@ -4,7 +4,9 @@
   "package": "com.r3ct.collection.mixin",
   "compatibilityLevel": "JAVA_18",
   "mixins": [],
-  "client": [],
+  "client": [
+    "GuiGraphicsMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

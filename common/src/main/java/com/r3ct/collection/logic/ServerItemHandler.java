@@ -12,6 +12,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -26,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.CustomData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,42 +196,47 @@ public class ServerItemHandler {
             return;
         }
 
-        String rewardItemId = CollectionConfig.categoryRewards.getOrDefault(tabId, CollectionConfig.categoryRewards.get("modded_generic"));
+        Item trophyItem = BuiltInRegistries.ITEM.get(Identifier.parse(Constants.MOD_ID + ":trophy")).map(Holder::value).orElse(Items.AIR);
 
-        if (rewardItemId != null) {
-            Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(rewardItemId)).map(Holder::value).orElse(Items.AIR);
-            if (rewardItem != Items.AIR) {
-                ItemStack rewardStack = new ItemStack(rewardItem, 1);
+        if (trophyItem != Items.AIR) {
+            ItemStack rewardStack = new ItemStack(trophyItem, 1);
+            CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(Holder::value).orElse(null);
 
-                CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(Holder::value).orElse(null);
-                CreativeModeTab tabForName = rewardItemId.equals("r3ct_collection:trophy_mod") ? tab : null;
-
-                MutableComponent customName = buildTrophyName(player.getName().getString(), rewardItem.getDescriptionId(), tabForName);
-                rewardStack.set(DataComponents.CUSTOM_NAME, customName);
-
-                var savedTrophyName = rewardStack.getHoverName().copy();
-                giveItemToPlayer(player, rewardStack);
-
-                Component tabName = (tab != null) ? tab.getDisplayName() : Component.literal(tabId);
-                var catNameComp = tabName.copy().withStyle(ChatFormatting.YELLOW);
-                var trophyComp = savedTrophyName.withStyle(ChatFormatting.LIGHT_PURPLE);
-
-                player.sendSystemMessage(Component.empty()
-                        .append(getPrefix())
-                        .append(Component.translatable("chat.r3ct_collection.category_complete", catNameComp, trophyComp).withStyle(ChatFormatting.GREEN))
-                );
-
-                data.rewardedCategories.add(tabId);
-
-                int catSize = data.rewardedCategories.size();
-                if (data.rewardedCategories.contains(Constants.ALL_COMPLETED_KEY)) catSize--;
-
-                if (catSize >= 1) grantAdvancement(player, "r3ct_collection:category_1");
-                if (catSize >= 5) grantAdvancement(player, "r3ct_collection:category_5");
-
-                ModState.get(player.level().getServer()).setDirty();
-                Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
+            String displayItemId = "minecraft:nether_star";
+            if (tab != null && !tab.getIconItem().isEmpty()) {
+                displayItemId = BuiltInRegistries.ITEM.getKey(tab.getIconItem().getItem()).toString();
             }
+
+            CompoundTag tag = new CompoundTag();
+            tag.putString("DisplayItem", displayItemId);
+            tag.putString("OwnerName", player.getName().getString());
+            rewardStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+
+            MutableComponent customName = buildTrophyName(player.getName().getString(), trophyItem.getDescriptionId(), tab);
+            rewardStack.set(DataComponents.CUSTOM_NAME, customName);
+
+            var savedTrophyName = rewardStack.getHoverName().copy();
+            giveItemToPlayer(player, rewardStack);
+
+            Component tabName = (tab != null) ? tab.getDisplayName() : Component.literal(tabId);
+            var catNameComp = tabName.copy().withStyle(ChatFormatting.YELLOW);
+            var trophyComp = savedTrophyName.withStyle(ChatFormatting.LIGHT_PURPLE);
+
+            player.sendSystemMessage(Component.empty()
+                    .append(getPrefix())
+                    .append(Component.translatable("chat.r3ct_collection.category_complete", catNameComp, trophyComp).withStyle(ChatFormatting.GREEN))
+            );
+
+            data.rewardedCategories.add(tabId);
+
+            int catSize = data.rewardedCategories.size();
+            if (data.rewardedCategories.contains(Constants.ALL_COMPLETED_KEY)) catSize--;
+
+            if (catSize >= 1) grantAdvancement(player, "r3ct_collection:category_1");
+            if (catSize >= 5) grantAdvancement(player, "r3ct_collection:category_5");
+
+            ModState.get(player.level().getServer()).setDirty();
+            Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
         }
     }
 
@@ -277,38 +284,43 @@ public class ServerItemHandler {
     }
 
     public static void refundMigrationTrophies(ServerPlayer player, PlayerData data) {
-        if (data.receivedMigrationRefund) return;
+        if (data.receivedMigrationRefundV2) return;
 
         if (data.rewardedCategories.isEmpty() || (data.rewardedCategories.size() == 1 && data.rewardedCategories.contains(Constants.ALL_COMPLETED_KEY))) {
-            data.receivedMigrationRefund = true;
+            data.receivedMigrationRefundV2 = true;
             ModState.get(player.level().getServer()).setDirty();
             return;
         }
 
         boolean gaveAny = false;
+        Item trophyItem = BuiltInRegistries.ITEM.get(Identifier.parse(Constants.MOD_ID + ":trophy")).map(Holder::value).orElse(Items.AIR);
 
         for (String tabId : data.rewardedCategories) {
             if (tabId.equals(Constants.ALL_COMPLETED_KEY)) continue;
 
-            String rewardItemId = CollectionConfig.categoryRewards.getOrDefault(tabId, CollectionConfig.categoryRewards.get("modded_generic"));
+            if (trophyItem != Items.AIR) {
+                ItemStack rewardStack = new ItemStack(trophyItem, 1);
+                CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(Holder::value).orElse(null);
 
-            if (rewardItemId != null) {
-                Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(rewardItemId)).map(Holder::value).orElse(Items.AIR);
-                if (rewardItem != Items.AIR) {
-                    ItemStack rewardStack = new ItemStack(rewardItem, 1);
-
-                    CreativeModeTab tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(Identifier.parse(tabId)).map(Holder::value).orElse(null);
-                    CreativeModeTab tabForName = rewardItemId.equals("r3ct_collection:trophy_mod") ? tab : null;
-
-                    MutableComponent customName = buildTrophyName(player.getName().getString(), rewardItem.getDescriptionId(), tabForName);
-
-                    rewardStack.set(DataComponents.CUSTOM_NAME, customName);
-                    giveItemToPlayer(player, rewardStack);
-                    gaveAny = true;
+                String displayItemId = "minecraft:nether_star";
+                if (tab != null && !tab.getIconItem().isEmpty()) {
+                    displayItemId = BuiltInRegistries.ITEM.getKey(tab.getIconItem().getItem()).toString();
                 }
+
+                CompoundTag tag = new CompoundTag();
+                tag.putString("DisplayItem", displayItemId);
+                tag.putString("OwnerName", player.getName().getString());
+                rewardStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+
+                MutableComponent customName = buildTrophyName(player.getName().getString(), trophyItem.getDescriptionId(), tab);
+                rewardStack.set(DataComponents.CUSTOM_NAME, customName);
+
+                giveItemToPlayer(player, rewardStack);
+                gaveAny = true;
             }
         }
-        data.receivedMigrationRefund = true;
+
+        data.receivedMigrationRefundV2 = true;
         ModState.get(player.level().getServer()).setDirty();
 
         if (gaveAny) {
