@@ -28,7 +28,7 @@ public class PlayerData {
 
         nbt.putString("lastKnownName", lastKnownName);
 
-        nbt.putBoolean("receivedMigrationRefund", receivedMigrationRefundV2);
+        nbt.putBoolean("receivedMigrationRefundV2", receivedMigrationRefundV2);
 
         ListTag itemsList = new ListTag();
         for (String item : unlockedItems) itemsList.add(StringTag.valueOf(item != null ? item : ""));
@@ -48,8 +48,8 @@ public class PlayerData {
             data.lastKnownName = nbt.getString("lastKnownName").orElse("Unknown");
         }
 
-        if (nbt.contains("receivedMigrationRefund")) {
-            data.receivedMigrationRefundV2 = nbt.getBoolean("receivedMigrationRefund").orElse(false);
+        if (nbt.contains("receivedMigrationRefundV2")) {
+            data.receivedMigrationRefundV2 = nbt.getBoolean("receivedMigrationRefundV2").orElse(false);
         }
 
         if (nbt.contains("unlockedItems")) {
