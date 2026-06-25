@@ -1,5 +1,6 @@
 package com.r3ct.collection;
 
+import com.r3ct.collection.block.ModBlocks;
 import com.r3ct.collection.client.data.ClientPlayerData;
 import com.r3ct.collection.config.CollectionConfig;
 import com.r3ct.collection.data.ModState;
@@ -22,13 +23,10 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import com.r3ct.collection.block.ModBlocks;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.function.BiConsumer;
 
 @Mod(Constants.MOD_ID)
 public class CollectionNeoForge {
@@ -102,29 +100,25 @@ public class CollectionNeoForge {
 
     private void onRegister(RegisterEvent event) {
 
-        BiConsumer<String, Block> registerTrophy = (name, block) -> {
-            Identifier id = Identifier.parse(Constants.MOD_ID + ":" + name);
-            ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
+        Identifier trophyId = Identifier.parse(Constants.MOD_ID + ":trophy");
+        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, trophyId);
 
-            event.register(BuiltInRegistries.BLOCK.key(), helper -> helper.register(id, block));
-            event.register(BuiltInRegistries.ITEM.key(), helper -> helper.register(id, new BlockItem(block, new Item.Properties()
-                    .setId(itemKey).stacksTo(1).rarity(Rarity.EPIC).fireResistant()
-            )));
-        };
-
-        ModBlocks.TROPHIES.forEach(registerTrophy::accept);
+        event.register(BuiltInRegistries.BLOCK.key(), helper -> helper.register(trophyId, ModBlocks.TROPHY));
+        event.register(BuiltInRegistries.ITEM.key(), helper -> helper.register(trophyId, new BlockItem(ModBlocks.TROPHY, new Item.Properties()
+                .setId(itemKey).stacksTo(1).rarity(Rarity.EPIC).fireResistant()
+        )));
 
         event.register(BuiltInRegistries.BLOCK_ENTITY_TYPE.key(), helper -> {
-            helper.register(Identifier.parse(Constants.MOD_ID + ":trophy_building_be"), ModBlocks.TROPHY_BE_TYPE);
+            helper.register(Identifier.parse(Constants.MOD_ID + ":trophy_be"), ModBlocks.TROPHY_BE_TYPE);
         });
 
         event.register(Registries.CREATIVE_MODE_TAB, helper -> {
             helper.register(Identifier.parse(Constants.MOD_ID + ":main_tab"),
                     CreativeModeTab.builder()
                             .title(Component.translatable("itemGroup." + Constants.MOD_ID + ".main_tab"))
-                            .icon(() -> new ItemStack(ModBlocks.TROPHY_BUILDING))
+                            .icon(() -> new ItemStack(ModBlocks.TROPHY))
                             .displayItems((context, output) -> {
-                                ModBlocks.TROPHIES.values().forEach(output::accept);
+                                output.accept(ModBlocks.TROPHY);
                             })
                             .build()
             );
