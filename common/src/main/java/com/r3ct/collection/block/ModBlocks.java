@@ -23,7 +23,7 @@ public class ModBlocks {
             .isValidSpawn((state, getter, pos, entityType) -> false)
             .isViewBlocking((state, getter, pos) -> false)
             .strength(1.0f)
-            .sound(SoundType.GLASS));
+            .sound(SoundType.NETHERITE_BLOCK));
 
     public static final ResourceKey<BlockEntityType<?>> TROPHY_BE_KEY = ResourceKey.create(
             Registries.BLOCK_ENTITY_TYPE,
