@@ -284,10 +284,10 @@ public class ServerItemHandler {
     }
 
     public static void refundMigrationTrophies(ServerPlayer player, PlayerData data) {
-        if (data.receivedMigrationRefund) return;
+        if (data.receivedMigrationRefundV2) return;
 
         if (data.rewardedCategories.isEmpty() || (data.rewardedCategories.size() == 1 && data.rewardedCategories.contains(Constants.ALL_COMPLETED_KEY))) {
-            data.receivedMigrationRefund = true;
+            data.receivedMigrationRefundV2 = true;
             ModState.get(player.level().getServer()).setDirty();
             return;
         }
@@ -320,7 +320,7 @@ public class ServerItemHandler {
             }
         }
 
-        data.receivedMigrationRefund = true;
+        data.receivedMigrationRefundV2 = true;
         ModState.get(player.level().getServer()).setDirty();
 
         if (gaveAny) {

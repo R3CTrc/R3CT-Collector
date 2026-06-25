@@ -14,7 +14,7 @@ public class PlayerData {
     public Set<String> unlockedItems = new HashSet<>();
     public Set<String> rewardedCategories = new HashSet<>();
 
-    public boolean receivedMigrationRefund = false;
+    public boolean receivedMigrationRefundV2 = false;
 
     public static final Codec<PlayerData> CODEC = CompoundTag.CODEC.xmap(PlayerData::fromNbt, PlayerData::toNbt);
 
@@ -28,7 +28,7 @@ public class PlayerData {
 
         nbt.putString("lastKnownName", lastKnownName);
 
-        nbt.putBoolean("receivedMigrationRefund", receivedMigrationRefund);
+        nbt.putBoolean("receivedMigrationRefund", receivedMigrationRefundV2);
 
         ListTag itemsList = new ListTag();
         for (String item : unlockedItems) itemsList.add(StringTag.valueOf(item != null ? item : ""));
@@ -49,7 +49,7 @@ public class PlayerData {
         }
 
         if (nbt.contains("receivedMigrationRefund")) {
-            data.receivedMigrationRefund = nbt.getBoolean("receivedMigrationRefund").orElse(false);
+            data.receivedMigrationRefundV2 = nbt.getBoolean("receivedMigrationRefund").orElse(false);
         }
 
         if (nbt.contains("unlockedItems")) {
