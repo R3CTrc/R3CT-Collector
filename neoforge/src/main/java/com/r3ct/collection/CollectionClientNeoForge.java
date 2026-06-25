@@ -1,7 +1,9 @@
 package com.r3ct.collection;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.r3ct.collection.block.ModBlocks;
 import com.r3ct.collection.client.input.KeyMappings;
+import com.r3ct.collection.client.render.TrophyBlockEntityRenderer;
 import com.r3ct.collection.client.screen.CollectionConfigScreen;
 import com.r3ct.collection.config.CollectionConfig;
 import com.r3ct.collection.scanner.CreativeTabScanner;
@@ -14,6 +16,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.lwjgl.glfw.GLFW;
@@ -43,6 +46,11 @@ public class CollectionClientNeoForge {
                     IConfigScreenFactory.class,
                     () -> (minecraft, parentScreen) -> new CollectionConfigScreen(parentScreen)
             );
+        }
+
+        @SubscribeEvent
+        public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerBlockEntityRenderer(ModBlocks.TROPHY_BE_TYPE, TrophyBlockEntityRenderer::new);
         }
     }
 

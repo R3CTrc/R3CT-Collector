@@ -433,19 +433,6 @@ public class CatalogScreen extends Screen {
         int baseTabX = (bookX + 27) - tabW + 5;
         int arrowCenter = baseTabX + (tabW / 2);
 
-        if (currentTabScroll > 0) {
-            Component upArrow = Component.literal("▲");
-            int w = this.font.width(upArrow);
-            int y = tabStartY - 10;
-            boolean isHoveringUp = scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= y - 2 && scaledMouseY <= y + 10;
-            int color = isHoveringUp ? 0xFFFFFFFF : 0xFFBBBBBB;
-            guiGraphics.text(this.font, upArrow, arrowCenter - (w / 2), y, color, false);
-
-            if (isHoveringUp) {
-                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.prev_categories").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
-            }
-        }
-
         if (canSubmitAnythingGlobally) {
             long time = System.currentTimeMillis();
             float pulse = (float) (Math.sin(time / 150.0) + 1.0) / 2.0f;
@@ -461,6 +448,19 @@ public class CatalogScreen extends Screen {
 
             if (scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= alertY - 2 && scaledMouseY <= alertY + 10) {
                 guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.global_submit_ready").withStyle(s -> s.withColor(0xFFFFAA00)), rawMouseX, rawMouseY);
+            }
+        }
+
+        if (currentTabScroll > 0) {
+            Component upArrow = Component.literal("▲");
+            int w = this.font.width(upArrow);
+            int y = tabStartY - 10;
+            boolean isHoveringUp = scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= y - 2 && scaledMouseY <= y + 10;
+            int color = isHoveringUp ? 0xFFFFFFFF : 0xFFBBBBBB;
+            guiGraphics.text(this.font, upArrow, arrowCenter - (w / 2), y, color, false);
+
+            if (isHoveringUp) {
+                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.prev_categories").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
             }
         }
 

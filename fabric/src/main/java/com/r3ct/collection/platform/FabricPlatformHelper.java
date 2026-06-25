@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
@@ -68,7 +69,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isCatalogKey(Object event) {
-        if (event instanceof net.minecraft.client.input.KeyEvent keyEvent) {
+        if (event instanceof KeyEvent keyEvent) {
             return KeyMappings.openCatalogKey != null &&
                     KeyMappings.openCatalogKey.matches(keyEvent);
         }

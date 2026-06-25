@@ -19,7 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
 
 public class CollectionFabric implements ModInitializer {
 
@@ -27,9 +26,15 @@ public class CollectionFabric implements ModInitializer {
     public void onInitialize() {
         CollectionConfig.load();
 
-        ModBlocks.TROPHIES.forEach(this::registerTrophy);
+        Identifier trophyId = Identifier.parse(Constants.MOD_ID + ":trophy");
+        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, trophyId);
 
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.parse(Constants.MOD_ID + ":trophy_building_be"), ModBlocks.TROPHY_BE_TYPE);
+        Registry.register(BuiltInRegistries.BLOCK, trophyId, ModBlocks.TROPHY);
+        Registry.register(BuiltInRegistries.ITEM, trophyId, new BlockItem(ModBlocks.TROPHY, new Item.Properties()
+                .setId(itemKey).stacksTo(1).rarity(Rarity.EPIC).fireResistant()
+        ));
+
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.parse(Constants.MOD_ID + ":trophy_be"), ModBlocks.TROPHY_BE_TYPE);
 
         ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(
                 Registries.CREATIVE_MODE_TAB,
@@ -38,9 +43,9 @@ public class CollectionFabric implements ModInitializer {
 
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB_KEY, FabricCreativeModeTab.builder()
                 .title(Component.translatable("itemGroup." + Constants.MOD_ID + ".main_tab"))
-                .icon(() -> new ItemStack(ModBlocks.TROPHY_BUILDING))
+                .icon(() -> new ItemStack(ModBlocks.TROPHY))
                 .displayItems((context, output) -> {
-                    ModBlocks.TROPHIES.values().forEach(output::accept);
+                    output.accept(ModBlocks.TROPHY);
                 })
                 .build()
         );
@@ -74,15 +79,5 @@ public class CollectionFabric implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(RequestLeaderboardPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleLeaderboardRequest(context.player()));
         });
-    }
-
-    private void registerTrophy(String name, Block block) {
-        Identifier id = Identifier.parse(Constants.MOD_ID + ":" + name);
-        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
-
-        Registry.register(BuiltInRegistries.BLOCK, id, block);
-        Registry.register(BuiltInRegistries.ITEM, id, new BlockItem(block, new Item.Properties()
-                .setId(itemKey).stacksTo(1).rarity(Rarity.EPIC).fireResistant()
-        ));
     }
 }
