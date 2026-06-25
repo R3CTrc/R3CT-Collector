@@ -1,4 +1,5 @@
 {
+  "itemGroup.r3ct_collection.main_tab": "R3CT Collection",
   "key.category.r3ct_collection.main": "R3CT Collection",
   "key.r3ct.open_catalog": "Otwórz Księgę Kolekcjonera",
   "r3ct_collection:main": "R3CT Collection",
@@ -71,16 +72,5 @@
   "advancement.r3ct_collection.all_completed.title": "Złap je wszystkie!",
   "advancement.r3ct_collection.all_completed.desc": "Zbierz absolutnie każdy przedmiot w grze i wypełnij Księgę w 100%!",
 
-  "item.r3ct_collection.trophy_building": "Trofeum Budowniczego",
-  "item.r3ct_collection.trophy_combat": "Trofeum Wojownika",
-  "item.r3ct_collection.trophy_tools": "Trofeum Górnika",
-  "item.r3ct_collection.trophy_food": "Trofeum Kulinarne",
-  "item.r3ct_collection.trophy_redstone": "Trofeum Inżyniera",
-  "item.r3ct_collection.trophy_ingredients": "Trofeum Zbieracza",
-  "item.r3ct_collection.trophy_natural": "Trofeum Natury",
-  "item.r3ct_collection.trophy_colored": "Trofeum Artysty",
-  "item.r3ct_collection.trophy_egg": "Trofeum Przywoływacza",
-  "item.r3ct_collection.trophy_functional": "Trofeum Rzemieślnika",
-  "item.r3ct_collection.trophy_mod": "Trofeum Odkrywcy",
-  "itemGroup.r3ct_collection.main_tab": "R3CT Collection"
+  "item.r3ct_collection.trophy": "Collection Trophy"
 }

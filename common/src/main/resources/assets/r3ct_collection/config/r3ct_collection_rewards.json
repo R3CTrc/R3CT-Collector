@@ -38,20 +38,5 @@
       "chance": 50,
       "color": "&b"
     }
-  ],
-
-  "_comment_categories": "Rewards given for completing an entire tab (100%). Default fallback is 'modded_generic'.",
-  "categoryRewards": {
-    "minecraft:building_blocks": "r3ct_collection:trophy_building",
-    "minecraft:colored_blocks": "r3ct_collection:trophy_colored",
-    "minecraft:natural_blocks": "r3ct_collection:trophy_natural",
-    "minecraft:functional_blocks": "r3ct_collection:trophy_functional",
-    "minecraft:redstone_blocks": "r3ct_collection:trophy_redstone",
-    "minecraft:tools_and_utilities": "r3ct_collection:trophy_tools",
-    "minecraft:combat": "r3ct_collection:trophy_combat",
-    "minecraft:food_and_drinks": "r3ct_collection:trophy_food",
-    "minecraft:ingredients": "r3ct_collection:trophy_ingredients",
-    "minecraft:spawn_eggs": "r3ct_collection:trophy_egg",
-    "modded_generic": "r3ct_collection:trophy_mod"
-  }
+  ]
 }
