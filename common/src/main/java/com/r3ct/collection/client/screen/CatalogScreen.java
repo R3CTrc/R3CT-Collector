@@ -25,11 +25,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ResolvableProfile;
@@ -715,6 +712,19 @@ public class CatalogScreen extends Screen {
                         .append(tooltipIcon.copy().withStyle(finalIconColorFormatting).withStyle(ChatFormatting.BOLD));
 
                 itemTooltip.add(modifiedName);
+
+                if (stack.has(DataComponents.POTION_CONTENTS)) {
+                    List<Component> vanillaTooltip = stack.getTooltipLines(
+                            Item.TooltipContext.of(this.minecraft.level),
+                            this.minecraft.player,
+                            TooltipFlag.NORMAL
+                    );
+
+                    for (int k = 1; k < vanillaTooltip.size(); k++) {
+                        itemTooltip.add(vanillaTooltip.get(k));
+                    }
+                }
+
                 if (!isCollected) {
                     int xp = CollectionConfig.xpCommon;
                     Rarity rarity = stack.getRarity();
