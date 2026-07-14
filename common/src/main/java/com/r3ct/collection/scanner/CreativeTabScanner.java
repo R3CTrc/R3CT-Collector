@@ -72,9 +72,11 @@ public class CreativeTabScanner {
                     }
 
                     // 3. Sprawdzanie głównej blacklisty itemów i modów
-                    if (!CollectionConfig.blacklistedItems.contains(itemId) && !CollectionConfig.blacklistedMods.contains(itemNamespace)) {
+                    String uniqueKey = ServerItemHandler.getUniqueItemId(stack);
 
-                        String uniqueKey = ServerItemHandler.getUniqueItemId(stack);
+                    if (!CollectionConfig.blacklistedMods.contains(itemNamespace) &&
+                            !CollectionConfig.blacklistedItems.contains(itemId) &&
+                            !CollectionConfig.blacklistedItems.contains(uniqueKey)) {
 
                         if (!processedItems.contains(uniqueKey)) {
                             category.items.add(stack);
