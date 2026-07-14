@@ -20,18 +20,28 @@ public class ItemSelectionScreen extends Screen {
     private final Screen parent;
     private final List<CatalogScreen.SlotItem> availableItems;
     private final String itemId;
+    private final Runnable onNextInQueue;
 
     public ItemSelectionScreen(Screen parent, List<CatalogScreen.SlotItem> availableItems, String itemId) {
+        this(parent, availableItems, itemId, null);
+    }
+
+    public ItemSelectionScreen(Screen parent, List<CatalogScreen.SlotItem> availableItems, String itemId, Runnable onNextInQueue) {
         super(Component.translatable("gui.r3ct_collection.catalog.select_title"));
         this.parent = parent;
         this.availableItems = availableItems;
         this.itemId = itemId;
+        this.onNextInQueue = onNextInQueue;
     }
 
     @Override
     protected void init() {
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> {
-            if (this.minecraft != null) this.minecraft.setScreen(this.parent);
+            if (this.onNextInQueue != null) {
+                this.onNextInQueue.run();
+            } else if (this.minecraft != null) {
+                this.minecraft.setScreen(this.parent);
+            }
         }).bounds(this.width / 2 - 50, this.height / 2 + 50, 100, 20).build());
     }
 
@@ -90,12 +100,29 @@ public class ItemSelectionScreen extends Screen {
             if (mouseX >= slotX && mouseX <= slotX + slotSize && mouseY >= slotY && mouseY <= slotY + slotSize) {
                 CatalogScreen.SlotItem selected = availableItems.get(i);
 
-                if (CatalogScreen.isValuable(selected.stack)) {
-                    this.minecraft.setScreen(new ConfirmSubmitScreen(this.parent, selected.stack, selected.slotId, this.itemId));
+                if (this.onNextInQueue != null) {
+                    this.minecraft.setScreen(new ConfirmSubmitScreen(
+                            this,
+                            selected.stack,
+                            selected.slotId,
+                            this.itemId,
+                            () -> {
+                                Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, selected.slotId);
+                                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                this.onNextInQueue.run();
+                            },
+                            () -> {
+                                this.minecraft.setScreen(this);
+                            }
+                    ));
                 } else {
-                    Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, selected.slotId);
-                    this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
-                    this.minecraft.setScreen(this.parent);
+                    if (CatalogScreen.isValuable(selected.stack)) {
+                        this.minecraft.setScreen(new ConfirmSubmitScreen(this.parent, selected.stack, selected.slotId, this.itemId));
+                    } else {
+                        Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, selected.slotId);
+                        this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                        this.minecraft.setScreen(this.parent);
+                    }
                 }
                 return true;
             }

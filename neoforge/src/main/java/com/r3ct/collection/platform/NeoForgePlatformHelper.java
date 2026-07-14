@@ -43,6 +43,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public void sendBulkSubmitPacketToServer(String tabId, List<String> itemIds, List<Integer> slotIds) {
+        ClientPacketDistributor.sendToServer(new BulkSubmitPayload(tabId, itemIds, slotIds));
+    }
+
+    @Override
     public void sendClaimRewardPacketToServer(String tabId) {
         ClientPacketDistributor.sendToServer(new ClaimCategoryRewardPayload(tabId));
     }

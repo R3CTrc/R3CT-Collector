@@ -17,7 +17,7 @@
   "xpCommon": 10,
   "xpUncommon": 50,
   "xpRare": 100,
-  "xpEpic": 500,
+  "xpEpic": 250,
 
   "_comment_interval": "How often (every X items) the player receives a milestone reward.",
   "milestoneInterval": 100,
@@ -28,15 +28,22 @@
       "item": "minecraft:emerald",
       "min_amount": 24,
       "max_amount": 32,
-      "chance": 50,
+      "chance": 45,
       "color": "&a"
     },
     {
       "item": "minecraft:diamond",
       "min_amount": 16,
       "max_amount": 24,
-      "chance": 50,
+      "chance": 45,
       "color": "&b"
+    },
+    {
+      "item": "minecraft:netherite_scrap",
+      "min_amount": 1,
+      "max_amount": 2,
+      "chance": 10,
+      "color": "&5"
     }
   ]
 }

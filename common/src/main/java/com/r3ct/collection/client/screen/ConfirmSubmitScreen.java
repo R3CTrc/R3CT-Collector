@@ -20,6 +20,8 @@ public class ConfirmSubmitScreen extends Screen {
     private final ItemStack stack;
     private final int slotId;
     private final String itemId;
+    private final Runnable onConfirm;
+    private final Runnable onCancel;
 
     public ConfirmSubmitScreen(Screen parent, ItemStack stack, int slotId, String itemId) {
         super(Component.translatable("gui.r3ct_collection.catalog.confirm_title"));
@@ -27,6 +29,26 @@ public class ConfirmSubmitScreen extends Screen {
         this.stack = stack;
         this.slotId = slotId;
         this.itemId = itemId;
+        this.onConfirm = () -> {
+            Services.PLATFORM.sendSubmitItemPacketToServer(itemId, slotId);
+            if (this.minecraft != null) {
+                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                this.minecraft.setScreen(parent);
+            }
+        };
+        this.onCancel = () -> {
+            if (this.minecraft != null) this.minecraft.setScreen(parent);
+        };
+    }
+
+    public ConfirmSubmitScreen(Screen parent, ItemStack stack, int slotId, String itemId, Runnable onConfirm, Runnable onCancel) {
+        super(Component.translatable("gui.r3ct_collection.catalog.confirm_title"));
+        this.parent = parent;
+        this.stack = stack;
+        this.slotId = slotId;
+        this.itemId = itemId;
+        this.onConfirm = onConfirm;
+        this.onCancel = onCancel;
     }
 
     @Override
@@ -35,15 +57,11 @@ public class ConfirmSubmitScreen extends Screen {
         int btnY = this.height / 2 + 30;
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.yes").withStyle(ChatFormatting.GREEN), button -> {
-            Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, this.slotId);
-            if (this.minecraft != null) {
-                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
-                this.minecraft.setScreen(this.parent);
-            }
+            this.onConfirm.run();
         }).bounds(centerX - 105, btnY, 100, 20).build());
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.no").withStyle(ChatFormatting.RED), button -> {
-            if (this.minecraft != null) this.minecraft.setScreen(this.parent);
+            this.onCancel.run();
         }).bounds(centerX + 5, btnY, 100, 20).build());
     }
 

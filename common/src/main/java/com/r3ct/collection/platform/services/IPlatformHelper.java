@@ -48,6 +48,8 @@ public interface IPlatformHelper {
 
     void sendSubmitItemPacketToServer(String itemId, int slotId);
 
+    void sendBulkSubmitPacketToServer(String tabId, List<String> itemIds, List<Integer> slotIds);
+
     void sendClaimRewardPacketToServer(String tabId);
 
     void sendSyncDataPacketToClient(ServerPlayer player, Set<String> unlockedItems, Set<String> rewardedCategories);

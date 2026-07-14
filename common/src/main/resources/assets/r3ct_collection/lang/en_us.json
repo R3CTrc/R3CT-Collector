@@ -20,6 +20,11 @@
   "gui.r3ct_collection.catalog.no": "No",
   "gui.r3ct_collection.catalog.global_submit_ready": "You have items to submit!",
 
+  "gui.r3ct_collection.catalog.bulk.title": "Are you sure you want to submit this items?",
+  "gui.r3ct_collection.catalog.bulk.submit_safe": "Submit",
+  "gui.r3ct_collection.catalog.bulk.cancel": "Cancel",
+  "gui.r3ct_collection.catalog.bulk.hint": "Click to bulk submit items.",
+
   "gui.r3ct_collection.info.rewards_title": "Collection Rewards",
   "gui.r3ct_collection.info.point1": "1. Submitting Items",
   "gui.r3ct_collection.info.point1.rarity.common": "§7Common: %s §6XP",

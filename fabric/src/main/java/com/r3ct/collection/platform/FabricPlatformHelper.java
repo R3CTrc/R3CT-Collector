@@ -43,6 +43,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public void sendBulkSubmitPacketToServer(String tabId, List<String> itemIds, List<Integer> slotIds) {
+        ClientPlayNetworking.send(new BulkSubmitPayload(tabId, itemIds, slotIds));
+    }
+
+    @Override
     public void sendClaimRewardPacketToServer(String tabId) {
         ClientPlayNetworking.send(new ClaimCategoryRewardPayload(tabId));
     }
