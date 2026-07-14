@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.*;
 
@@ -57,7 +58,20 @@ public class CreativeTabScanner {
                 for (ItemStack stack : displayItems) {
                     String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
                     String itemNamespace = itemId.split(":")[0];
+                    boolean isVanilla = itemNamespace.equals("minecraft");
 
+                    // 1. Zablokowanie przedmiotów z modów (tylko vanilla)
+                    if (CollectionConfig.onlyVanillaItems && !isVanilla) {
+                        continue;
+                    }
+
+                    // 2. Automatyczne blokowanie jajek spawnujących
+                    if (stack.getItem() instanceof SpawnEggItem) {
+                        if (isVanilla && CollectionConfig.blacklistVanillaSpawnEggs) continue;
+                        if (!isVanilla && CollectionConfig.blacklistModdedSpawnEggs) continue;
+                    }
+
+                    // 3. Sprawdzanie głównej blacklisty itemów i modów
                     if (!CollectionConfig.blacklistedItems.contains(itemId) && !CollectionConfig.blacklistedMods.contains(itemNamespace)) {
 
                         String uniqueKey = ServerItemHandler.getUniqueItemId(stack);

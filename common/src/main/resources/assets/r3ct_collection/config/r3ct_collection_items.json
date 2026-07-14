@@ -2,6 +2,10 @@
   "_comment_version": "Do not change the version number! It is used for automatic config updates.",
   "version": 2,
 
+  "onlyVanillaItems": false,
+  "blacklistVanillaSpawnEggs": true,
+  "blacklistModdedSpawnEggs": true,
+
   "_comment_blacklists": "Add item, mod, or tab IDs here to hide them from the Collector's Book.",
   "blacklistedMods": [
     "r3ct_collection"
