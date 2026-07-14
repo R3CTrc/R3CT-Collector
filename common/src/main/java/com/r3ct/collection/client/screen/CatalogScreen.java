@@ -48,37 +48,6 @@ public class CatalogScreen extends Screen {
     private static final Identifier TAB_RIGHT_UNSELECTED = Identifier.parse("advancements/tab_right_middle");
     private static final Identifier TAB_RIGHT_SELECTED = Identifier.parse("advancements/tab_right_middle_selected");
 
-    public ItemStack getHoveredItem(double mouseX, double mouseY) {
-        float scale = calculateEffectiveScale();
-        double scaledMouseX = (mouseX - this.width / 2.0) / scale + this.width / 2.0;
-        double scaledMouseY = (mouseY - this.height / 2.0) / scale + this.height / 2.0;
-
-        int bookStartX = (this.width - RENDER_SIZE) / 2;
-        int bookStartY = (this.height - RENDER_SIZE) / 2;
-
-        if (activeSpecialTab != SpecialTab.NONE || cachedCategories.isEmpty()) return ItemStack.EMPTY;
-
-        int gridStartX = bookStartX + 49;
-        int gridStartY = bookStartY + 46;
-
-        if (scaledMouseX >= gridStartX && scaledMouseX < gridStartX + (7 * 21) && scaledMouseY >= gridStartY && scaledMouseY < gridStartY + (8 * 21)) {
-            int col = (int) (scaledMouseX - gridStartX) / 21;
-            int row = (int) (scaledMouseY - gridStartY) / 21;
-            int actualItemIndex = (currentRowScroll * 7) + ((row * 7) + col);
-
-            CreativeTabScanner.SubCategory activeCat = cachedCategories.get(selectedTabIndex);
-
-            if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
-                int itemX = gridStartX + (col * 21) + 1;
-                int itemY = gridStartY + (row * 21) + 1;
-                if (scaledMouseX >= itemX && scaledMouseX < itemX + 16 && scaledMouseY >= itemY && scaledMouseY < itemY + 16) {
-                    return activeCat.items.get(actualItemIndex);
-                }
-            }
-        }
-        return ItemStack.EMPTY;
-    }
-
     private static final int SOURCE_PAGE_SIZE = 192;
     private static final int RENDER_SIZE = 260;
 
@@ -93,6 +62,11 @@ public class CatalogScreen extends Screen {
     private double scrollGrabOffset = 0.0;
 
     private final List<CreativeTabScanner.SubCategory> cachedCategories = new ArrayList<>();
+
+    private Set<String> playerInvCache = new HashSet<>();
+    private Set<String> tabsWithSubmittableItems = new HashSet<>();
+    private boolean canSubmitAnythingGlobally = false;
+    private int tickCounter = 0;
 
     private enum SpecialTab { NONE, HOME, INFO, LEADERBOARD }
     private SpecialTab activeSpecialTab = SpecialTab.HOME;
@@ -130,6 +104,52 @@ public class CatalogScreen extends Screen {
         }
 
         Services.PLATFORM.sendRequestLeaderboardPacketToServer();
+
+        refreshInventoryCache();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        tickCounter++;
+        if (tickCounter % 5 == 0) {
+            refreshInventoryCache();
+        }
+    }
+
+    private void refreshInventoryCache() {
+        if (this.minecraft == null || this.minecraft.player == null) return;
+
+        playerInvCache.clear();
+        tabsWithSubmittableItems.clear();
+        canSubmitAnythingGlobally = false;
+
+        if (!this.minecraft.player.isCreative()) {
+            Inventory inv = this.minecraft.player.getInventory();
+            for (int j = 0; j < inv.getContainerSize(); j++) {
+                ItemStack invStack = inv.getItem(j);
+                if (!invStack.isEmpty()) {
+                    playerInvCache.add(ServerItemHandler.getUniqueItemId(invStack));
+                }
+            }
+        }
+
+        for (CreativeTabScanner.SubCategory cat : cachedCategories) {
+            boolean canSubmitToThisTab = false;
+            for (ItemStack stack : cat.items) {
+                String itemId = ServerItemHandler.getUniqueItemId(stack);
+                if (!ClientPlayerData.unlockedItems.contains(itemId)) {
+                    if (this.minecraft.player.isCreative() || playerInvCache.contains(itemId)) {
+                        canSubmitToThisTab = true;
+                        canSubmitAnythingGlobally = true;
+                        break;
+                    }
+                }
+            }
+            if (canSubmitToThisTab) {
+                tabsWithSubmittableItems.add(cat.tabId);
+            }
+        }
     }
 
     private int getGatheredCount(CreativeTabScanner.SubCategory cat) {
@@ -139,6 +159,37 @@ public class CatalogScreen extends Screen {
             if (ClientPlayerData.unlockedItems.contains(id)) gathered++;
         }
         return gathered;
+    }
+
+    public ItemStack getHoveredItem(double mouseX, double mouseY) {
+        float scale = calculateEffectiveScale();
+        double scaledMouseX = (mouseX - this.width / 2.0) / scale + this.width / 2.0;
+        double scaledMouseY = (mouseY - this.height / 2.0) / scale + this.height / 2.0;
+
+        int bookStartX = (this.width - RENDER_SIZE) / 2;
+        int bookStartY = (this.height - RENDER_SIZE) / 2;
+
+        if (activeSpecialTab != SpecialTab.NONE || cachedCategories.isEmpty()) return ItemStack.EMPTY;
+
+        int gridStartX = bookStartX + 49;
+        int gridStartY = bookStartY + 46;
+
+        if (scaledMouseX >= gridStartX && scaledMouseX < gridStartX + (7 * 21) && scaledMouseY >= gridStartY && scaledMouseY < gridStartY + (8 * 21)) {
+            int col = (int) (scaledMouseX - gridStartX) / 21;
+            int row = (int) (scaledMouseY - gridStartY) / 21;
+            int actualItemIndex = (currentRowScroll * 7) + ((row * 7) + col);
+
+            CreativeTabScanner.SubCategory activeCat = cachedCategories.get(selectedTabIndex);
+
+            if (actualItemIndex >= 0 && actualItemIndex < activeCat.items.size()) {
+                int itemX = gridStartX + (col * 21) + 1;
+                int itemY = gridStartY + (row * 21) + 1;
+                if (scaledMouseX >= itemX && scaledMouseX < itemX + 16 && scaledMouseY >= itemY && scaledMouseY < itemY + 16) {
+                    return activeCat.items.get(actualItemIndex);
+                }
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -207,7 +258,7 @@ public class CatalogScreen extends Screen {
             guiGraphics.item(icons[i], finalX + 7, currentY + 6);
 
             if (isHovered) {
-                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable(tooltips[i]).withStyle(s -> s.withColor(0xFFD4AF37).withBold(true)), rawMouseX, rawMouseY);
+                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable(tooltips[i]).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD), rawMouseX, rawMouseY);
             }
         }
     }
@@ -402,31 +453,6 @@ public class CatalogScreen extends Screen {
 
     private void renderTabs(GuiGraphicsExtractor guiGraphics, int bookX, int bookY, double scaledMouseX, double scaledMouseY, int rawMouseX, int rawMouseY) {
 
-        Set<String> playerInvCache = new HashSet<>();
-        if (!this.minecraft.player.isCreative()) {
-            Inventory inv = this.minecraft.player.getInventory();
-            for (int j = 0; j < inv.getContainerSize(); j++) {
-                ItemStack invStack = inv.getItem(j);
-                if (!invStack.isEmpty()) {
-                    playerInvCache.add(ServerItemHandler.getUniqueItemId(invStack));
-                }
-            }
-        }
-
-        boolean canSubmitAnythingGlobally = false;
-        for (CreativeTabScanner.SubCategory cat : cachedCategories) {
-            for (ItemStack stack : cat.items) {
-                String itemId = ServerItemHandler.getUniqueItemId(stack);
-                if (!ClientPlayerData.unlockedItems.contains(itemId)) {
-                    if (this.minecraft.player.isCreative() || playerInvCache.contains(itemId)) {
-                        canSubmitAnythingGlobally = true;
-                        break;
-                    }
-                }
-            }
-            if (canSubmitAnythingGlobally) break;
-        }
-
         int maxVisibleTabs = 7;
         int tabStartY = bookY + 20;
         int tabW = 32;
@@ -448,7 +474,7 @@ public class CatalogScreen extends Screen {
             guiGraphics.text(this.font, globalAlert, arrowCenter - (alertW / 2), alertY, blinkColor, true);
 
             if (scaledMouseX >= arrowCenter - 10 && scaledMouseX <= arrowCenter + 10 && scaledMouseY >= alertY - 2 && scaledMouseY <= alertY + 10) {
-                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.global_submit_ready").withStyle(s -> s.withColor(0xFFFFAA00)), rawMouseX, rawMouseY);
+                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.global_submit_ready").withStyle(ChatFormatting.GOLD), rawMouseX, rawMouseY);
             }
         }
 
@@ -461,7 +487,7 @@ public class CatalogScreen extends Screen {
             guiGraphics.text(this.font, upArrow, arrowCenter - (w / 2), y, color, false);
 
             if (isHoveringUp) {
-                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.prev_categories").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
+                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.prev_categories").withStyle(ChatFormatting.GRAY), rawMouseX, rawMouseY);
             }
         }
 
@@ -474,7 +500,7 @@ public class CatalogScreen extends Screen {
             guiGraphics.text(this.font, downArrow, arrowCenter - (w / 2), y, color, false);
 
             if (isHoveringDown) {
-                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.next_categories").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
+                guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.next_categories").withStyle(ChatFormatting.GRAY), rawMouseX, rawMouseY);
             }
         }
 
@@ -501,20 +527,8 @@ public class CatalogScreen extends Screen {
                 }
             }
 
-            boolean canSubmitAny = false;
+            boolean canSubmitAny = tabsWithSubmittableItems.contains(cat.tabId);
             boolean isCompleted = (totalCatItems > 0 && gatheredCatItems == totalCatItems);
-
-            if (!isCompleted) {
-                for (ItemStack stack : cat.items) {
-                    String itemId = ServerItemHandler.getUniqueItemId(stack);
-                    if (!ClientPlayerData.unlockedItems.contains(itemId)) {
-                        if (this.minecraft.player.isCreative() || playerInvCache.contains(itemId)) {
-                            canSubmitAny = true;
-                            break;
-                        }
-                    }
-                }
-            }
 
             if (isCompleted) {
                 guiGraphics.text(this.font, "✔", finalX + 19, currentY + 17, 0xFF55FF55, true);
@@ -530,13 +544,13 @@ public class CatalogScreen extends Screen {
 
             if (isHovered) {
                 List<Component> tabTooltip = new ArrayList<>();
-                tabTooltip.add(cat.displayName.copy().withStyle(s -> s.withColor(0xFFD4AF37).withBold(true)));
+                tabTooltip.add(cat.displayName.copy().withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
 
                 float currentAnimProgress = actualIndex < tabProgressArray.length ? tabProgressArray[actualIndex] : 0f;
                 int catPercent = Math.clamp(Math.round(currentAnimProgress * 100), 0, 100);
                 int barColor = catPercent < 33 ? 0xFFFF5555 : (catPercent < 66 ? 0xFFFFAA00 : 0xFF55FF55);
 
-                tabTooltip.add(Component.translatable("gui.r3ct_collection.catalog.gathered", gatheredCatItems, totalCatItems).withStyle(s -> s.withColor(0xFFBBBBBB)));
+                tabTooltip.add(Component.translatable("gui.r3ct_collection.catalog.gathered", gatheredCatItems, totalCatItems).withStyle(ChatFormatting.GRAY));
 
                 int barLength = 12;
 
@@ -605,7 +619,7 @@ public class CatalogScreen extends Screen {
         }
 
         if (scaledMouseX >= barX && scaledMouseX <= barX + barW && scaledMouseY >= barY && scaledMouseY <= barY + barH) {
-            guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.category_progress").withStyle(s -> s.withColor(0xFFAAAAAA)), rawMouseX, rawMouseY);
+            guiGraphics.setTooltipForNextFrame(this.font, Component.translatable("gui.r3ct_collection.catalog.category_progress").withStyle(ChatFormatting.GRAY), rawMouseX, rawMouseY);
         }
 
         int totalRows = (int) Math.ceil((double) items.size() / columns);
@@ -634,17 +648,6 @@ public class CatalogScreen extends Screen {
         int b = 0;
         int blinkColor = 0xFF000000 | (r << 16) | (g << 8) | b;
 
-        Set<String> playerInvCache = new HashSet<>();
-        if (!this.minecraft.player.isCreative()) {
-            Inventory inv = this.minecraft.player.getInventory();
-            for (int j = 0; j < inv.getContainerSize(); j++) {
-                ItemStack invStack = inv.getItem(j);
-                if (!invStack.isEmpty()) {
-                    playerInvCache.add(ServerItemHandler.getUniqueItemId(invStack));
-                }
-            }
-        }
-
         for (int i = startIndex; i < endIndex; i++) {
             int index = i - startIndex;
             int slotX = gridStartX + (index % columns * 21);
@@ -672,20 +675,24 @@ public class CatalogScreen extends Screen {
 
             Component gridIcon = null;
             final Component tooltipIcon;
-            final int finalIconColor;
+            final ChatFormatting finalIconColorFormatting;
+            final int finalIconColorHex;
 
             if (isCollected) {
                 gridIcon = Component.literal("✔");
                 tooltipIcon = Component.literal("✔");
-                finalIconColor = 0xFF55FF55;
+                finalIconColorFormatting = ChatFormatting.GREEN;
+                finalIconColorHex = 0xFF55FF55;
             } else if (isInInventory) {
                 gridIcon = null;
                 tooltipIcon = Component.literal("?");
-                finalIconColor = 0xFFFFAA00;
+                finalIconColorFormatting = ChatFormatting.GOLD;
+                finalIconColorHex = 0xFFFFAA00;
             } else {
                 gridIcon = null;
                 tooltipIcon = Component.literal("✘");
-                finalIconColor = 0xFFFF5555;
+                finalIconColorFormatting = ChatFormatting.RED;
+                finalIconColorHex = 0xFFFF5555;
             }
 
             int itemX = slotX + 1;
@@ -698,14 +705,14 @@ public class CatalogScreen extends Screen {
                 }
 
                 int iconW = this.font.width(gridIcon);
-                guiGraphics.text(this.font, gridIcon, itemX + 8 - (iconW / 2), itemY + 4, finalIconColor, true);
+                guiGraphics.text(this.font, gridIcon, itemX + 8 - (iconW / 2), itemY + 4, finalIconColorHex, true);
             }
 
             if (scaledMouseX >= itemX && scaledMouseX < itemX + 16 && scaledMouseY >= itemY && scaledMouseY < itemY + 16) {
                 List<Component> itemTooltip = new ArrayList<>();
                 Component originalName = stack.getHoverName();
                 Component modifiedName = originalName.copy().append(Component.literal(" "))
-                        .append(tooltipIcon.copy().withStyle(s -> s.withColor(finalIconColor).withBold(true)));
+                        .append(tooltipIcon.copy().withStyle(finalIconColorFormatting).withStyle(ChatFormatting.BOLD));
 
                 itemTooltip.add(modifiedName);
                 if (!isCollected) {
@@ -722,34 +729,18 @@ public class CatalogScreen extends Screen {
             }
         }
 
-        // ==========================================
-        // ENDER CHEST - BULK SUBMIT NA DOLE KARTY
-        // ==========================================
         int bulkX = gridStartX + (3 * 21);
         int bulkY = gridStartY + (8 * 21);
 
-        boolean canSubmitBulk = false;
-        for (ItemStack stack : items) {
-            String itemId = ServerItemHandler.getUniqueItemId(stack);
-            if (!ClientPlayerData.unlockedItems.contains(itemId)) {
-                if (this.minecraft.player.isCreative() || playerInvCache.contains(itemId)) {
-                    canSubmitBulk = true;
-                    break;
-                }
-            }
-        }
+        boolean canSubmitBulk = tabsWithSubmittableItems.contains(activeCat.tabId);
 
         if (canSubmitBulk) {
             int pulseInt = (int) (170 + (85 * pulse));
-            // Fioletowo-różowy puls typowy dla Endu
             int enderBlinkColor = 0xFF000000 | (pulseInt << 16) | (50 << 8) | pulseInt;
 
-            // IDEALNY ROZMIAR 18x18 (Zewnętrzna ramka)
             guiGraphics.fill(bulkX, bulkY, bulkX + 18, bulkY + 18, enderBlinkColor);
-            // IDEALNY ROZMIAR 16x16 (Wewnętrzne tło)
             guiGraphics.fill(bulkX + 1, bulkY + 1, bulkX + 17, bulkY + 17, 0x882A002A);
         } else {
-            // Wyróżniające się tło dla nieaktywnego przycisku (szaro-fioletowa, stała ramka 18x18)
             guiGraphics.fill(bulkX, bulkY, bulkX + 18, bulkY + 18, 0xFF3A1A3A);
             guiGraphics.fill(bulkX + 1, bulkY + 1, bulkX + 17, bulkY + 17, 0xFF150815);
         }
@@ -801,6 +792,7 @@ public class CatalogScreen extends Screen {
             if (missing) {
                 Services.PLATFORM.sendBulkSubmitPacketToServer(tabId, new ArrayList<>(), new ArrayList<>());
                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.PLAYER_LEVELUP, 1.0F));
+                refreshInventoryCache();
             }
         } else {
             BulkSubmitHelper.ScanResult scan = BulkSubmitHelper.scanInventory(tabId);
@@ -902,9 +894,6 @@ public class CatalogScreen extends Screen {
             int gridStartX = bookStartX + 49;
             int gridStartY = bookStartY + 46;
 
-            // ==========================================
-            // KLIKNIĘCIE W ENDER CHEST (BULK SUBMIT)
-            // ==========================================
             int bulkX = gridStartX + (3 * 21);
             int bulkY = gridStartY + (8 * 21);
 
@@ -929,6 +918,7 @@ public class CatalogScreen extends Screen {
                         if (this.minecraft.player.isCreative()) {
                             Services.PLATFORM.sendSubmitItemPacketToServer(itemId, -1);
                             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                            refreshInventoryCache();
                             return true;
                         }
 
@@ -949,7 +939,7 @@ public class CatalogScreen extends Screen {
                                 }
 
                                 if (!isDuplicate) {
-                                    uniqueItems.add(new SlotItem(invStack, i));
+                                    uniqueItems.add(new SlotItem(invStack.copy(), i));
                                 }
                             }
                         }
@@ -961,6 +951,7 @@ public class CatalogScreen extends Screen {
                             } else {
                                 Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
                                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
+                                refreshInventoryCache();
                             }
                         } else if (uniqueItems.size() > 1) {
                             this.minecraft.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));

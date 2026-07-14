@@ -20,7 +20,7 @@
   "gui.r3ct_collection.catalog.no": "No",
   "gui.r3ct_collection.catalog.global_submit_ready": "You have items to submit!",
 
-  "gui.r3ct_collection.catalog.bulk.title": "Are you sure you want to submit this items?",
+  "gui.r3ct_collection.catalog.bulk.title": "Are you sure you want to submit these items?",
   "gui.r3ct_collection.catalog.bulk.submit_safe": "Submit",
   "gui.r3ct_collection.catalog.bulk.cancel": "Cancel",
   "gui.r3ct_collection.catalog.bulk.hint": "Click to bulk submit items.",
@@ -52,9 +52,9 @@
   "gui.r3ct_collection.config.client.scale_desc": "Collector's Book Scale:",
 
   "gui.r3ct_collection.config.server.title": "Server Settings",
-  "gui.r3ct_collection.config.server.items_button": "Edit Blacklist (Items)",
+  "gui.r3ct_collection.config.server.items_button": "Edit Items Blacklist",
   "gui.r3ct_collection.config.server.items_tooltip": "Open the configuration file for blacklisted tabs and items.",
-  "gui.r3ct_collection.config.server.rewards_button": "Edit Rewards (Rewards)",
+  "gui.r3ct_collection.config.server.rewards_button": "Edit Rewards",
   "gui.r3ct_collection.config.server.rewards_tooltip": "Open the configuration file for XP, figures, and milestone rewards.",
 
   "chat.r3ct_collection.milestone_reward": "Reached milestone of %s items! You received: %s",

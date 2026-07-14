@@ -167,8 +167,18 @@ public class ServerItemHandler {
                     if (!data.unlockedItems.contains(uId)) {
                         data.unlockedItems.add(uId);
                         addedCount++;
+                        Rarity rarity = stack.getRarity();
+                        totalXp += switch (rarity) {
+                            case UNCOMMON -> CollectionConfig.xpUncommon;
+                            case RARE -> CollectionConfig.xpRare;
+                            case EPIC -> CollectionConfig.xpEpic;
+                            default -> CollectionConfig.xpCommon;
+                        };
                     }
                 }
+            }
+            if (totalXp > 0) {
+                player.giveExperiencePoints(totalXp);
             }
         } else {
             List<String> itemIds = payload.itemIds();

@@ -4,6 +4,7 @@ import com.r3ct.collection.platform.Services;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.CommonComponents;
@@ -37,11 +38,7 @@ public class ItemSelectionScreen extends Screen {
     @Override
     protected void init() {
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> {
-            if (this.onNextInQueue != null) {
-                this.onNextInQueue.run();
-            } else if (this.minecraft != null) {
-                this.minecraft.setScreen(this.parent);
-            }
+            this.onClose();
         }).bounds(this.width / 2 - 50, this.height / 2 + 50, 100, 20).build());
     }
 
@@ -111,9 +108,7 @@ public class ItemSelectionScreen extends Screen {
                                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                                 this.onNextInQueue.run();
                             },
-                            () -> {
-                                this.minecraft.setScreen(this);
-                            }
+                            () -> this.minecraft.setScreen(this)
                     ));
                 } else {
                     if (CatalogScreen.isValuable(selected.stack)) {
@@ -128,5 +123,28 @@ public class ItemSelectionScreen extends Screen {
             }
         }
         return super.mouseClicked(event, doubleClick);
+    }
+
+    @Override
+    public void onClose() {
+        if (this.onNextInQueue != null) {
+            this.onNextInQueue.run();
+        } else if (this.minecraft != null) {
+            this.minecraft.setScreen(this.parent);
+        }
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (Services.PLATFORM.isCatalogKey(event)) {
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 }

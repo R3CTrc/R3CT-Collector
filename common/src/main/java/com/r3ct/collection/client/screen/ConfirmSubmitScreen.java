@@ -5,6 +5,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -61,7 +62,7 @@ public class ConfirmSubmitScreen extends Screen {
         }).bounds(centerX - 105, btnY, 100, 20).build());
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.catalog.no").withStyle(ChatFormatting.RED), button -> {
-            this.onCancel.run();
+            this.onClose();
         }).bounds(centerX + 5, btnY, 100, 20).build());
     }
 
@@ -82,5 +83,24 @@ public class ConfirmSubmitScreen extends Screen {
         if (mouseX >= itemX && mouseX <= itemX + 16 && mouseY >= itemY && mouseY <= itemY + 16) {
             guiGraphics.setTooltipForNextFrame(this.font, this.stack.getTooltipLines(Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, TooltipFlag.NORMAL), Optional.empty(), mouseX, mouseY);
         }
+    }
+
+    @Override
+    public void onClose() {
+        this.onCancel.run();
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (Services.PLATFORM.isCatalogKey(event)) {
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 }

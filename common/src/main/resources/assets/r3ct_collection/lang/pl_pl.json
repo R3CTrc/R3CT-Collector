@@ -22,7 +22,7 @@
 
   "gui.r3ct_collection.catalog.bulk.title": "Czy na pewno chcesz oddać te przedmioty?",
   "gui.r3ct_collection.catalog.bulk.submit_safe": "Tak",
-  "gui.r3ct_collection.catalog.bulk.cancel": "Nie",
+  "gui.r3ct_collection.catalog.bulk.cancel": "Anuluj",
   "gui.r3ct_collection.catalog.bulk.hint": "Kliknij, aby oddać przedmioty masowo.",
   "gui.r3ct_collection.catalog.bulk.none": "Brak przedmiotów do oddania w tej kategorii.",
 
@@ -52,9 +52,9 @@
   "gui.r3ct_collection.config.client.scale_desc": "Skala Księgi Kolekcjonera:",
 
   "gui.r3ct_collection.config.server.title": "Ustawienia Serwera",
-  "gui.r3ct_collection.config.server.items_button": "Edytuj Blacklistę (Items)",
+  "gui.r3ct_collection.config.server.items_button": "Edytuj Blackliste",
   "gui.r3ct_collection.config.server.items_tooltip": "Otwórz plik konfiguracyjny zablokowanych zakładek i przedmiotów.",
-  "gui.r3ct_collection.config.server.rewards_button": "Edytuj Nagrody (Rewards)",
+  "gui.r3ct_collection.config.server.rewards_button": "Edytuj Nagrody",
   "gui.r3ct_collection.config.server.rewards_tooltip": "Otwórz plik konfiguracyjny z ilością PD, figurkami i nagrodami.",
 
   "chat.r3ct_collection.milestone_reward": "Osiągnięto kamień milowy %s przedmiotów! Otrzymujesz: %s",
@@ -78,5 +78,5 @@
   "advancement.r3ct_collection.all_completed.title": "Złap je wszystkie!",
   "advancement.r3ct_collection.all_completed.desc": "Zbierz absolutnie każdy przedmiot w grze i wypełnij Księgę w 100%!",
 
-  "item.r3ct_collection.trophy": "Collection Trophy"
+  "item.r3ct_collection.trophy": "Trofeum Kolekcjonera"
 }
