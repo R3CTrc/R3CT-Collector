@@ -24,6 +24,7 @@
   "gui.r3ct_collection.catalog.bulk.submit_safe": "Submit",
   "gui.r3ct_collection.catalog.bulk.cancel": "Cancel",
   "gui.r3ct_collection.catalog.bulk.hint": "Click to bulk submit items.",
+  "gui.r3ct_collection.catalog.bulk.none": "No items to submit in this category.",
 
   "gui.r3ct_collection.info.rewards_title": "Collection Rewards",
   "gui.r3ct_collection.info.point1": "1. Submitting Items",

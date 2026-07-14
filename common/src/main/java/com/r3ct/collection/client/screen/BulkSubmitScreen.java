@@ -33,6 +33,11 @@ public class BulkSubmitScreen extends Screen {
 
     @Override
     protected void init() {
+        if (this.scanResult.safeSlots.isEmpty() && !this.scanResult.conflicts.isEmpty()) {
+            processConflictQueue(0);
+            return;
+        }
+
         int centerX = this.width / 2;
         int bottomY = this.height / 2 + 50;
 
@@ -124,13 +129,15 @@ public class BulkSubmitScreen extends Screen {
             int itemX = slotX + 4;
             int itemY = slotY + 4;
 
-            ItemStack stack = inv.getItem(scanResult.safeSlots.get(i));
-            guiGraphics.item(stack, itemX, itemY);
-            guiGraphics.itemDecorations(this.font, stack, itemX, itemY);
+            ItemStack originalStack = inv.getItem(scanResult.safeSlots.get(i));
+            ItemStack displayStack = originalStack.copyWithCount(1);
+
+            guiGraphics.item(displayStack, itemX, itemY);
+            guiGraphics.itemDecorations(this.font, displayStack, itemX, itemY);
 
             if (mouseX >= slotX && mouseX <= slotX + slotSize && mouseY >= slotY && mouseY <= slotY + slotSize) {
                 guiGraphics.fill(slotX, slotY, slotX + slotSize, slotY + slotSize, 0x44FFFFFF);
-                guiGraphics.setTooltipForNextFrame(this.font, stack.getTooltipLines(Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, TooltipFlag.NORMAL), Optional.empty(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(this.font, displayStack.getTooltipLines(Item.TooltipContext.of(this.minecraft.level), this.minecraft.player, TooltipFlag.NORMAL), Optional.empty(), mouseX, mouseY);
             }
         }
 
