@@ -60,18 +60,15 @@ public class CreativeTabScanner {
                     String itemNamespace = itemId.split(":")[0];
                     boolean isVanilla = itemNamespace.equals("minecraft");
 
-                    // 1. Zablokowanie przedmiotów z modów (tylko vanilla)
                     if (CollectionConfig.onlyVanillaItems && !isVanilla) {
                         continue;
                     }
 
-                    // 2. Automatyczne blokowanie jajek spawnujących
                     if (stack.getItem() instanceof SpawnEggItem) {
                         if (isVanilla && CollectionConfig.blacklistVanillaSpawnEggs) continue;
                         if (!isVanilla && CollectionConfig.blacklistModdedSpawnEggs) continue;
                     }
 
-                    // 3. Sprawdzanie głównej blacklisty itemów i modów
                     String uniqueKey = ServerItemHandler.getUniqueItemId(stack);
 
                     if (!CollectionConfig.blacklistedMods.contains(itemNamespace) &&
