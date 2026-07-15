@@ -56,6 +56,7 @@ public class CollectionFabric implements ModInitializer {
         PayloadTypeRegistry.serverboundPlay().register(RequestLeaderboardPayload.TYPE, RequestLeaderboardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(LeaderboardDataPayload.TYPE, LeaderboardDataPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(ConfigSyncPayload.TYPE, ConfigSyncPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(BulkSubmitPayload.TYPE, BulkSubmitPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SubmitItemPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleItemSubmit(context.player(), payload.itemId(), payload.slotId()));
@@ -78,6 +79,10 @@ public class CollectionFabric implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(RequestLeaderboardPayload.TYPE, (payload, context) -> {
             context.server().execute(() -> ServerItemHandler.handleLeaderboardRequest(context.player()));
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(BulkSubmitPayload.TYPE, (payload, context) -> {
+            context.server().execute(() -> ServerItemHandler.handleBulkSubmit(context.player(), payload));
         });
     }
 }

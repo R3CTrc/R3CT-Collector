@@ -15,6 +15,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CollectionConfig {
 
+    public static boolean onlyVanillaItems = false;
+    public static boolean blacklistVanillaSpawnEggs = true;
+    public static boolean blacklistModdedSpawnEggs = true;
+
     public static Set<String> blacklistedMods = new HashSet<>();
     public static Set<String> blacklistedTabs = new HashSet<>();
     public static Set<String> blacklistedItems = new HashSet<>();
@@ -86,6 +90,9 @@ public class CollectionConfig {
         try (FileReader reader = new FileReader(SERVER_PATH.toFile())) {
             ItemsData data = GSON.fromJson(reader, ItemsData.class);
             if (data != null) {
+                onlyVanillaItems = data.onlyVanillaItems;
+                blacklistVanillaSpawnEggs = data.blacklistVanillaSpawnEggs;
+                blacklistModdedSpawnEggs = data.blacklistModdedSpawnEggs;
                 if (data.blacklistedMods != null) blacklistedMods = data.blacklistedMods;
                 if (data.blacklistedTabs != null) blacklistedTabs = data.blacklistedTabs;
                 if (data.blacklistedItems != null) blacklistedItems = data.blacklistedItems;
@@ -150,6 +157,9 @@ public class CollectionConfig {
 
     private static class ItemsData {
         int version = SERVER_CONFIG_VERSION;
+        boolean onlyVanillaItems = CollectionConfig.onlyVanillaItems;
+        boolean blacklistVanillaSpawnEggs = CollectionConfig.blacklistVanillaSpawnEggs;
+        boolean blacklistModdedSpawnEggs = CollectionConfig.blacklistModdedSpawnEggs;
         Set<String> blacklistedMods = CollectionConfig.blacklistedMods;
         Set<String> blacklistedTabs = CollectionConfig.blacklistedTabs;
         Set<String> blacklistedItems = CollectionConfig.blacklistedItems;
@@ -205,6 +215,9 @@ public class CollectionConfig {
             if (itemsJson != null && !itemsJson.isEmpty()) {
                 ItemsData data = GSON.fromJson(itemsJson, ItemsData.class);
                 if (data != null) {
+                    onlyVanillaItems = data.onlyVanillaItems;
+                    blacklistVanillaSpawnEggs = data.blacklistVanillaSpawnEggs;
+                    blacklistModdedSpawnEggs = data.blacklistModdedSpawnEggs;
                     if (data.blacklistedMods != null) blacklistedMods = data.blacklistedMods;
                     if (data.blacklistedTabs != null) blacklistedTabs = data.blacklistedTabs;
                     if (data.blacklistedItems != null) blacklistedItems = data.blacklistedItems;

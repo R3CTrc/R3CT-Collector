@@ -50,6 +50,13 @@ public class CollectionNeoForge {
         );
 
         registrar.playToServer(
+                BulkSubmitPayload.TYPE, BulkSubmitPayload.CODEC,
+                (payload, context) -> context.enqueueWork(() -> {
+                    ServerItemHandler.handleBulkSubmit((ServerPlayer) context.player(), payload);
+                })
+        );
+
+        registrar.playToServer(
                 ClaimCategoryRewardPayload.TYPE, ClaimCategoryRewardPayload.CODEC,
                 (payload, context) -> context.enqueueWork(() -> {
                     ServerItemHandler.handleCategoryReward((ServerPlayer) context.player(), payload.tabId());

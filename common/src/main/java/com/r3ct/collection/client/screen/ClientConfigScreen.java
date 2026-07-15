@@ -24,7 +24,7 @@ public class ClientConfigScreen extends Screen {
         int widgetWidth = 140;
         int widgetHeight = 20;
 
-        this.scaleBox = new EditBox(this.font, rightColumnX, 80, widgetWidth, widgetHeight, Component.translatable("gui.r3ct_collection.config.client.scale"));;
+        this.scaleBox = new EditBox(this.font, rightColumnX, 80, widgetWidth, widgetHeight, Component.translatable("gui.r3ct_collection.config.client.scale"));
         this.scaleBox.setValue(String.valueOf(CollectionConfig.catalogScale));
         this.addRenderableWidget(this.scaleBox);
 
@@ -46,7 +46,8 @@ public class ClientConfigScreen extends Screen {
     @Override
     public void onClose() {
         try {
-            CollectionConfig.catalogScale = Float.parseFloat(this.scaleBox.getValue());
+            float parsedScale = Float.parseFloat(this.scaleBox.getValue());
+            CollectionConfig.catalogScale = Math.clamp(parsedScale, 0.5f, 2.0f);
         } catch (NumberFormatException ignored) {}
 
         CollectionConfig.saveClient();

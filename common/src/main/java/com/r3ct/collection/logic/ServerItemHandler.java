@@ -4,6 +4,7 @@ import com.r3ct.collection.Constants;
 import com.r3ct.collection.config.CollectionConfig;
 import com.r3ct.collection.data.ModState;
 import com.r3ct.collection.data.PlayerData;
+import com.r3ct.collection.network.BulkSubmitPayload;
 import com.r3ct.collection.network.LeaderboardDataPayload;
 import com.r3ct.collection.platform.Services;
 import com.r3ct.collection.scanner.CreativeTabScanner;
@@ -146,6 +147,119 @@ public class ServerItemHandler {
             ModState.get(player.level().getServer()).setDirty();
             Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
 
+            handleLeaderboardRequest(player);
+        }
+    }
+
+    public static void handleBulkSubmit(ServerPlayer player, BulkSubmitPayload payload) {
+        PlayerData data = ModState.getPlayerData(player.level().getServer(), player.getUUID());
+        data.lastKnownName = player.getName().getString();
+
+        int sizeBefore = data.unlockedItems.size();
+        int addedCount = 0;
+        int totalXp = 0;
+
+        if (player.isCreative()) {
+            if (CreativeTabScanner.SCANNED_SUBCATEGORIES.containsKey(payload.tabId())) {
+                CreativeTabScanner.SubCategory cat = CreativeTabScanner.SCANNED_SUBCATEGORIES.get(payload.tabId());
+                for (ItemStack stack : cat.items) {
+                    String uId = getUniqueItemId(stack);
+                    if (!data.unlockedItems.contains(uId)) {
+                        data.unlockedItems.add(uId);
+                        addedCount++;
+                        Rarity rarity = stack.getRarity();
+                        totalXp += switch (rarity) {
+                            case UNCOMMON -> CollectionConfig.xpUncommon;
+                            case RARE -> CollectionConfig.xpRare;
+                            case EPIC -> CollectionConfig.xpEpic;
+                            default -> CollectionConfig.xpCommon;
+                        };
+                    }
+                }
+            }
+            if (totalXp > 0) {
+                player.giveExperiencePoints(totalXp);
+            }
+        } else {
+            List<String> itemIds = payload.itemIds();
+            List<Integer> slotIds = payload.slotIds();
+
+            for (int i = 0; i < itemIds.size(); i++) {
+                String expectedId = itemIds.get(i);
+                int slotId = slotIds.get(i);
+
+                if (data.unlockedItems.contains(expectedId)) continue;
+
+                ItemStack stack = player.getInventory().getItem(slotId);
+                if (!stack.isEmpty() && getUniqueItemId(stack).equals(expectedId)) {
+                    Rarity rarity = stack.getRarity();
+                    int xpToGive = switch (rarity) {
+                        case UNCOMMON -> CollectionConfig.xpUncommon;
+                        case RARE -> CollectionConfig.xpRare;
+                        case EPIC -> CollectionConfig.xpEpic;
+                        default -> CollectionConfig.xpCommon;
+                    };
+
+                    stack.shrink(1);
+                    data.unlockedItems.add(expectedId);
+                    totalXp += xpToGive;
+                    addedCount++;
+                }
+            }
+            if (totalXp > 0) {
+                player.giveExperiencePoints(totalXp);
+            }
+        }
+
+        if (addedCount > 0) {
+            int sizeAfter = data.unlockedItems.size();
+
+            if (sizeAfter >= 1) grantAdvancement(player, "r3ct_collection:first_item");
+            if (sizeAfter >= 100) grantAdvancement(player, "r3ct_collection:items_100");
+            if (sizeAfter >= 500) grantAdvancement(player, "r3ct_collection:items_500");
+            if (sizeAfter >= 1000) grantAdvancement(player, "r3ct_collection:items_1000");
+
+            int interval = CollectionConfig.milestoneInterval;
+            if (interval > 0) {
+                int milestonesCrossed = (sizeAfter / interval) - (sizeBefore / interval);
+                for (int m = 0; m < milestonesCrossed; m++) {
+                    CollectionConfig.LootEntry reward = CollectionConfig.getRandomMilestoneReward();
+                    if (reward != null) {
+                        Item rewardItem = BuiltInRegistries.ITEM.get(Identifier.parse(reward.item)).map(Holder::value).orElse(Items.AIR);
+                        if (rewardItem != Items.AIR) {
+                            int amount = reward.min_amount + player.getRandom().nextInt((reward.max_amount - reward.min_amount) + 1);
+                            ItemStack rewardStack = new ItemStack(rewardItem, amount);
+                            var savedItemName = rewardStack.getHoverName().copy();
+
+                            giveItemToPlayer(player, rewardStack);
+                            player.level().playSound(null, player.blockPosition(), SoundEvents.FIREWORK_ROCKET_TWINKLE, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+                            ChatFormatting rewardColor = ChatFormatting.AQUA;
+                            if (reward.color != null && reward.color.length() >= 2 && reward.color.startsWith("&")) {
+                                ChatFormatting parsedColor = ChatFormatting.getByCode(reward.color.charAt(1));
+                                if (parsedColor != null) {
+                                    rewardColor = parsedColor;
+                                }
+                            }
+
+                            int milestoneLevel = (sizeBefore / interval + 1 + m) * interval;
+                            var numberComp = Component.literal(String.valueOf(milestoneLevel)).withStyle(ChatFormatting.YELLOW);
+                            var rewardComp = Component.literal(amount + "x ")
+                                    .withStyle(rewardColor)
+                                    .append(savedItemName.withStyle(rewardColor));
+
+                            player.sendSystemMessage(Component.empty()
+                                    .append(getPrefix())
+                                    .append(Component.translatable("chat.r3ct_collection.milestone_reward", numberComp, rewardComp).withStyle(ChatFormatting.GREEN))
+                            );
+                        }
+                    }
+                }
+            }
+
+            checkAndAwardCompletedCategories(player, data);
+            ModState.get(player.level().getServer()).setDirty();
+            Services.PLATFORM.sendSyncDataPacketToClient(player, data.unlockedItems, data.rewardedCategories);
             handleLeaderboardRequest(player);
         }
     }
