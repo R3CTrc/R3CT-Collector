@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.*;
 
@@ -57,10 +58,22 @@ public class CreativeTabScanner {
                 for (ItemStack stack : displayItems) {
                     String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
                     String itemNamespace = itemId.split(":")[0];
+                    boolean isVanilla = itemNamespace.equals("minecraft");
 
-                    if (!CollectionConfig.blacklistedItems.contains(itemId) && !CollectionConfig.blacklistedMods.contains(itemNamespace)) {
+                    if (CollectionConfig.onlyVanillaItems && !isVanilla) {
+                        continue;
+                    }
 
-                        String uniqueKey = ServerItemHandler.getUniqueItemId(stack);
+                    if (stack.getItem() instanceof SpawnEggItem) {
+                        if (isVanilla && CollectionConfig.blacklistVanillaSpawnEggs) continue;
+                        if (!isVanilla && CollectionConfig.blacklistModdedSpawnEggs) continue;
+                    }
+
+                    String uniqueKey = ServerItemHandler.getUniqueItemId(stack);
+
+                    if (!CollectionConfig.blacklistedMods.contains(itemNamespace) &&
+                            !CollectionConfig.blacklistedItems.contains(itemId) &&
+                            !CollectionConfig.blacklistedItems.contains(uniqueKey)) {
 
                         if (!processedItems.contains(uniqueKey)) {
                             category.items.add(stack);

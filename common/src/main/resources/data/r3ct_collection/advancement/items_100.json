@@ -10,6 +10,6 @@
     "hidden": false
   },
   "criteria": {
-    "trigger": { "trigger": "minecraft:impossible" }
+    "unlocked": { "trigger": "minecraft:impossible" }
   }
 }

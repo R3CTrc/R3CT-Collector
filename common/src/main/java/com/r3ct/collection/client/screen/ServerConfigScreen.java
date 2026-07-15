@@ -39,7 +39,7 @@ public class ServerConfigScreen extends Screen {
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.config.server.rewards_button"), button -> {
                     File configFile = Paths.get("config", "r3ct_collection", "r3ct_collection_rewards.json").toFile();
-                    if (!configFile.exists()) CollectionConfig.save();
+                    if (!configFile.exists()) CollectionConfig.saveRewards();
                     Util.getPlatform().openUri(configFile.toURI());
                 })
                 .bounds(centerX, startY + 25, buttonWidth, buttonHeight)
