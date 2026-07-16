@@ -73,8 +73,11 @@ public class CatalogScreen extends Screen {
     }
 
     public float calculateEffectiveScale() {
+        int actualWidth = this.width > 0 ? this.width : this.minecraft.getWindow().getGuiScaledWidth();
+        int actualHeight = this.height > 0 ? this.height : this.minecraft.getWindow().getGuiScaledHeight();
+
         float configScale = CollectionConfig.catalogScale;
-        float maxPossibleScale = Math.min((float) this.width / (RENDER_SIZE + 60), (float) this.height / RENDER_SIZE);
+        float maxPossibleScale = Math.min((float) actualWidth / (RENDER_SIZE + 60), (float) actualHeight / RENDER_SIZE);
         return Math.min(configScale, maxPossibleScale);
     }
 

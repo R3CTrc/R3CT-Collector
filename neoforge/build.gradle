@@ -8,8 +8,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly "mezz.jei:jei-1.21.11-neoforge-api:27.4.0.24"
-    runtimeOnly "mezz.jei:jei-1.21.11-neoforge:27.4.0.24"
+    compileOnly "mezz.jei:jei-1.21.11-neoforge-api:27.0.0.1"
+    runtimeOnly "mezz.jei:jei-1.21.11-neoforge:27.0.0.1"
 }
 
 neoForge {
