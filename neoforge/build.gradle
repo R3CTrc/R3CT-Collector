@@ -8,8 +8,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly "mezz.jei:jei-26.2-neoforge-api:30.9.0.57"
-    runtimeOnly "mezz.jei:jei-26.2-neoforge:30.9.0.57"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
 neoForge {
