@@ -32,10 +32,20 @@ public class JeiIntegrationFabric implements IModPlugin {
                     @Override public Class<? extends Screen> screenClass() { return CatalogScreen.class; }
                     @Override public int guiXSize() { return (int)(260 * screen.calculateEffectiveScale()); }
                     @Override public int guiYSize() { return (int)(260 * screen.calculateEffectiveScale()); }
-                    @Override public int guiLeft() { return (screen.width - guiXSize()) / 2; }
-                    @Override public int guiTop() { return (screen.height - guiYSize()) / 2; }
-                    @Override public int screenWidth() { return screen.width; }
-                    @Override public int screenHeight() { return screen.height; }
+                    @Override public int guiLeft() {
+                        int w = screen.width > 0 ? screen.width : Minecraft.getInstance().getWindow().getGuiScaledWidth();
+                        return (w - guiXSize()) / 2;
+                    }
+                    @Override public int guiTop() {
+                        int h = screen.height > 0 ? screen.height : Minecraft.getInstance().getWindow().getGuiScaledHeight();
+                        return (h - guiYSize()) / 2;
+                    }
+                    @Override public int screenWidth() {
+                        return screen.width > 0 ? screen.width : Minecraft.getInstance().getWindow().getGuiScaledWidth();
+                    }
+                    @Override public int screenHeight() {
+                        return screen.height > 0 ? screen.height : Minecraft.getInstance().getWindow().getGuiScaledHeight();
+                    }
                 };
             }
         });
