@@ -6,9 +6,10 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    implementation "maven.modrinth:modmenu:18.0.0-beta.1"
-    compileOnly "mezz.jei:jei-26.1.1-fabric-api:29.4.0.23"
-    runtimeOnly "mezz.jei:jei-26.1.1-fabric:29.4.0.23"
+
+    implementation "maven.modrinth:modmenu:${modmenu_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-fabric:${jei_version}"
 }
 
 repositories {
