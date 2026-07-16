@@ -74,13 +74,13 @@ public class BulkSubmitScreen extends Screen {
         if (!scanResult.conflicts.isEmpty()) {
             processConflictQueue(0);
         } else {
-            this.minecraft.setScreen(parent);
+            this.minecraft.gui.setScreen(parent);
         }
     }
 
     private void processConflictQueue(int index) {
         if (index >= scanResult.conflicts.size()) {
-            this.minecraft.setScreen(parent);
+            this.minecraft.gui.setScreen(parent);
             return;
         }
 
@@ -89,7 +89,7 @@ public class BulkSubmitScreen extends Screen {
         if (conflict.slotItems.size() == 1) {
             CatalogScreen.SlotItem singleItem = conflict.slotItems.get(0);
 
-            this.minecraft.setScreen(new ConfirmSubmitScreen(
+            this.minecraft.gui.setScreen(new ConfirmSubmitScreen(
                     this.parent,
                     singleItem.stack,
                     singleItem.slotId,
@@ -102,7 +102,7 @@ public class BulkSubmitScreen extends Screen {
                     () -> processConflictQueue(index + 1)
             ));
         } else {
-            this.minecraft.setScreen(new ItemSelectionScreen(
+            this.minecraft.gui.setScreen(new ItemSelectionScreen(
                     this.parent,
                     conflict.slotItems,
                     conflict.itemId,
@@ -253,7 +253,7 @@ public class BulkSubmitScreen extends Screen {
 
     @Override
     public void onClose() {
-        if (this.minecraft != null) this.minecraft.setScreen(parent);
+        if (this.minecraft != null) this.minecraft.gui.setScreen(parent);
     }
 
     @Override

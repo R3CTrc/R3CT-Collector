@@ -25,7 +25,7 @@ public class CollectionConfigScreen extends Screen {
         int startY = this.height / 2 - 30;
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.r3ct_collection.config.main.client_button"), button -> {
-                    this.minecraft.setScreen(new ClientConfigScreen(this));
+                    this.minecraft.gui.setScreen(new ClientConfigScreen(this));
                 })
                 .bounds(centerX, startY, buttonWidth, buttonHeight)
                 .tooltip(Tooltip.create(Component.translatable("gui.r3ct_collection.config.main.client_tooltip")))
@@ -34,7 +34,7 @@ public class CollectionConfigScreen extends Screen {
         boolean isSingleplayer = this.minecraft != null && this.minecraft.hasSingleplayerServer();
 
         Button serverButton = Button.builder(Component.translatable("gui.r3ct_collection.config.main.server_button"), button -> {
-                    this.minecraft.setScreen(new ServerConfigScreen(this));
+                    this.minecraft.gui.setScreen(new ServerConfigScreen(this));
                 })
                 .bounds(centerX, startY + 25, buttonWidth, buttonHeight)
                 .tooltip(Tooltip.create(
@@ -61,7 +61,7 @@ public class CollectionConfigScreen extends Screen {
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(this.parent);
+            this.minecraft.gui.setScreen(this.parent);
         }
     }
 }

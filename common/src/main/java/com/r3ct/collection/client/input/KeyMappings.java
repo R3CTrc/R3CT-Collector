@@ -14,8 +14,8 @@ public class KeyMappings {
         Minecraft mc = Minecraft.getInstance();
 
         while (openCatalogKey.consumeClick()) {
-            if (mc.screen == null && mc.level != null) {
-                mc.setScreen(new CatalogScreen());
+            if (mc.gui.screen() == null && mc.level != null) {
+                mc.gui.setScreen(new CatalogScreen());
             }
         }
     }

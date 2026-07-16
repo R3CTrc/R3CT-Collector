@@ -98,7 +98,7 @@ public class ItemSelectionScreen extends Screen {
                 CatalogScreen.SlotItem selected = availableItems.get(i);
 
                 if (this.onNextInQueue != null) {
-                    this.minecraft.setScreen(new ConfirmSubmitScreen(
+                    this.minecraft.gui.setScreen(new ConfirmSubmitScreen(
                             this,
                             selected.stack,
                             selected.slotId,
@@ -108,15 +108,15 @@ public class ItemSelectionScreen extends Screen {
                                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                                 this.onNextInQueue.run();
                             },
-                            () -> this.minecraft.setScreen(this)
+                            () -> this.minecraft.gui.setScreen(this)
                     ));
                 } else {
                     if (CatalogScreen.isValuable(selected.stack)) {
-                        this.minecraft.setScreen(new ConfirmSubmitScreen(this.parent, selected.stack, selected.slotId, this.itemId));
+                        this.minecraft.gui.setScreen(new ConfirmSubmitScreen(this.parent, selected.stack, selected.slotId, this.itemId));
                     } else {
                         Services.PLATFORM.sendSubmitItemPacketToServer(this.itemId, selected.slotId);
                         this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
-                        this.minecraft.setScreen(this.parent);
+                        this.minecraft.gui.setScreen(this.parent);
                     }
                 }
                 return true;
@@ -130,7 +130,7 @@ public class ItemSelectionScreen extends Screen {
         if (this.onNextInQueue != null) {
             this.onNextInQueue.run();
         } else if (this.minecraft != null) {
-            this.minecraft.setScreen(this.parent);
+            this.minecraft.gui.setScreen(this.parent);
         }
     }
 

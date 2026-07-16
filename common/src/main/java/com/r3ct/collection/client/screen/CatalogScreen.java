@@ -73,8 +73,11 @@ public class CatalogScreen extends Screen {
     }
 
     public float calculateEffectiveScale() {
+        int actualWidth = this.width > 0 ? this.width : this.minecraft.getWindow().getGuiScaledWidth();
+        int actualHeight = this.height > 0 ? this.height : this.minecraft.getWindow().getGuiScaledHeight();
+
         float configScale = CollectionConfig.catalogScale;
-        float maxPossibleScale = Math.min((float) this.width / (RENDER_SIZE + 60), (float) this.height / RENDER_SIZE);
+        float maxPossibleScale = Math.min((float) actualWidth / (RENDER_SIZE + 60), (float) actualHeight / RENDER_SIZE);
         return Math.min(configScale, maxPossibleScale);
     }
 
@@ -807,7 +810,7 @@ public class CatalogScreen extends Screen {
         } else {
             BulkSubmitHelper.ScanResult scan = BulkSubmitHelper.scanInventory(tabId);
             if (!scan.safeSlots.isEmpty() || !scan.conflicts.isEmpty()) {
-                this.minecraft.setScreen(new BulkSubmitScreen(this, tabId, scan));
+                this.minecraft.gui.setScreen(new BulkSubmitScreen(this, tabId, scan));
             }
         }
     }
@@ -957,14 +960,14 @@ public class CatalogScreen extends Screen {
                         if (uniqueItems.size() == 1) {
                             SlotItem singleItem = uniqueItems.get(0);
                             if (isValuable(singleItem.stack)) {
-                                this.minecraft.setScreen(new ConfirmSubmitScreen(this, singleItem.stack, singleItem.slotId, itemId));
+                                this.minecraft.gui.setScreen(new ConfirmSubmitScreen(this, singleItem.stack, singleItem.slotId, itemId));
                             } else {
                                 Services.PLATFORM.sendSubmitItemPacketToServer(itemId, singleItem.slotId);
                                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
                                 refreshInventoryCache();
                             }
                         } else if (uniqueItems.size() > 1) {
-                            this.minecraft.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));
+                            this.minecraft.gui.setScreen(new ItemSelectionScreen(this, uniqueItems, itemId));
                         }
                     }
                     return true;

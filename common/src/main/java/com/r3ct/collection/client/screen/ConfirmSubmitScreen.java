@@ -34,11 +34,11 @@ public class ConfirmSubmitScreen extends Screen {
             Services.PLATFORM.sendSubmitItemPacketToServer(itemId, slotId);
             if (this.minecraft != null) {
                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
-                this.minecraft.setScreen(parent);
+                this.minecraft.gui.setScreen(parent);
             }
         };
         this.onCancel = () -> {
-            if (this.minecraft != null) this.minecraft.setScreen(parent);
+            if (this.minecraft != null) this.minecraft.gui.setScreen(parent);
         };
     }
 
