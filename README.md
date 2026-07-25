@@ -12,7 +12,7 @@
 The ultimate completionist and collection mod for Minecraft! R3CT Collection automatically scans all items in your game (including those from other mods) and generates a beautifully categorized Collector's Book. Gather items, earn XP, claim rewards, and compete with other players on your server!
 
 <div align="center">
-  <img src="./images/icon_nb.png" width="50%" alt="R3CT Collection Mod Icon">
+  <img src="./images/collection_banner.png" width="100%" alt="R3CT Collection">
 </div>
 
 ---
@@ -31,8 +31,8 @@ The ultimate completionist and collection mod for Minecraft! R3CT Collection aut
 * **🔍 JEI Integration:** Fully integrated with Just Enough Items! Simply click any item inside the Collector's Book to instantly view its recipes and uses.
 
 <div align="center">
-  <a href="./images/Tab.png" target="_blank">
-    <img src="./images/Tab.png" width="75%" alt="Catalog Screen (Click to enlarge)">
+  <a href="./images/collection_book.png" target="_blank">
+    <img src="./images/collection_book.png" width="100%" alt="Collector's Book (Click to enlarge)">
   </a>
 </div>
 
@@ -45,8 +45,8 @@ The ultimate completionist and collection mod for Minecraft! R3CT Collection aut
 * **👑 Server Leaderboard:** Compete for the top 10 spots. Hover over players to see their exact category progress.
 
 <div align="center">
-  <a href="./images/Trophy.png" target="_blank">
-    <img src="./images/Trophy.png" width="75%" alt="Trophy (Click to enlarge)">
+  <a href="./images/collection_trophies.png" target="_blank">
+    <img src="./images/collection_trophies.png" width="100%" alt="Trophies (Click to enlarge)">
   </a>
 </div>
 
@@ -96,14 +96,11 @@ Manage core mechanics using simple JSON files found in `config/r3ct_collection/`
 
 ## 📦 Check out my other mods!
 
-If you enjoy this mod, you might also like my other projects:
-
-### [🎯 R3CT Daily Quests & Rewards](https://modrinth.com/mod/r3ct-daily-quests-rewards)
-*A highly configurable Daily Quests & Rewards mod! Keep players engaged with dynamic tasks, login rewards, streaks, and competitive leaderboards.*
-
-<a href="https://modrinth.com/mod/r3ct-daily-quests-rewards">
-  <img src="./images/daily_icon_nb.png" width="150" alt="R3CT Daily Quests & Rewards">
-</a>
+<div align="center">
+  <a href="https://modrinth.com/mod/r3ct-daily-quests-rewards" target="_blank">
+    <img src="./images/daily_banner.png" width="100%" alt="Check out R3CT Daily Quests & Rewards!">
+  </a>
+</div>
 
 ---
 
